@@ -98,7 +98,7 @@ th, td {
 }
 
 .eye {
-  color: #2040c0;
+  color: rgba(0,0,0,0);
   border: 1em solid;
   border-radius: 1em;
   margin: 0.35em;
@@ -107,8 +107,14 @@ th, td {
   display: inline-block;
 }
 
+
+
 .visible {
   color: #c08020;
+}
+
+.visible.invert {
+  color: #2040c0;
 }
 
 .dice {
@@ -119,6 +125,11 @@ th, td {
   margin: 0.7em;
 
   display: inline-block;
+}
+
+.dice.invert {
+  color: #2040c0;
+  background-color: #c08020;
 }
 
 .row {

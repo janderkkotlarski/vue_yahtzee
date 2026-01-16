@@ -1,7 +1,7 @@
 <script setup>
-import Display from './components/Display.vue';
+import Roller from './components/Roller.vue';
 </script>
 
 <template>
-    <Display />
+    <Roller />
 </template>

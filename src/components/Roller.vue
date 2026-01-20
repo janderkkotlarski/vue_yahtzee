@@ -12,48 +12,52 @@ const invert = 'invert';
 const total = ref(0);
 
 // reactive() for arrays and simpler handling
-const diceValues = reactive([]);
+const diceInversions = reactive([]);
 
 // const diceTrolls = defineModel('diceTrolls', {type: Array, default: []});
 const diceRolls = defineModel('diceRolls', {type: Array, default: []});
 
-const emit = defineEmits('diceTolls');
-
 // const diceRolls = ref([]);
 
 // reactive() objects can just be passed along like variables
-const reactArrayIndex = (reactName, index, amount) => {
+const reactArrayIndex = (reactName, index, content) => {
     // Check whether generating or changing array contents
     if (index === reactName.length + 1) {
         // Generate new array contents
-        reactName.push({id: index, entry: amount, inversion: normal});
+        reactName.push({id: index, entry: content});
         // reactName.push({id: index + 1, entry: 0});
-    } else if (index > 0 && index < reactName.length + 1 && reactName[index - 1].inversion === normal) {
+    } else if (index > 0 && index < reactName.length + 1) {
         // Change specific array content
-        reactName[index - 1].entry = amount;
+        reactName[index - 1].entry = content;
     }
 };
 
-const reactArrayInvert = (reactName, index) => {
-    if (index > 0 && index < reactName.length + 1) {
-        let flipped = reactName[index - 1].inversion;
-
-        if (flipped === invert) {
-            flipped = normal;
-        } else {
-            flipped = invert;
-        }
-
-        reactName[index - 1].inversion = flipped;
+const normalization = () => {
+    for (let index = 1; index <= diceAmount; ++index) {
+        reactArrayIndex(diceInversions, index, normal);
     }
 };
+
+// const reactArrayInvert = (reactName, index) => {
+//     if (index > 0 && index < reactName.length + 1) {
+//         let flipped = reactName[index - 1].inversion;
+
+//         if (flipped === invert) {
+//             flipped = normal;
+//         } else {
+//             flipped = invert;
+//         }
+
+//         reactName[index - 1].inversion = flipped;
+//     }
+// };
 
 // Simple dice roll function
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
-const flip = index => {
-    reactArrayInvert(diceRolls.value, index);
-};
+// const flip = index => {
+//     reactArrayInvert(diceRolls.value, index);
+// };
 
 const single = index => {
     reactArrayIndex(diceRolls.value, index, roll());
@@ -77,23 +81,24 @@ const rolling = () => {
 };
 
 // Roll the dice
+normalization();
 rolling();
 </script>
 
 <template>
     <div>
         <Dice
-            @click="flip(rolled.id)"
+            @click="single(rolled.id)"
             v-for="rolled in diceRolls"
             :key="rolled.id"
             v-model:eyeValue="rolled.entry"
-            v-model:inverted="rolled.inversion"
-            :class="rolled.inversion"
-            :inverted="rolled.inversion"
+            :class="normal"
+            :inverted="normal"
         />
     </div>
 
     {{ diceRolls }}
+    {{ diceInversions }}
 
     <br />
     <button @click="rolling">Opnieuw rollen?</button>

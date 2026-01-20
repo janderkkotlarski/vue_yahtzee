@@ -14,7 +14,12 @@ const total = ref(0);
 // reactive() for arrays and simpler handling
 const diceValues = reactive([]);
 
+// const diceTrolls = defineModel('diceTrolls', {type: Array, default: []});
 const diceRolls = defineModel('diceRolls', {type: Array, default: []});
+
+const emit = defineEmits('diceTolls');
+
+// const diceRolls = ref([]);
 
 // reactive() objects can just be passed along like variables
 const reactArrayIndex = (reactName, index, amount) => {
@@ -29,21 +34,29 @@ const reactArrayIndex = (reactName, index, amount) => {
     }
 };
 
-// Simple dice roll function
-const roll = () => Math.floor(valueMax * Math.random()) + 1;
+const reactArrayInvert = (reactName, index) => {
+    if (index > 0 && index < reactName.length + 1) {
+        let flipped = reactName[index - 1].inversion;
 
-const flip = index => {
-    if (index > 0 && index < diceRolls.value.length + 1) {
-        let flipped = diceRolls.value[index - 1].inversion;
-        // Change specific array content
         if (flipped === invert) {
             flipped = normal;
         } else {
             flipped = invert;
         }
 
-        diceRolls.value[index - 1].inversion = flipped;
+        reactName[index - 1].inversion = flipped;
     }
+};
+
+// Simple dice roll function
+const roll = () => Math.floor(valueMax * Math.random()) + 1;
+
+const flip = index => {
+    reactArrayInvert(diceRolls.value, index);
+};
+
+const single = index => {
+    reactArrayIndex(diceRolls.value, index, roll());
 };
 
 const resum = () => {
@@ -73,7 +86,8 @@ rolling();
             @click="flip(rolled.id)"
             v-for="rolled in diceRolls"
             :key="rolled.id"
-            v-model:value="rolled.entry"
+            v-model:eyeValue="rolled.entry"
+            v-model:inverted="rolled.inversion"
             :class="rolled.inversion"
             :inverted="rolled.inversion"
         />

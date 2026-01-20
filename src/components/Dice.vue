@@ -2,7 +2,7 @@
 import Line from './Line.vue';
 
 // Default is for empty die
-const value = defineModel('value', {type: Number, default: 0});
+const eyeValue = defineModel('eyeValue', {type: Number, default: 0});
 const inverted = defineModel('inverted', {type: String, default: '______'});
 
 // Most effective array config for v-for coding standards
@@ -15,6 +15,11 @@ const diceLines = [
 
 <template>
     <div class="dice">
-        <Line v-for="diceLine in diceLines" :key="diceLine.id" :selected="diceLine.lines[value]" :inverted="inverted" />
+        <Line
+            v-for="diceLine in diceLines"
+            :key="diceLine.id"
+            :selected="diceLine.lines[eyeValue]"
+            :inversion="inverted"
+        />
     </div>
 </template>

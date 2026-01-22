@@ -120,15 +120,9 @@ const restart = () => {
             :inverted="cube.inversion"
         />
     </div>
-    {{ diceArray.dice }}
     <br />
     <button @click="diceRolling">{{ buttonMessage }} {{ diceArray.clicked }}</button>
     <br />
-    <div>
-        {{ publicDice }}
-        <br />
-        {{ diceArray.clicked }}
-    </div>
     <br />
     <button @click="diceArrayReset">Nieuwe Ronde</button>
     <br />

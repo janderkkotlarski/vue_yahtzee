@@ -14,15 +14,7 @@ const invert = 'invert';
 
 const buttonMessage = 'Gooien: ';
 
-// reactive() for arrays and simpler handling
-
 const publicDice = defineModel('publicRolls', {type: Array, default: []});
-
-const dicoid = index => {
-    if (index > 0 && index <= diceAmount) {
-        return publicDice.rolled[index - 1];
-    }
-};
 
 const diceArray = reactive({
     dice: [],

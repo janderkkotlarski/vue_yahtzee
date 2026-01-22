@@ -5,11 +5,14 @@ import Dice from './Dice.vue';
 // Simple constants
 const valueMax = 6;
 const diceAmount = 5;
+const maxThrows = 25;
+const millis = 25;
+const maxClicks = 3;
 
 const normal = '______';
 const invert = 'invert';
 
-const buttonMessage = 'Opnieuw rollen?';
+const buttonMessage = 'Gooien: ';
 
 // reactive() for arrays and simpler handling
 
@@ -23,7 +26,7 @@ const dicoid = index => {
 
 const diceArray = reactive({
     dice: [],
-    clicked: 0,
+    clicked: maxClicks,
 });
 
 // Really nested and powerful way of changing reactive objects
@@ -41,71 +44,69 @@ const roll = () => Math.floor(valueMax * Math.random()) + 1;
 // Do the same for the publicDice defineModel object
 const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
-        diceArray.dice.push({id: index, rolled: roll(), inversion: normal});
+        diceArray.dice.push({id: index, rolled: 0, inversion: normal});
 
-        publicDice.value.push({id: index, rolled: diceArray.dice[index - 1].rolled});
+        publicDice.value.push({id: index, rolled: 0});
     }
 };
 
 diceArrayFilling();
 
-const diceRolling = () => {
+// For the next round
+const diceArrayReset = () => {
     for (let index = 1; index <= diceAmount; ++index) {
         const cubid = cuboid(index);
 
+        cubid.rolled = 0;
+        cubid.inversion = normal;
+
+        publicDice.value[index - 1].rolled = 0;
+    }
+
+    diceArray.clicked = maxClicks;
+};
+
+// Roll all dice that are rollable
+const diceRoll = () => {
+    for (let index = 1; index <= diceAmount; ++index) {
+        const cubid = cuboid(index);
+
+        // If not locked, then roll
         if (cubid.inversion === normal) {
             cubid.rolled = roll();
 
             publicDice.value[index - 1].rolled = cubid.rolled;
         }
     }
-
-    ++diceArray.clicked;
 };
 
+// Throw dice a number of times and space them apart in time
+const diceRolling = () => {
+    if (diceArray.clicked > 0) {
+        for (let throws = 0; throws < maxThrows; ++throws) {
+            setTimeout(function () {
+                diceRoll();
+            }, millis * throws);
+        }
+
+        --diceArray.clicked;
+    }
+};
+
+// flip between free and locked
 const flip = index => {
     if (index > 0 && index <= diceAmount) {
-        if (diceArray.dice[index - 1].inversion === normal) {
-            diceArray.dice[index - 1].inversion = invert;
-        } else {
-            diceArray.dice[index - 1].inversion = normal;
+        const cubid = cuboid(index);
+
+        if (cubid.rolled > 0 && cubid.rolled <= valueMax) {
+            cubid.inversion = cubid.inversion === normal ? invert : normal;
         }
     }
 };
 
-// const resum = () => {
-//     total.value = 0;
-
-//     for (let index = 1; index <= diceAmount; ++index) {
-//         total.value += diceRolls[index - 1].entry;
-//     }
-// };
-
-// const single = index => {
-//     if (index > 0 && index < reactName.length + 1) {
-//         diceInversions[index - 1].entry = diceInversions[index - 1].entry === normal ? invert : normal;
-
-//         ++clicked;
-//     }
-// };
-
-// @click="single(rolled.id)"
-
-/*
-<div>
-        <Dice
-            @click="single(rolled.id)"
-            v-for="rolled in cubes.rolls"
-            :key="rolled.id"
-            v-model:eyeValue="rolled.entry"
-            :class="cubes.inversions[rolled.id].entry"
-            :inverted="cubes.inversions[rolled.id].entry"
-        />
-    </div>
-    {{ cubes.inversions }}
-
-    {{ cubes.clicked }}
-    */
+const restart = () => {
+    location.reload();
+};
 </script>
 
 <template>
@@ -121,7 +122,7 @@ const flip = index => {
     </div>
     {{ diceArray.dice }}
     <br />
-    <button @click="diceRolling">{{ buttonMessage }}</button>
+    <button @click="diceRolling">{{ buttonMessage }} {{ diceArray.clicked }}</button>
     <br />
     <div>
         {{ publicDice }}
@@ -129,4 +130,8 @@ const flip = index => {
         {{ diceArray.clicked }}
     </div>
     <br />
+    <button @click="diceArrayReset">Nieuwe Ronde</button>
+    <br />
+    <br />
+    <button @click="restart">Herstart</button>
 </template>

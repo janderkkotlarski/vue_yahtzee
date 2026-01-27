@@ -47,30 +47,59 @@ const uptick = index => {
         }
     }
 
-    countAll();
+    countUpper();
 };
 
 const scoreArray = reactive({
     scores: [
-        {id: 1, scored: 0},
-        {id: 2, scored: 0},
-        {id: 3, scored: 0},
-        {id: 4, scored: 0},
-        {id: 5, scored: 0},
-        {id: 6, scored: 0},
-        {id: 'summed', scored: 0},
-        {id: 'bonus', scored: 0},
-        {id: 'upper', scored: 0},
-        {id: 'three', scored: 0},
-        {id: 'four', scored: 0},
-        {id: 'full', scored: 0},
-        {id: 'small', scored: 0},
-        {id: 'large', scored: 0},
-        {id: 'yahtzee', scored: 0},
-        {id: 'chance', scored: 0},
-        {id: 'yonus', scored: 0},
-        {id: 'lower', scored: 0},
-        {id: 'total', scored: 0},
+        {id: 1, title: 'Enen', scored: 0},
+        {id: 2, title: 'Tweeën', scored: 0},
+        {id: 3, title: 'Drieën', scored: 0},
+        {id: 4, title: 'Vieren', scored: 0},
+        {id: 5, title: 'Vijfen', scored: 0},
+        {id: 6, title: 'Zessen', scored: 0},
+        {id: 'summed', title: 'Getallen', scored: 0},
+        {id: 'bonus', title: 'Bonus', scored: 0},
+        {id: 'upper', title: 'Boven Totaal', scored: 0},
+        {id: 'three', title: '3 Gelijke', scored: 0},
+        {id: 'four', title: '4 Gelijke', scored: 0},
+        {id: 'full', title: 'Full House', scored: 0},
+        {id: 'small', title: 'Kleine Straat', scored: 0},
+        {id: 'large', title: 'Grote Straat', scored: 0},
+        {id: 'chance', title: 'Kans', scored: 0},
+        {id: 'yahtzee', title: 'Yahtzee', scored: 0},
+        {id: 'yonus', title: 'Yahtzee Bonus', scored: 0},
+        {id: 'lower', title: 'Lager Totaal', scored: 0},
+        {id: 'total', title: 'Geheel Totaal', scored: 0},
+    ],
+});
+
+const scoreUpper = reactive({
+    scores: [
+        {id: 1, title: 'Enen', scored: 0},
+        {id: 2, title: 'Tweeën', scored: 0},
+        {id: 3, title: 'Drieën', scored: 0},
+        {id: 4, title: 'Vieren', scored: 0},
+        {id: 5, title: 'Vijfen', scored: 0},
+        {id: 6, title: 'Zessen', scored: 0},
+        {id: 'summed', title: 'Getallen', scored: 0},
+        {id: 'bonus', title: 'Bonus', scored: 0},
+        {id: 'upper', title: 'Boven Totaal', scored: 0},
+    ],
+});
+
+const scoreLower = reactive({
+    scores: [
+        {id: 'three', title: '3 Gelijke', scored: 0},
+        {id: 'four', title: '4 Gelijke', scored: 0},
+        {id: 'full', title: 'Full House', scored: 0},
+        {id: 'small', title: 'Kleine Straat', scored: 0},
+        {id: 'large', title: 'Grote Straat', scored: 0},
+        {id: 'chance', title: 'Kans', scored: 0},
+        {id: 'yahtzee', title: 'Yahtzee', scored: 0},
+        {id: 'yonus', title: 'Yahtzee Bonus', scored: 0},
+        {id: 'lower', title: 'Lager Totaal', scored: 0},
+        {id: 'total', title: 'Geheel Totaal', scored: 0},
     ],
 });
 
@@ -108,24 +137,24 @@ const countMultiples = () => {
     }
 };
 
-const countAll = () => {
+const countUpper = () => {
     let summed = 0;
 
     for (let number = 1; number <= valueMax; ++number) {
         const score = countNumber(number) * number;
 
-        arrayEntry(scoreArray.scores, 'id', number).scored = score;
+        arrayEntry(scoreUpper.scores, 'id', number).scored = score;
         summed += score;
     }
 
     const bonus = summed >= 10 ? 35 : 0;
 
-    arrayEntry(scoreArray.scores, 'id', 'summed').scored = summed;
-    arrayEntry(scoreArray.scores, 'id', 'bonus').scored = bonus;
-    arrayEntry(scoreArray.scores, 'id', 'upper').scored = summed + bonus;
+    arrayEntry(scoreUpper.scores, 'id', 'summed').scored = summed;
+    arrayEntry(scoreUpper.scores, 'id', 'bonus').scored = bonus;
+    arrayEntry(scoreUpper.scores, 'id', 'upper').scored = summed + bonus;
 };
 
-countAll();
+countUpper();
 </script>
 
 <template>
@@ -143,16 +172,31 @@ countAll();
     <br />
     <br />
 
-    <table>
-        <tr>
-            <th>Combinatie</th>
-            <th>Punten</th>
-        </tr>
-        <tr v-for="score in scoreArray.scores" :key="score.id">
-            <td>{{ score.id }}</td>
-            <td>{{ score.scored }}</td>
-        </tr>
-    </table>
+    <div class="inlined">
+        <table>
+            <tr>
+                <th>Combinatie</th>
+                <th>Punten</th>
+            </tr>
+            <tr v-for="score in scoreUpper.scores" :key="score.id">
+                <td>{{ score.title }}</td>
+                <td>{{ score.scored }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="inlined">
+        <table>
+            <tr>
+                <th>Combinatie</th>
+                <th>Punten</th>
+            </tr>
+            <tr v-for="score in scoreLower.scores" :key="score.id">
+                <td>{{ score.title }}</td>
+                <td>{{ score.scored }}</td>
+            </tr>
+        </table>
+    </div>
 
     <br />
     <br />

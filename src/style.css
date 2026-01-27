@@ -82,9 +82,10 @@ table {
 
   margin-left: auto;
   margin-right: auto;
+  padding: 1.4em;
   background-color: #2040c0;
   
-  font-size: 2em;
+  font-size: 1.4em;
 }
 
 table, th, td {
@@ -107,7 +108,10 @@ th, td {
   display: inline-block;
 }
 
-
+.inlined {
+  display: inline-block;
+  padding: 1em;
+}
 
 .visible {
   color: #c08020;

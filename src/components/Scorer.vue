@@ -7,6 +7,8 @@ const diceAmount = 5;
 
 const normal = '______';
 
+const times = ' keer';
+
 const diceArray = reactive({
     dice: [],
 });
@@ -102,8 +104,6 @@ const countMultiples = () => {
     }
 };
 
-countMultiples();
-
 const diceSum = ref(0);
 
 const countUpper = () => {
@@ -116,8 +116,6 @@ const countUpper = () => {
         diceSum.value += score;
     }
 };
-
-countUpper();
 
 const cloneMax = () => {
     let cloneCount = 1;
@@ -143,8 +141,40 @@ const filledHouse = () => {
     return false;
 };
 
+const consecutive = () => {
+    let consec = 0;
+
+    for (let index = 1; index < 4; ++index) {
+        let mult = arrayEntry(scoreUpper.scores, 'id', index).scored;
+
+        if (mult > 0) {
+            let streak = 1;
+
+            for (let jndex = index + 1; jndex <= valueMax; ++jndex) {
+                mult *= arrayEntry(scoreUpper.scores, 'id', jndex).scored;
+
+                if (mult > 0) {
+                    ++streak;
+
+                    if (streak === 4) {
+                        consec = 4;
+                    }
+
+                    if (streak === 5) {
+                        return 5;
+                    }
+                }
+            }
+        }
+    }
+
+    return consec;
+};
+
 const countLower = () => {
     const sameResult = cloneMax();
+
+    const straight = consecutive();
 
     arrayEntry(scoreLower.scores, 'id', 'yahtzee').scored = sameResult === 5 ? 50 : 0;
 
@@ -154,10 +184,30 @@ const countLower = () => {
 
     arrayEntry(scoreLower.scores, 'id', 'full').scored = filledHouse() ? 25 : 0;
 
+    arrayEntry(scoreLower.scores, 'id', 'small').scored = straight > 3 ? 30 : 0;
+
+    arrayEntry(scoreLower.scores, 'id', 'large').scored = straight > 4 ? 40 : 0;
+
     arrayEntry(scoreLower.scores, 'id', 'chance').scored = diceSum.value;
 };
 
-countLower();
+const recount = () => {
+    countMultiples();
+    countUpper();
+    countLower();
+};
+
+recount();
+
+const lockUpper = index => {
+    const score = arrayEntry(scoreUpper.scores, 'id', index);
+
+    score.locked = score.scored;
+
+    diceReroll();
+
+    recount();
+};
 
 const uptick = index => {
     if (index > 0 && index <= diceAmount) {
@@ -170,11 +220,7 @@ const uptick = index => {
         }
     }
 
-    countMultiples();
-
-    countUpper();
-
-    countLower();
+    recount();
 };
 </script>
 
@@ -202,7 +248,7 @@ const uptick = index => {
             </tr>
             <tr v-for="score in scoreUpper.scores" :key="score.id">
                 <td>{{ score.title }}</td>
-                <td>{{ score.scored }}</td>
+                <td @click="lockUpper(score.id)">{{ score.scored }}</td>
                 <td>{{ score.locked }}</td>
             </tr>
         </table>

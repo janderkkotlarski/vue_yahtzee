@@ -37,30 +37,30 @@ const cuboid = index => {
 
 const scoreUpper = reactive({
     scores: [
-        {id: 1, title: 'Enen', scored: 0, locked: 0},
-        {id: 2, title: 'Tweeën', scored: 0, locked: 0},
-        {id: 3, title: 'Drieën', scored: 0, locked: 0},
-        {id: 4, title: 'Vieren', scored: 0, locked: 0},
-        {id: 5, title: 'Vijfen', scored: 0, locked: 0},
-        {id: 6, title: 'Zessen', scored: 0, locked: 0},
-        {id: 'summed', title: 'Getallen', scored: ' ', locked: 0},
-        {id: 'bonus', title: 'Bonus', scored: ' ', locked: 0},
-        {id: 'upper', title: 'Boven Totaal', scored: ' ', locked: 0},
+        {id: 1, title: 'Enen', scored: 0, locked: 0, yonus: 'null'},
+        {id: 2, title: 'Tweeën', scored: 0, locked: 0, yonus: 'null'},
+        {id: 3, title: 'Drieën', scored: 0, locked: 0, yonus: 'null'},
+        {id: 4, title: 'Vieren', scored: 0, locked: 0, yonus: 'null'},
+        {id: 5, title: 'Vijfen', scored: 0, locked: 0, yonus: 'null'},
+        {id: 6, title: 'Zessen', scored: 0, locked: 0, yonus: 'null'},
+        {id: 'summed', title: 'Getallen', scored: ' ', locked: 0, yonus: 'never'},
+        {id: 'bonus', title: 'Bonus', scored: ' ', locked: 0, yonus: 'never'},
+        {id: 'upper', title: 'Boven Totaal', scored: ' ', locked: 0, yonus: 'never'},
     ],
 });
 
 const scoreLower = reactive({
     scores: [
-        {id: 'three', title: '3 Gelijke', scored: 0, locked: 0},
-        {id: 'four', title: '4 Gelijke', scored: 0, locked: 0},
-        {id: 'full', title: 'Full House', scored: 0, locked: 0},
-        {id: 'small', title: 'Kleine Straat', scored: 0, locked: 0},
-        {id: 'large', title: 'Grote Straat', scored: 0, locked: 0},
-        {id: 'chance', title: 'Kans', scored: 0, locked: 0},
-        {id: 'yahtzee', title: 'Yahtzee', scored: 0, locked: 0},
-        {id: 'yonus', title: 'Yahtzee Bonus', scored: ' ', locked: 0},
-        {id: 'lower', title: 'Lager Totaal', scored: ' ', locked: 0},
-        {id: 'total', title: 'Geheel Totaal', scored: ' ', locked: 0},
+        {id: 'three', title: '3 Gelijke', scored: 0, locked: 0, yonus: 'null'},
+        {id: 'four', title: '4 Gelijke', scored: 0, locked: 0, yonus: 'null'},
+        {id: 'full', title: 'Full House', scored: 0, locked: 0, yonus: 'null'},
+        {id: 'small', title: 'Kleine Straat', scored: 0, locked: 0, yonus: 'null'},
+        {id: 'large', title: 'Grote Straat', scored: 0, locked: 0, yonus: 'null'},
+        {id: 'chance', title: 'Kans', scored: 0, locked: 0, yonus: 'null'},
+        {id: 'yahtzee', title: 'Yahtzee', scored: 0, locked: 0, yonus: 'negate'},
+        {id: 'yonus', title: 'Yahtzee Bonus', scored: ' ', locked: 0, yonus: 'never'},
+        {id: 'lower', title: 'Lager Totaal', scored: ' ', locked: 0, yonus: 'never'},
+        {id: 'total', title: 'Geheel Totaal', scored: ' ', locked: 0, yonus: 'never'},
     ],
 });
 
@@ -131,20 +131,28 @@ const cloneMax = () => {
     return cloneCount;
 };
 
+const filledHouse = () => {
+    if (cloneMax() === 3) {
+        for (const amount of multiples.counts) {
+            if (amount.count == 2) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+};
+
 const countLower = () => {
     const sameResult = cloneMax();
 
-    if (sameResult === 5) {
-        arrayEntry(scoreLower.scores, 'id', 'yahtzee').scored = 50;
-    }
+    arrayEntry(scoreLower.scores, 'id', 'yahtzee').scored = sameResult === 5 ? 50 : 0;
 
-    if (sameResult >= 4) {
-        arrayEntry(scoreLower.scores, 'id', 'four').scored = diceSum.value;
-    }
+    arrayEntry(scoreLower.scores, 'id', 'four').scored = sameResult >= 4 ? diceSum.value : 0;
 
-    if (sameResult >= 3) {
-        arrayEntry(scoreLower.scores, 'id', 'three').scored = diceSum.value;
-    }
+    arrayEntry(scoreLower.scores, 'id', 'three').scored = sameResult >= 3 ? diceSum.value : 0;
+
+    arrayEntry(scoreLower.scores, 'id', 'full').scored = filledHouse() ? 25 : 0;
 
     arrayEntry(scoreLower.scores, 'id', 'chance').scored = diceSum.value;
 };

@@ -7,7 +7,13 @@ const diceAmount = 5;
 
 const normal = '______';
 
+const open = 'open';
+const lock = 'lock';
+
 const times = ' keer';
+
+let lowerLocks = 0;
+const extraYahtzee = ref(0);
 
 const diceArray = reactive({
     dice: [],
@@ -39,30 +45,30 @@ const cuboid = index => {
 
 const scoreUpper = reactive({
     scores: [
-        {id: 1, title: 'Enen', scored: 0, locked: 0, yonus: 'null'},
-        {id: 2, title: 'Tweeën', scored: 0, locked: 0, yonus: 'null'},
-        {id: 3, title: 'Drieën', scored: 0, locked: 0, yonus: 'null'},
-        {id: 4, title: 'Vieren', scored: 0, locked: 0, yonus: 'null'},
-        {id: 5, title: 'Vijfen', scored: 0, locked: 0, yonus: 'null'},
-        {id: 6, title: 'Zessen', scored: 0, locked: 0, yonus: 'null'},
-        {id: 'summed', title: 'Getallen', scored: ' ', locked: 0, yonus: 'never'},
-        {id: 'bonus', title: 'Bonus', scored: ' ', locked: 0, yonus: 'never'},
-        {id: 'upper', title: 'Boven Totaal', scored: ' ', locked: 0, yonus: 'never'},
+        {id: 1, title: 'Enen', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 2, title: 'Tweeën', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 3, title: 'Drieën', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 4, title: 'Vieren', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 5, title: 'Vijfen', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 6, title: 'Zessen', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 'summed', title: 'Getallen', scored: ' ', final: 0, yonus: 'never', locked: open},
+        {id: 'bonus', title: 'Bonus', scored: ' ', final: 0, yonus: 'never', locked: open},
+        {id: 'upper', title: 'Boven Totaal', scored: ' ', final: 0, yonus: 'never', locked: open},
     ],
 });
 
 const scoreLower = reactive({
     scores: [
-        {id: 'three', title: '3 Gelijke', scored: 0, locked: 0, yonus: 'null'},
-        {id: 'four', title: '4 Gelijke', scored: 0, locked: 0, yonus: 'null'},
-        {id: 'full', title: 'Full House', scored: 0, locked: 0, yonus: 'null'},
-        {id: 'small', title: 'Kleine Straat', scored: 0, locked: 0, yonus: 'null'},
-        {id: 'large', title: 'Grote Straat', scored: 0, locked: 0, yonus: 'null'},
-        {id: 'chance', title: 'Kans', scored: 0, locked: 0, yonus: 'null'},
-        {id: 'yahtzee', title: 'Yahtzee', scored: 0, locked: 0, yonus: 'negate'},
-        {id: 'yonus', title: 'Yahtzee Bonus', scored: ' ', locked: 0, yonus: 'never'},
-        {id: 'lower', title: 'Lager Totaal', scored: ' ', locked: 0, yonus: 'never'},
-        {id: 'total', title: 'Geheel Totaal', scored: ' ', locked: 0, yonus: 'never'},
+        {id: 'three', title: '3 Gelijke', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 'four', title: '4 Gelijke', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 'full', title: 'Full House', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 'small', title: 'Kleine Straat', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 'large', title: 'Grote Straat', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 'chance', title: 'Kans', scored: 0, final: 0, yonus: 'null', locked: open},
+        {id: 'yahtzee', title: 'Yahtzee', scored: 0, final: 0, yonus: 'negate', locked: open},
+        {id: 'yonus', title: 'Yahtzee Bonus', scored: ' ', final: 0, yonus: 'never', locked: open},
+        {id: 'lower', title: 'Lager Totaal', scored: ' ', final: 0, yonus: 'never', locked: open},
+        {id: 'total', title: 'Geheel Totaal', scored: ' ', final: 0, yonus: 'never', locked: open},
     ],
 });
 
@@ -117,6 +123,34 @@ const countUpper = () => {
     }
 };
 
+const sumUpper = () => {
+    let summed = 0;
+
+    lowerLocks = 0;
+
+    for (let number = 1; number <= valueMax; ++number) {
+        const entry = arrayEntry(scoreUpper.scores, 'id', number);
+
+        summed += entry.final;
+
+        if (entry.locked === lock) {
+            ++lowerLocks;
+        }
+    }
+
+    arrayEntry(scoreUpper.scores, 'id', 'summed').final = summed;
+    const bonus = summed >= 63 ? 35 : 0;
+    arrayEntry(scoreUpper.scores, 'id', 'bonus').final = bonus;
+    arrayEntry(scoreUpper.scores, 'id', 'upper').final = summed + bonus;
+
+    if (lowerLocks === 6 && arrayEntry(scoreUpper.scores, 'id', 'summed').locked === 'open') {
+        arrayEntry(scoreUpper.scores, 'id', 'summed').locked = lock;
+        arrayEntry(scoreUpper.scores, 'id', 'bonus').locked = lock;
+        arrayEntry(scoreUpper.scores, 'id', 'upper').locked = lock;
+    }
+};
+
+// Highest amount of dice with the same value
 const cloneMax = () => {
     let cloneCount = 1;
 
@@ -129,6 +163,15 @@ const cloneMax = () => {
     return cloneCount;
 };
 
+const multiYahtzee = () => {
+    if (arrayEntry(scoreLower.scores, 'id', 'yahtzee').final === 50 && cloneMax() === 5) {
+        return true;
+    }
+
+    return false;
+};
+
+// Check if there are 3 dice with a value and 2 dice with another value
 const filledHouse = () => {
     if (cloneMax() === 3) {
         for (const amount of multiples.counts) {
@@ -138,21 +181,26 @@ const filledHouse = () => {
         }
     }
 
-    return false;
+    return multiYahtzee();
 };
 
+// Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
 const consecutive = () => {
     let consec = 0;
 
+    // Start from a lowest value
     for (let index = 1; index < 4; ++index) {
         let mult = arrayEntry(scoreUpper.scores, 'id', index).scored;
 
+        // When there is a vaule found, start multiplying
         if (mult > 0) {
             let streak = 1;
 
+            // Keep multiplying
             for (let jndex = index + 1; jndex <= valueMax; ++jndex) {
                 mult *= arrayEntry(scoreUpper.scores, 'id', jndex).scored;
 
+                // Check multiplication value.
                 if (mult > 0) {
                     ++streak;
 
@@ -168,12 +216,15 @@ const consecutive = () => {
         }
     }
 
+    if (multiYahtzee()) {
+        consec = 5;
+    }
+
     return consec;
 };
 
 const countLower = () => {
     const sameResult = cloneMax();
-
     const straight = consecutive();
 
     arrayEntry(scoreLower.scores, 'id', 'yahtzee').scored = sameResult === 5 ? 50 : 0;
@@ -194,19 +245,27 @@ const countLower = () => {
 const recount = () => {
     countMultiples();
     countUpper();
+    sumUpper();
     countLower();
 };
 
 recount();
 
-const lockUpper = index => {
-    const score = arrayEntry(scoreUpper.scores, 'id', index);
+const lockEntry = (box, index) => {
+    const score = arrayEntry(box.scores, 'id', index);
 
-    score.locked = score.scored;
+    if (score.locked === open && typeof score.scored === 'number') {
+        score.final = score.scored;
+        score.locked = lock;
 
-    diceReroll();
+        if (multiYahtzee()) {
+            ++extraYahtzee.value;
+        }
 
-    recount();
+        diceReroll();
+
+        recount();
+    }
 };
 
 const uptick = index => {
@@ -221,6 +280,10 @@ const uptick = index => {
     }
 
     recount();
+};
+
+const rounded = fract => {
+    return Math.round(fract);
 };
 </script>
 
@@ -246,10 +309,15 @@ const uptick = index => {
                 <th>Punten</th>
                 <th>Gescoord</th>
             </tr>
-            <tr v-for="score in scoreUpper.scores" :key="score.id">
+            <tr
+                @click="lockEntry(scoreUpper, score.id)"
+                v-for="score in scoreUpper.scores"
+                :key="score.id"
+                :class="score.locked"
+            >
                 <td>{{ score.title }}</td>
-                <td @click="lockUpper(score.id)">{{ score.scored }}</td>
-                <td>{{ score.locked }}</td>
+                <td>{{ score.scored }}</td>
+                <td>{{ score.final }}</td>
             </tr>
         </table>
     </div>
@@ -259,13 +327,17 @@ const uptick = index => {
             <tr>
                 <th>Combinatie</th>
                 <th>Punten</th>
-
                 <th>Gescoord</th>
             </tr>
-            <tr v-for="score in scoreLower.scores" :key="score.id">
+            <tr
+                @click="lockEntry(scoreLower, score.id)"
+                v-for="score in scoreLower.scores"
+                :key="score.id"
+                :class="score.locked"
+            >
                 <td>{{ score.title }}</td>
                 <td>{{ score.scored }}</td>
-                <td>{{ score.locked }}</td>
+                <td>{{ score.final }}</td>
             </tr>
         </table>
     </div>

@@ -123,19 +123,29 @@ const countUpper = () => {
     }
 };
 
+const lockFully = entryArray => {
+    let lockCount = 0;
+
+    for (const entry of entryArray) {
+        if (entry.locked === lock) {
+            ++lockCount;
+        }
+    }
+
+    if (lockCount >= entryArray.length - 3) {
+        return true;
+    }
+
+    return false;
+};
+
 const sumUpper = () => {
     let summed = 0;
-
-    lowerLocks = 0;
 
     for (let number = 1; number <= valueMax; ++number) {
         const entry = arrayEntry(scoreUpper.scores, 'id', number);
 
         summed += entry.final;
-
-        if (entry.locked === lock) {
-            ++lowerLocks;
-        }
     }
 
     arrayEntry(scoreUpper.scores, 'id', 'summed').final = summed;
@@ -143,7 +153,7 @@ const sumUpper = () => {
     arrayEntry(scoreUpper.scores, 'id', 'bonus').final = bonus;
     arrayEntry(scoreUpper.scores, 'id', 'upper').final = summed + bonus;
 
-    if (lowerLocks === 6 && arrayEntry(scoreUpper.scores, 'id', 'summed').locked === 'open') {
+    if (lockFully(scoreUpper.scores)) {
         arrayEntry(scoreUpper.scores, 'id', 'summed').locked = lock;
         arrayEntry(scoreUpper.scores, 'id', 'bonus').locked = lock;
         arrayEntry(scoreUpper.scores, 'id', 'upper').locked = lock;

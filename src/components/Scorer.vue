@@ -35,7 +35,15 @@ const diceReroll = () => {
     }
 };
 
-diceReroll();
+// diceReroll();
+
+const rollYahtzee = number => {
+    for (const cube of diceArray.dice) {
+        cube.rolled = number;
+    }
+};
+
+rollYahtzee(roll());
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
@@ -141,22 +149,21 @@ const lockFully = entryArray => {
 
 const sumUpper = () => {
     let summed = 0;
+    const scores = scoreUpper.scores;
 
     for (let number = 1; number <= valueMax; ++number) {
-        const entry = arrayEntry(scoreUpper.scores, 'id', number);
-
-        summed += entry.final;
+        summed += arrayEntry(scores, 'id', number).final;
     }
 
-    arrayEntry(scoreUpper.scores, 'id', 'summed').final = summed;
+    arrayEntry(scores, 'id', 'summed').final = summed;
     const bonus = summed >= 63 ? 35 : 0;
-    arrayEntry(scoreUpper.scores, 'id', 'bonus').final = bonus;
-    arrayEntry(scoreUpper.scores, 'id', 'upper').final = summed + bonus;
+    arrayEntry(scores, 'id', 'bonus').final = bonus;
+    arrayEntry(scores, 'id', 'upper').final = summed + bonus;
 
-    if (lockFully(scoreUpper.scores)) {
-        arrayEntry(scoreUpper.scores, 'id', 'summed').locked = lock;
-        arrayEntry(scoreUpper.scores, 'id', 'bonus').locked = lock;
-        arrayEntry(scoreUpper.scores, 'id', 'upper').locked = lock;
+    if (lockFully(scores)) {
+        arrayEntry(scores, 'id', 'summed').locked = lock;
+        arrayEntry(scores, 'id', 'bonus').locked = lock;
+        arrayEntry(scores, 'id', 'upper').locked = lock;
     }
 };
 
@@ -237,19 +244,49 @@ const countLower = () => {
     const sameResult = cloneMax();
     const straight = consecutive();
 
-    arrayEntry(scoreLower.scores, 'id', 'yahtzee').scored = sameResult === 5 ? 50 : 0;
+    const scores = scoreLower.scores;
 
-    arrayEntry(scoreLower.scores, 'id', 'four').scored = sameResult >= 4 ? diceSum.value : 0;
+    arrayEntry(scores, 'id', 'three').scored = sameResult >= 3 ? diceSum.value : 0;
+    arrayEntry(scores, 'id', 'four').scored = sameResult >= 4 ? diceSum.value : 0;
 
-    arrayEntry(scoreLower.scores, 'id', 'three').scored = sameResult >= 3 ? diceSum.value : 0;
+    arrayEntry(scores, 'id', 'full').scored = filledHouse() ? 25 : 0;
 
-    arrayEntry(scoreLower.scores, 'id', 'full').scored = filledHouse() ? 25 : 0;
+    arrayEntry(scores, 'id', 'small').scored = straight > 3 ? 30 : 0;
+    arrayEntry(scores, 'id', 'large').scored = straight > 4 ? 40 : 0;
 
-    arrayEntry(scoreLower.scores, 'id', 'small').scored = straight > 3 ? 30 : 0;
+    arrayEntry(scores, 'id', 'chance').scored = diceSum.value;
+    arrayEntry(scores, 'id', 'yahtzee').scored = sameResult === 5 ? 50 : 0;
+};
 
-    arrayEntry(scoreLower.scores, 'id', 'large').scored = straight > 4 ? 40 : 0;
+const sumLower = () => {
+    let summed = 0;
+    const scores = scoreLower.scores;
 
-    arrayEntry(scoreLower.scores, 'id', 'chance').scored = diceSum.value;
+    // arrayEntry(scores, 'id', number).final;
+
+    const indices = [
+        {id: 'three'},
+        {id: 'four'},
+        {id: 'full'},
+        {id: 'small'},
+        {id: 'large'},
+        {id: 'chance'},
+        {id: 'yahtzee'},
+    ];
+
+    for (const index of indices) {
+        summed += arrayEntry(scores, 'id', index.id).final;
+    }
+
+    arrayEntry(scores, 'id', 'yonus').final = extraYahtzee.value * 100;
+    arrayEntry(scores, 'id', 'lower').final = summed;
+    arrayEntry(scores, 'id', 'total').final =
+        summed + extraYahtzee.value * 100 + arrayEntry(scoreUpper.scores, 'id', 'upper').final;
+    if (lockFully(scores)) {
+        arrayEntry(scores, 'id', 'yonus').locked = lock;
+        arrayEntry(scores, 'id', 'lower').locked = lock;
+        arrayEntry(scores, 'id', 'total').locked = lock;
+    }
 };
 
 const recount = () => {
@@ -257,6 +294,7 @@ const recount = () => {
     countUpper();
     sumUpper();
     countLower();
+    sumLower();
 };
 
 recount();
@@ -265,12 +303,13 @@ const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
     if (score.locked === open && typeof score.scored === 'number') {
-        score.final = score.scored;
-        score.locked = lock;
-
-        if (multiYahtzee()) {
+        // Test this before yahtzee is finalized and the score must be positive
+        if (multiYahtzee() && score.scored > 0) {
             ++extraYahtzee.value;
         }
+
+        score.final = score.scored;
+        score.locked = lock;
 
         diceReroll();
 
@@ -295,6 +334,23 @@ const uptick = index => {
 const rounded = fract => {
     return Math.round(fract);
 };
+
+/*
+
+    <div class="inlined">
+        <table>
+            <tr>
+                <th>Getal</th>
+                <th>Aantal</th>
+            </tr>
+            <tr v-for="amount in multiples.counts" :key="amount.id">
+                <td>{{ amount.id }}</td>
+                <td>{{ amount.count }}</td>
+            </tr>
+        </table>
+    </div>
+
+*/
 </script>
 
 <template>
@@ -348,19 +404,6 @@ const rounded = fract => {
                 <td>{{ score.title }}</td>
                 <td>{{ score.scored }}</td>
                 <td>{{ score.final }}</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="inlined">
-        <table>
-            <tr>
-                <th>Getal</th>
-                <th>Aantal</th>
-            </tr>
-            <tr v-for="amount in multiples.counts" :key="amount.id">
-                <td>{{ amount.id }}</td>
-                <td>{{ amount.count }}</td>
             </tr>
         </table>
     </div>

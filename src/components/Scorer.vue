@@ -12,7 +12,7 @@ const lock = 'lock';
 
 const times = ' keer';
 
-let lowerLocks = 0;
+let locked = ref(0);
 const extraYahtzee = ref(0);
 
 const diceArray = reactive({
@@ -299,21 +299,61 @@ const recount = () => {
 
 recount();
 
+// const findYahtzee = () => {
+//     for (let eyes = 1; eyes <= valueMax; ++eyes) {
+//         if (multiples.counts.count === 5
+//     }
+// }
+
+const yahtzeeEyesLocked = index => {
+    for (let eyes = 1; eyes <= valueMax; ++eyes) {
+        if (arrayEntry(multiples.counts, 'id', eyes).count === 5) {
+            if (index === eyes || arrayEntry(scoreUpper.scores, 'id', eyes).locked === lock) {
+                return true;
+            }
+
+            locked.value = eyes;
+
+            return false;
+        }
+    }
+
+    locked.value += 'u';
+
+    return true;
+};
+
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
     if (score.locked === open && typeof score.scored === 'number') {
-        // Test this before yahtzee is finalized and the score must be positive
-        if (multiYahtzee() && score.scored > 0) {
-            ++extraYahtzee.value;
+        let lockable = true;
+
+        if (multiYahtzee()) {
+            lockable = yahtzeeEyesLocked(index);
+
+            if (lockable) {
+                // locked.value = 'hallo';
+            }
+
+            // --locked.value;
         }
 
-        score.final = score.scored;
-        score.locked = lock;
+        if (lockable) {
+            // Test this before yahtzee is finalized and the score must be positive
+            if (multiYahtzee() && score.scored > 0) {
+                ++extraYahtzee.value;
+            }
 
-        diceReroll();
+            score.final = score.scored;
+            score.locked = lock;
 
-        recount();
+            // diceReroll();
+
+            rollYahtzee(roll());
+
+            recount();
+        }
     }
 };
 
@@ -410,5 +450,7 @@ const rounded = fract => {
 
     <br />
     <br />
-    <div></div>
+    <div>
+        {{ locked }}
+    </div>
 </template>

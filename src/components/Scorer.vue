@@ -10,9 +10,6 @@ const normal = '______';
 const open = 'open';
 const lock = 'lock';
 
-const times = ' keer';
-
-let locked = ref(0);
 const extraYahtzee = ref(0);
 
 const diceArray = reactive({
@@ -35,15 +32,23 @@ const diceReroll = () => {
     }
 };
 
-// diceReroll();
-
 const rollYahtzee = number => {
     for (const cube of diceArray.dice) {
         cube.rolled = number;
     }
 };
 
-rollYahtzee(roll());
+const rolling = number => {
+    if (number >= 1 && number <= valueMax) {
+        rollYahtzee(number);
+    } else {
+        diceReroll();
+    }
+};
+
+const number = 6;
+
+rolling(number);
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
@@ -63,6 +68,7 @@ const scoreUpper = reactive({
         {id: 'bonus', title: 'Bonus', scored: ' ', final: 0, yonus: 'never', locked: open},
         {id: 'upper', title: 'Boven Totaal', scored: ' ', final: 0, yonus: 'never', locked: open},
     ],
+    locks: 0,
 });
 
 const scoreLower = reactive({
@@ -78,6 +84,7 @@ const scoreLower = reactive({
         {id: 'lower', title: 'Lager Totaal', scored: ' ', final: 0, yonus: 'never', locked: open},
         {id: 'total', title: 'Geheel Totaal', scored: ' ', final: 0, yonus: 'never', locked: open},
     ],
+    locks: 0,
 });
 
 const multiples = reactive({
@@ -131,20 +138,15 @@ const countUpper = () => {
     }
 };
 
-const lockFully = entryArray => {
-    let lockCount = 0;
-
-    for (const entry of entryArray) {
-        if (entry.locked === lock) {
-            ++lockCount;
+const fullyLocked = scoreSheet => {
+    if (scoreSheet.locks === scoreSheet.scores.length - 3) {
+        for (const score of scoreSheet.scores) {
+            if (score.locked === open) {
+                score.locked = lock;
+                ++scoreSheet.locks;
+            }
         }
     }
-
-    if (lockCount >= entryArray.length - 3) {
-        return true;
-    }
-
-    return false;
 };
 
 const sumUpper = () => {
@@ -160,11 +162,7 @@ const sumUpper = () => {
     arrayEntry(scores, 'id', 'bonus').final = bonus;
     arrayEntry(scores, 'id', 'upper').final = summed + bonus;
 
-    if (lockFully(scores)) {
-        arrayEntry(scores, 'id', 'summed').locked = lock;
-        arrayEntry(scores, 'id', 'bonus').locked = lock;
-        arrayEntry(scores, 'id', 'upper').locked = lock;
-    }
+    fullyLocked(scoreUpper);
 };
 
 // Highest amount of dice with the same value
@@ -262,8 +260,6 @@ const sumLower = () => {
     let summed = 0;
     const scores = scoreLower.scores;
 
-    // arrayEntry(scores, 'id', number).final;
-
     const indices = [
         {id: 'three'},
         {id: 'four'},
@@ -282,11 +278,8 @@ const sumLower = () => {
     arrayEntry(scores, 'id', 'lower').final = summed;
     arrayEntry(scores, 'id', 'total').final =
         summed + extraYahtzee.value * 100 + arrayEntry(scoreUpper.scores, 'id', 'upper').final;
-    if (lockFully(scores)) {
-        arrayEntry(scores, 'id', 'yonus').locked = lock;
-        arrayEntry(scores, 'id', 'lower').locked = lock;
-        arrayEntry(scores, 'id', 'total').locked = lock;
-    }
+
+    fullyLocked(scoreLower);
 };
 
 const recount = () => {
@@ -299,26 +292,16 @@ const recount = () => {
 
 recount();
 
-// const findYahtzee = () => {
-//     for (let eyes = 1; eyes <= valueMax; ++eyes) {
-//         if (multiples.counts.count === 5
-//     }
-// }
-
 const yahtzeeEyesLocked = index => {
     for (let eyes = 1; eyes <= valueMax; ++eyes) {
         if (arrayEntry(multiples.counts, 'id', eyes).count === 5) {
-            if (index === eyes || arrayEntry(scoreUpper.scores, 'id', eyes).locked === lock) {
-                return true;
-            }
-
-            locked.value = eyes;
-
-            return false;
+            return (
+                index === eyes ||
+                (arrayEntry(scoreUpper.scores, 'id', eyes).locked === lock && typeof index != 'number') ||
+                scoreLower.locks === scoreLower.scores.length
+            );
         }
     }
-
-    locked.value += 'u';
 
     return true;
 };
@@ -327,31 +310,21 @@ const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
     if (score.locked === open && typeof score.scored === 'number') {
-        let lockable = true;
+        // const lockable = multiYahtzee() ? yahtzeeEyesLocked(index) : true;
 
-        if (multiYahtzee()) {
-            lockable = yahtzeeEyesLocked(index);
-
-            if (lockable) {
-                // locked.value = 'hallo';
-            }
-
-            // --locked.value;
-        }
-
-        if (lockable) {
-            // Test this before yahtzee is finalized and the score must be positive
-            if (multiYahtzee() && score.scored > 0) {
+        // If another yahtzee is scored, restrict scoring to official multiple yahtzee bonus scoring rules
+        if (multiYahtzee() ? yahtzeeEyesLocked(index) : true) {
+            // When another yahtzee is scored, up the bonus
+            if (multiYahtzee()) {
                 ++extraYahtzee.value;
             }
 
             score.final = score.scored;
             score.locked = lock;
 
-            // diceReroll();
+            ++box.locks;
 
-            rollYahtzee(roll());
-
+            rolling(number);
             recount();
         }
     }
@@ -374,23 +347,6 @@ const uptick = index => {
 const rounded = fract => {
     return Math.round(fract);
 };
-
-/*
-
-    <div class="inlined">
-        <table>
-            <tr>
-                <th>Getal</th>
-                <th>Aantal</th>
-            </tr>
-            <tr v-for="amount in multiples.counts" :key="amount.id">
-                <td>{{ amount.id }}</td>
-                <td>{{ amount.count }}</td>
-            </tr>
-        </table>
-    </div>
-
-*/
 </script>
 
 <template>
@@ -450,7 +406,8 @@ const rounded = fract => {
 
     <br />
     <br />
-    <div>
-        {{ locked }}
-    </div>
+
+    <div>Upper locks: {{ scoreUpper.locks }}</div>
+
+    <div>Lower locks: {{ scoreLower.locks }}</div>
 </template>

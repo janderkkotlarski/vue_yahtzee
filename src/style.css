@@ -94,6 +94,11 @@ table, th, td {
   border-collapse: collapse;
 }
 
+.klik {
+  color: #2040c0;
+  background-color: #208020;
+}
+
 .lock {
   color: #2040c0;
   background-color: #c08020;

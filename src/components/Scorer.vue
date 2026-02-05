@@ -8,9 +8,15 @@ const diceAmount = 5;
 const normal = '______';
 
 const open = 'open';
+const klik = 'klik';
+const back = 'back';
 const lock = 'lock';
 
+let moreYahtzee = false;
+
+const sameMax = ref(0);
 const extraYahtzee = ref(0);
+const yahtzeeNumber = ref(0);
 
 const diceArray = reactive({
     dice: [],
@@ -58,31 +64,31 @@ const cuboid = index => {
 
 const scoreUpper = reactive({
     scores: [
-        {id: 1, title: 'Enen', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 2, title: 'Tweeën', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 3, title: 'Drieën', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 4, title: 'Vieren', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 5, title: 'Vijfen', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 6, title: 'Zessen', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 'summed', title: 'Getallen', scored: ' ', final: 0, yonus: 'never', locked: open},
-        {id: 'bonus', title: 'Bonus', scored: ' ', final: 0, yonus: 'never', locked: open},
-        {id: 'upper', title: 'Boven Totaal', scored: ' ', final: 0, yonus: 'never', locked: open},
+        {id: 1, title: 'Enen', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 2, title: 'Tweeën', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 3, title: 'Drieën', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 4, title: 'Vieren', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 5, title: 'Vijfen', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 6, title: 'Zessen', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 'summed', title: 'Getallen', scored: ' ', final: 0, yonus: 'never', locked: back},
+        {id: 'bonus', title: 'Bonus', scored: ' ', final: 0, yonus: 'never', locked: back},
+        {id: 'upper', title: 'Boven Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
     ],
     locks: 0,
 });
 
 const scoreLower = reactive({
     scores: [
-        {id: 'three', title: '3 Gelijke', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 'four', title: '4 Gelijke', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 'full', title: 'Full House', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 'small', title: 'Kleine Straat', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 'large', title: 'Grote Straat', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 'chance', title: 'Kans', scored: 0, final: 0, yonus: 'null', locked: open},
-        {id: 'yahtzee', title: 'Yahtzee', scored: 0, final: 0, yonus: 'negate', locked: open},
-        {id: 'yonus', title: 'Yahtzee Bonus', scored: ' ', final: 0, yonus: 'never', locked: open},
-        {id: 'lower', title: 'Lager Totaal', scored: ' ', final: 0, yonus: 'never', locked: open},
-        {id: 'total', title: 'Geheel Totaal', scored: ' ', final: 0, yonus: 'never', locked: open},
+        {id: 'three', title: '3 Gelijke', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 'four', title: '4 Gelijke', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 'full', title: 'Full House', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 'small', title: 'Kleine Straat', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 'large', title: 'Grote Straat', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 'chance', title: 'Kans', scored: 0, final: 0, yonus: 'null', locked: klik},
+        {id: 'yahtzee', title: 'Yahtzee', scored: 0, final: 0, yonus: 'negate', locked: klik},
+        {id: 'yonus', title: 'Yahtzee Bonus', scored: ' ', final: 0, yonus: 'never', locked: back},
+        {id: 'lower', title: 'Lager Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
+        {id: 'total', title: 'Geheel Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
     ],
     locks: 0,
 });
@@ -120,8 +126,19 @@ const arrayEntry = (array, key, value) => {
 };
 
 const countMultiples = () => {
+    sameMax.value = 0;
+    yahtzeeNumber.value = 0;
+
     for (let index = 1; index <= valueMax; ++index) {
         arrayEntry(multiples.counts, 'id', index).count = countNumber(index);
+
+        if (sameMax.value < arrayEntry(multiples.counts, 'id', index).count) {
+            sameMax.value = arrayEntry(multiples.counts, 'id', index).count;
+        }
+
+        if (sameMax.value === diceAmount) {
+            yahtzeeNumber.value = index;
+        }
     }
 };
 
@@ -134,6 +151,7 @@ const countUpper = () => {
         const score = arrayEntry(multiples.counts, 'id', number).count * number;
 
         arrayEntry(scoreUpper.scores, 'id', number).scored = score;
+
         diceSum.value += score;
     }
 };
@@ -141,7 +159,7 @@ const countUpper = () => {
 const fullyLocked = scoreSheet => {
     if (scoreSheet.locks === scoreSheet.scores.length - 3) {
         for (const score of scoreSheet.scores) {
-            if (score.locked === open) {
+            if (score.locked === back) {
                 score.locked = lock;
                 ++scoreSheet.locks;
             }
@@ -165,21 +183,8 @@ const sumUpper = () => {
     fullyLocked(scoreUpper);
 };
 
-// Highest amount of dice with the same value
-const cloneMax = () => {
-    let cloneCount = 1;
-
-    for (const amount of multiples.counts) {
-        if (amount.count > cloneCount) {
-            cloneCount = amount.count;
-        }
-    }
-
-    return cloneCount;
-};
-
 const multiYahtzee = () => {
-    if (arrayEntry(scoreLower.scores, 'id', 'yahtzee').final === 50 && cloneMax() === 5) {
+    if (arrayEntry(scoreLower.scores, 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0) {
         return true;
     }
 
@@ -188,7 +193,7 @@ const multiYahtzee = () => {
 
 // Check if there are 3 dice with a value and 2 dice with another value
 const filledHouse = () => {
-    if (cloneMax() === 3) {
+    if (sameMax.value === 3) {
         for (const amount of multiples.counts) {
             if (amount.count == 2) {
                 return true;
@@ -196,7 +201,7 @@ const filledHouse = () => {
         }
     }
 
-    return multiYahtzee();
+    return moreYahtzee;
 };
 
 // Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
@@ -207,7 +212,7 @@ const consecutive = () => {
     for (let index = 1; index < 4; ++index) {
         let mult = arrayEntry(scoreUpper.scores, 'id', index).scored;
 
-        // When there is a vaule found, start multiplying
+        // When there is a value found, start multiplying
         if (mult > 0) {
             let streak = 1;
 
@@ -231,7 +236,7 @@ const consecutive = () => {
         }
     }
 
-    if (multiYahtzee()) {
+    if (moreYahtzee) {
         consec = 5;
     }
 
@@ -239,13 +244,12 @@ const consecutive = () => {
 };
 
 const countLower = () => {
-    const sameResult = cloneMax();
     const straight = consecutive();
 
     const scores = scoreLower.scores;
 
-    arrayEntry(scores, 'id', 'three').scored = sameResult >= 3 ? diceSum.value : 0;
-    arrayEntry(scores, 'id', 'four').scored = sameResult >= 4 ? diceSum.value : 0;
+    arrayEntry(scores, 'id', 'three').scored = sameMax.value >= 3 ? diceSum.value : 0;
+    arrayEntry(scores, 'id', 'four').scored = sameMax.value >= 4 ? diceSum.value : 0;
 
     arrayEntry(scores, 'id', 'full').scored = filledHouse() ? 25 : 0;
 
@@ -253,7 +257,7 @@ const countLower = () => {
     arrayEntry(scores, 'id', 'large').scored = straight > 4 ? 40 : 0;
 
     arrayEntry(scores, 'id', 'chance').scored = diceSum.value;
-    arrayEntry(scores, 'id', 'yahtzee').scored = sameResult === 5 ? 50 : 0;
+    arrayEntry(scores, 'id', 'yahtzee').scored = sameMax.value === 5 ? 50 : 0;
 };
 
 const sumLower = () => {
@@ -284,6 +288,7 @@ const sumLower = () => {
 
 const recount = () => {
     countMultiples();
+    moreYahtzee = multiYahtzee();
     countUpper();
     sumUpper();
     countLower();
@@ -309,13 +314,11 @@ const yahtzeeEyesLocked = index => {
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
-    if (score.locked === open && typeof score.scored === 'number') {
-        // const lockable = multiYahtzee() ? yahtzeeEyesLocked(index) : true;
-
+    if (score.locked === klik && typeof score.scored === 'number') {
         // If another yahtzee is scored, restrict scoring to official multiple yahtzee bonus scoring rules
-        if (multiYahtzee() ? yahtzeeEyesLocked(index) : true) {
+        if (moreYahtzee ? yahtzeeEyesLocked(index) : true) {
             // When another yahtzee is scored, up the bonus
-            if (multiYahtzee()) {
+            if (moreYahtzee) {
                 ++extraYahtzee.value;
             }
 
@@ -342,10 +345,6 @@ const uptick = index => {
     }
 
     recount();
-};
-
-const rounded = fract => {
-    return Math.round(fract);
 };
 </script>
 
@@ -406,8 +405,4 @@ const rounded = fract => {
 
     <br />
     <br />
-
-    <div>Upper locks: {{ scoreUpper.locks }}</div>
-
-    <div>Lower locks: {{ scoreLower.locks }}</div>
 </template>

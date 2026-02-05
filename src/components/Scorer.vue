@@ -126,14 +126,15 @@ const arrayEntry = (array, key, value) => {
 };
 
 const countMultiples = () => {
+    const counts = multiples.counts;
     sameMax.value = 0;
     yahtzeeNumber.value = 0;
 
     for (let index = 1; index <= valueMax; ++index) {
-        arrayEntry(multiples.counts, 'id', index).count = countNumber(index);
+        arrayEntry(counts, 'id', index).count = countNumber(index);
 
-        if (sameMax.value < arrayEntry(multiples.counts, 'id', index).count) {
-            sameMax.value = arrayEntry(multiples.counts, 'id', index).count;
+        if (sameMax.value < arrayEntry(counts, 'id', index).count) {
+            sameMax.value = arrayEntry(counts, 'id', index).count;
         }
 
         if (sameMax.value === diceAmount) {
@@ -142,17 +143,21 @@ const countMultiples = () => {
     }
 };
 
+const entryLocking = (entry, score) => {
+    entry.scored = entry.locked === lock ? 0 : score;
+};
+
 const diceSum = ref(0);
 
 const countUpper = () => {
     diceSum.value = 0;
 
-    for (let number = 1; number <= valueMax; ++number) {
-        const score = arrayEntry(multiples.counts, 'id', number).count * number;
-
-        arrayEntry(scoreUpper.scores, 'id', number).scored = score;
-
-        diceSum.value += score;
+    for (const entry of scoreUpper.scores) {
+        if (entry.locked != back) {
+            const score = arrayEntry(multiples.counts, 'id', entry.id).count * entry.id;
+            entryLocking(entry, score);
+            diceSum.value += score;
+        }
     }
 };
 
@@ -243,21 +248,28 @@ const consecutive = () => {
     return consec;
 };
 
+const lowerScoring = () => {
+    const scoreSheet = [];
+
+    scoreSheet.push({id: 'three', score: sameMax.value >= 3 ? diceSum.value : 0});
+    scoreSheet.push({id: 'four', score: sameMax.value >= 4 ? diceSum.value : 0});
+    scoreSheet.push({id: 'full', score: filledHouse() ? 25 : 0});
+    scoreSheet.push({id: 'small', score: consecutive() > 3 ? 30 : 0});
+    scoreSheet.push({id: 'large', score: consecutive() > 4 ? 40 : 0});
+    scoreSheet.push({id: 'chance', score: diceSum.value});
+    scoreSheet.push({id: 'yahtzee', score: sameMax.value === diceAmount ? 50 : 0});
+
+    return scoreSheet;
+};
+
 const countLower = () => {
-    const straight = consecutive();
+    const scoreSheet = lowerScoring();
 
-    const scores = scoreLower.scores;
-
-    arrayEntry(scores, 'id', 'three').scored = sameMax.value >= 3 ? diceSum.value : 0;
-    arrayEntry(scores, 'id', 'four').scored = sameMax.value >= 4 ? diceSum.value : 0;
-
-    arrayEntry(scores, 'id', 'full').scored = filledHouse() ? 25 : 0;
-
-    arrayEntry(scores, 'id', 'small').scored = straight > 3 ? 30 : 0;
-    arrayEntry(scores, 'id', 'large').scored = straight > 4 ? 40 : 0;
-
-    arrayEntry(scores, 'id', 'chance').scored = diceSum.value;
-    arrayEntry(scores, 'id', 'yahtzee').scored = sameMax.value === 5 ? 50 : 0;
+    for (const entry of scoreLower.scores) {
+        if (entry.locked != back) {
+            entryLocking(entry, arrayEntry(scoreSheet, 'id', entry.id).score);
+        }
+    }
 };
 
 const sumLower = () => {
@@ -299,7 +311,7 @@ recount();
 
 const yahtzeeEyesLocked = index => {
     for (let eyes = 1; eyes <= valueMax; ++eyes) {
-        if (arrayEntry(multiples.counts, 'id', eyes).count === 5) {
+        if (arrayEntry(multiples.counts, 'id', eyes).count === diceAmount) {
             return (
                 index === eyes ||
                 (arrayEntry(scoreUpper.scores, 'id', eyes).locked === lock && typeof index != 'number') ||

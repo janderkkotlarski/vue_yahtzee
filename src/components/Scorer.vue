@@ -1,6 +1,7 @@
 <script setup>
 import {ref, reactive} from 'vue';
 import Dice from './Dice.vue';
+import Scorelist from './Scorelist.vue';
 
 const valueMax = 6;
 const diceAmount = 5;
@@ -358,6 +359,8 @@ const uptick = index => {
 
     recount();
 };
+
+//
 </script>
 
 <template>
@@ -417,4 +420,6 @@ const uptick = index => {
 
     <br />
     <br />
+
+    <Scorelist :listing="scoreUpper.scores" />
 </template>

@@ -75,7 +75,6 @@ const scoreUpper = reactive({
         {id: 'bonus', title: 'Bonus', scored: ' ', final: 0, yonus: 'never', locked: back},
         {id: 'upper', title: 'Boven Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
     ],
-    locks: 0,
 });
 
 const scoreLower = reactive({
@@ -91,7 +90,6 @@ const scoreLower = reactive({
         {id: 'lower', title: 'Lager Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
         {id: 'total', title: 'Geheel Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
     ],
-    locks: 0,
 });
 
 const multiples = reactive({
@@ -153,14 +151,19 @@ const entryLocking = (entry, score) => {
 
 const diceSum = ref(0);
 
-const countUpper = () => {
+const summing = () => {
     diceSum.value = 0;
 
+    for (const cube of diceArray.dice) {
+        diceSum.value += cube.rolled;
+    }
+};
+
+const countUpper = () => {
     for (const entry of scoreUpper.scores) {
         if (entry.locked != back) {
             const score = arrayEntry(multiples.counts, 'id', entry.id).count * entry.id;
             entryLocking(entry, score);
-            diceSum.value += score;
         }
     }
 };
@@ -293,6 +296,7 @@ const sumLower = () => {
 const recount = () => {
     countMultiples();
     moreYahtzee = multiYahtzee();
+    summing();
     countUpper();
     sumUpper();
     countLower();

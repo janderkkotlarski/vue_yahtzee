@@ -127,20 +127,23 @@ const arrayEntry = (array, key, value) => {
 };
 
 const countMultiples = () => {
-    const counts = multiples.counts;
     sameMax.value = 0;
     yahtzeeNumber.value = 0;
 
-    for (let index = 1; index <= valueMax; ++index) {
-        arrayEntry(counts, 'id', index).count = countNumber(index);
+    let index = 1;
 
-        if (sameMax.value < arrayEntry(counts, 'id', index).count) {
-            sameMax.value = arrayEntry(counts, 'id', index).count;
+    for (const amount of multiples.counts) {
+        amount.count = countNumber(index);
+
+        if (sameMax.value < amount.count) {
+            sameMax.value = amount.count;
         }
 
         if (sameMax.value === diceAmount) {
             yahtzeeNumber.value = index;
         }
+
+        ++index;
     }
 };
 
@@ -162,17 +165,6 @@ const countUpper = () => {
     }
 };
 
-const fullyLocked = scoreSheet => {
-    if (scoreSheet.locks === scoreSheet.scores.length - 3) {
-        for (const score of scoreSheet.scores) {
-            if (score.locked === back) {
-                score.locked = lock;
-                ++scoreSheet.locks;
-            }
-        }
-    }
-};
-
 const lockCount = list => {
     let locks = 0;
 
@@ -186,15 +178,11 @@ const lockCount = list => {
 };
 
 const lockList = list => {
-    let locks = 0;
-
-    for (const entry of list) {
-        if (entry.locked === lock) {
-            ++locks;
-        }
-
-        if (entry.locked === back && locks > list.length - 4) {
-            entry.locked = lock;
+    if (lockCount(list) > list.length - 4) {
+        for (const entry of list) {
+            if (entry.locked === back) {
+                entry.locked = lock;
+            }
         }
     }
 };
@@ -247,32 +235,13 @@ const filledHouse = () => {
 // Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
 const consecutive = () => {
     let consec = 0;
+    let counted = 0;
 
-    // Start from a lowest value
-    for (let index = 1; index < 4; ++index) {
-        let mult = arrayEntry(scoreUpper.scores, 'id', index).scored;
+    for (const amount of multiples.counts) {
+        counted = amount.count ? counted + 1 : 0;
 
-        // When there is a value found, start multiplying
-        if (mult > 0) {
-            let streak = 1;
-
-            // Keep multiplying
-            for (let jndex = index + 1; jndex <= valueMax; ++jndex) {
-                mult *= arrayEntry(scoreUpper.scores, 'id', jndex).scored;
-
-                // Check multiplication value.
-                if (mult > 0) {
-                    ++streak;
-
-                    if (streak === 4) {
-                        consec = 4;
-                    }
-
-                    if (streak === 5) {
-                        return 5;
-                    }
-                }
-            }
+        if (counted > consec) {
+            consec = counted;
         }
     }
 
@@ -316,7 +285,9 @@ const sumLower = () => {
     arrayEntry(scores, 'id', 'total').final =
         summed + extraYahtzee.value * 100 + arrayEntry(scoreUpper.scores, 'id', 'upper').final;
 
-    lockList(scores);
+    if (lockCount(scoreUpper.scores) === scoreUpper.scores.length) {
+        lockList(scores);
+    }
 };
 
 const recount = () => {
@@ -357,8 +328,6 @@ const lockEntry = (box, index) => {
 
             score.final = score.scored;
             score.locked = lock;
-
-            ++box.locks;
 
             rolling(number);
             recount();
@@ -442,4 +411,8 @@ const uptick = index => {
 
     <br />
     <br />
+
+    <div>{{ lowerScoring() }}</div>
+
+    <div>{{ multiples.counts }}</div>
 </template>

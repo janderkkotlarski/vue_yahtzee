@@ -87,7 +87,7 @@ const scoreLower = reactive({
         {id: 'chance', title: 'Kans', scored: 0, final: 0, yonus: 'null', locked: klik},
         {id: 'yahtzee', title: 'Yahtzee', scored: 0, final: 0, yonus: 'negate', locked: klik},
         {id: 'yonus', title: 'Yahtzee Bonus', scored: ' ', final: 0, yonus: 'never', locked: back},
-        {id: 'lower', title: 'Lager Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
+        {id: 'lower', title: 'Onder Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
         {id: 'total', title: 'Geheel Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
     ],
 });
@@ -159,12 +159,43 @@ const summing = () => {
     }
 };
 
+const cupped = ref(0);
+const cupid = reactive({
+    indices: [],
+});
+
+const cupidReset = ref(0);
+
+let pusher = true;
+
 const countUpper = () => {
+    let index = 1;
+
+    // if (cupid.indices.length === scoreUpper.scores.length) {
+    //     for (const inix of cupid.indices) {
+    //         arrayEntry(inix, 'id', index).number = 0;
+    //     }
+    // }
+
     for (const entry of scoreUpper.scores) {
-        if (entry.locked != back) {
+        // if (pusher) {
+        //     cupid.indices.push({id: index, block: entry});
+        // } else {
+        //     arrayEntry(cupid.indices, 'id', index).block = -index * cupped.value;
+        // }
+
+        ++cupped.value;
+
+        if (entry.locked === klik) {
             const score = arrayEntry(multiples.counts, 'id', entry.id).count * entry.id;
             entryLocking(entry, score);
         }
+
+        ++index;
+    }
+
+    if (pusher) {
+        pusher = false;
     }
 };
 
@@ -293,12 +324,21 @@ const sumLower = () => {
     }
 };
 
+const recounter = ref(0);
+
+const stopping = ref(0);
+
 const recount = () => {
+    ++recounter.value;
+
     countMultiples();
     moreYahtzee = multiYahtzee();
     summing();
+
     countUpper();
+    ++stopping.value;
     sumUpper();
+
     countLower();
     sumLower();
 };
@@ -319,6 +359,8 @@ const yahtzeeEyesLocked = index => {
     return true;
 };
 
+const locker = ref(0);
+
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
@@ -332,6 +374,8 @@ const lockEntry = (box, index) => {
 
             score.final = score.scored;
             score.locked = lock;
+
+            ++locker.value;
 
             rolling(number);
             recount();
@@ -416,7 +460,13 @@ const uptick = index => {
     <br />
     <br />
 
-    <div>{{ lowerScoring() }}</div>
+    <div>{{ cupped }}</div>
 
-    <div>{{ multiples.counts }}</div>
+    <div>{{ recounter }}</div>
+
+    <div>{{ scoreUpper.scores.length }}</div>
+
+    <div>{{ cupid.indices.length }}</div>
+
+    <div>{{ cupid }}</div>
 </template>

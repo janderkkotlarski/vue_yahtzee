@@ -8,10 +8,12 @@ const diceAmount = 5;
 
 const normal = '______';
 
-const open = 'open';
 const klik = 'klik';
-const back = 'back';
+const klak = 'klak';
 const lock = 'lock';
+
+const back = 'back';
+const lack = 'lack';
 
 let moreYahtzee = false;
 
@@ -53,7 +55,7 @@ const rolling = number => {
     }
 };
 
-const number = 0;
+const number = 6;
 
 rolling(number);
 
@@ -159,43 +161,16 @@ const summing = () => {
     }
 };
 
-const cupped = ref(0);
-const cupid = reactive({
-    indices: [],
-});
-
-const cupidReset = ref(0);
-
-let pusher = true;
-
 const countUpper = () => {
     let index = 1;
 
-    // if (cupid.indices.length === scoreUpper.scores.length) {
-    //     for (const inix of cupid.indices) {
-    //         arrayEntry(inix, 'id', index).number = 0;
-    //     }
-    // }
-
     for (const entry of scoreUpper.scores) {
-        // if (pusher) {
-        //     cupid.indices.push({id: index, block: entry});
-        // } else {
-        //     arrayEntry(cupid.indices, 'id', index).block = -index * cupped.value;
-        // }
-
-        ++cupped.value;
-
-        if (entry.locked === klik) {
+        if (entry.locked != back && entry.locked != lack) {
             const score = arrayEntry(multiples.counts, 'id', entry.id).count * entry.id;
             entryLocking(entry, score);
         }
 
         ++index;
-    }
-
-    if (pusher) {
-        pusher = false;
     }
 };
 
@@ -211,11 +186,23 @@ const lockCount = list => {
     return locks;
 };
 
+const lackCount = list => {
+    let lacks = 0;
+
+    for (const entry of list) {
+        if (entry.locked === lack) {
+            ++lacks;
+        }
+    }
+
+    return lacks;
+};
+
 const lockList = list => {
     if (lockCount(list) > list.length - 4) {
         for (const entry of list) {
             if (entry.locked === back) {
-                entry.locked = lock;
+                entry.locked = lack;
             }
         }
     }
@@ -225,7 +212,7 @@ const finalSummer = list => {
     let summed = 0;
 
     for (const entry of list) {
-        if (entry.locked != back) {
+        if (entry.locked === klik || entry.locked === lock) {
             summed += entry.final;
         }
     }
@@ -246,11 +233,29 @@ const sumUpper = () => {
 };
 
 const multiYahtzee = () => {
-    if (arrayEntry(scoreLower.scores, 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0) {
-        return true;
+    moreYahtzee = arrayEntry(scoreLower.scores, 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0;
+};
+
+const reklik = list => {};
+
+const klikable = () => {
+    for (const entry of scoreUpper.scores) {
+        if (entry.locked != back && entry.locked != lack && entry.locked != lock) {
+            entry.locked = klik;
+        }
     }
 
-    return false;
+    if (
+        moreYahtzee &&
+        (arrayEntry(scoreUpper.scores, 'id', yahtzeeNumber.value).locked != lock ||
+            lockCount(scoreLower.scores) + 3 < scoreLower.scores.length)
+    ) {
+        for (const entry of scoreUpper.scores) {
+            if (entry.locked === klik && entry.id != yahtzeeNumber.value) {
+                entry.locked = klak;
+            }
+        }
+    }
 };
 
 // Check if there are 3 dice with a value and 2 dice with another value
@@ -310,6 +315,12 @@ const countLower = () => {
     }
 };
 
+const fullyLocking = list => {
+    return lockCount(list) + lackCount(list) === list.length;
+};
+
+const lockered = ref(0);
+
 const sumLower = () => {
     const scores = scoreLower.scores;
     const summed = finalSummer(scores);
@@ -319,7 +330,8 @@ const sumLower = () => {
     arrayEntry(scores, 'id', 'total').final =
         summed + extraYahtzee.value * 100 + arrayEntry(scoreUpper.scores, 'id', 'upper').final;
 
-    if (lockCount(scoreUpper.scores) === scoreUpper.scores.length) {
+    if (fullyLocking(scoreUpper.scores)) {
+        ++lockered.value;
         lockList(scores);
     }
 };
@@ -332,11 +344,12 @@ const recount = () => {
     ++recounter.value;
 
     countMultiples();
-    moreYahtzee = multiYahtzee();
+    multiYahtzee();
+    klikable();
     summing();
 
     countUpper();
-    ++stopping.value;
+    // ++stopping.value;
     sumUpper();
 
     countLower();
@@ -351,7 +364,7 @@ const yahtzeeEyesLocked = index => {
             return (
                 index === eyes ||
                 (arrayEntry(scoreUpper.scores, 'id', eyes).locked === lock && typeof index != 'number') ||
-                lockCount(scoreLower.scores) === scoreLower.scores.length
+                lockCount(scoreLower.scores) + 3 === scoreLower.scores.length
             );
         }
     }
@@ -460,13 +473,5 @@ const uptick = index => {
     <br />
     <br />
 
-    <div>{{ cupped }}</div>
-
-    <div>{{ recounter }}</div>
-
-    <div>{{ scoreUpper.scores.length }}</div>
-
-    <div>{{ cupid.indices.length }}</div>
-
-    <div>{{ cupid }}</div>
+    <div>{{ lockered }}</div>
 </template>

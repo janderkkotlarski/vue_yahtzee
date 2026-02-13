@@ -236,23 +236,35 @@ const multiYahtzee = () => {
     moreYahtzee = arrayEntry(scoreLower.scores, 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0;
 };
 
-const reklik = list => {};
-
-const klikable = () => {
-    for (const entry of scoreUpper.scores) {
-        if (entry.locked != back && entry.locked != lack && entry.locked != lock) {
+const deklak = list => {
+    for (const entry of list) {
+        if (entry.locked === klak) {
             entry.locked = klik;
         }
     }
+};
 
-    if (
-        moreYahtzee &&
-        (arrayEntry(scoreUpper.scores, 'id', yahtzeeNumber.value).locked != lock ||
-            lockCount(scoreLower.scores) + 3 < scoreLower.scores.length)
-    ) {
-        for (const entry of scoreUpper.scores) {
-            if (entry.locked === klik && entry.id != yahtzeeNumber.value) {
-                entry.locked = klak;
+const klikable = () => {
+    deklak(scoreUpper.scores);
+    deklak(scoreLower.scores);
+
+    if (moreYahtzee) {
+        if (
+            arrayEntry(scoreUpper.scores, 'id', yahtzeeNumber.value).locked != lock ||
+            lockCount(scoreLower.scores) + 3 < scoreLower.scores.length
+        ) {
+            for (const entry of scoreUpper.scores) {
+                if (entry.locked === klik && entry.id != yahtzeeNumber.value) {
+                    entry.locked = klak;
+                }
+            }
+        }
+
+        if (arrayEntry(scoreUpper.scores, 'id', yahtzeeNumber.value).locked != lock) {
+            for (const entry of scoreLower.scores) {
+                if (entry.locked === klik) {
+                    entry.locked = klak;
+                }
             }
         }
     }
@@ -319,8 +331,6 @@ const fullyLocking = list => {
     return lockCount(list) + lackCount(list) === list.length;
 };
 
-const lockered = ref(0);
-
 const sumLower = () => {
     const scores = scoreLower.scores;
     const summed = finalSummer(scores);
@@ -331,25 +341,17 @@ const sumLower = () => {
         summed + extraYahtzee.value * 100 + arrayEntry(scoreUpper.scores, 'id', 'upper').final;
 
     if (fullyLocking(scoreUpper.scores)) {
-        ++lockered.value;
         lockList(scores);
     }
 };
 
-const recounter = ref(0);
-
-const stopping = ref(0);
-
 const recount = () => {
-    ++recounter.value;
-
     countMultiples();
     multiYahtzee();
     klikable();
     summing();
 
     countUpper();
-    // ++stopping.value;
     sumUpper();
 
     countLower();
@@ -358,28 +360,28 @@ const recount = () => {
 
 recount();
 
-const yahtzeeEyesLocked = index => {
-    for (let eyes = 1; eyes <= valueMax; ++eyes) {
-        if (arrayEntry(multiples.counts, 'id', eyes).count === diceAmount) {
-            return (
-                index === eyes ||
-                (arrayEntry(scoreUpper.scores, 'id', eyes).locked === lock && typeof index != 'number') ||
-                lockCount(scoreLower.scores) + 3 === scoreLower.scores.length
-            );
-        }
-    }
-
-    return true;
+const yahtzeeClicking = index => {
+    return (
+        index === yahtzeeNumber.value ||
+        (arrayEntry(scoreUpper.scores, 'id', yahtzeeNumber.value).locked === lock && typeof index != 'number') ||
+        lockCount(scoreLower.scores) + 3 === scoreLower.scores.length
+    );
 };
 
-const locker = ref(0);
+const kliksplay = locked => {
+    if (locked === klik) {
+        return klik;
+    }
+
+    return ' ';
+};
 
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
     if (score.locked === klik && typeof score.scored === 'number') {
         // If another yahtzee is scored, restrict scoring to official multiple yahtzee bonus scoring rules
-        if (moreYahtzee ? yahtzeeEyesLocked(index) : true) {
+        if (moreYahtzee ? yahtzeeClicking(index) : true) {
             // When another yahtzee is scored, up the bonus
             if (moreYahtzee) {
                 ++extraYahtzee.value;
@@ -387,8 +389,6 @@ const lockEntry = (box, index) => {
 
             score.final = score.scored;
             score.locked = lock;
-
-            ++locker.value;
 
             rolling(number);
             recount();
@@ -434,6 +434,7 @@ const uptick = index => {
                 <th>Combinatie</th>
                 <th>Punten</th>
                 <th>Gescoord</th>
+                <th>Klikbaar</th>
             </tr>
             <tr
                 @click="lockEntry(scoreUpper, score.id)"
@@ -444,7 +445,7 @@ const uptick = index => {
                 <td>{{ score.title }}</td>
                 <td>{{ score.scored }}</td>
                 <td>{{ score.final }}</td>
-                <td>{{ score.locked }}</td>
+                <td>{{ kliksplay(score.locked) }}</td>
             </tr>
         </table>
     </div>
@@ -455,6 +456,7 @@ const uptick = index => {
                 <th>Combinatie</th>
                 <th>Punten</th>
                 <th>Gescoord</th>
+                <th>Klikbaar</th>
             </tr>
             <tr
                 @click="lockEntry(scoreLower, score.id)"
@@ -465,13 +467,11 @@ const uptick = index => {
                 <td>{{ score.title }}</td>
                 <td>{{ score.scored }}</td>
                 <td>{{ score.final }}</td>
-                <td>{{ score.locked }}</td>
+                <td>{{ kliksplay(score.locked) }}</td>
             </tr>
         </table>
     </div>
 
     <br />
     <br />
-
-    <div>{{ lockered }}</div>
 </template>

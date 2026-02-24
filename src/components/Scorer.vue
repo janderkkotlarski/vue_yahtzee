@@ -478,5 +478,6 @@ const uptick = index => {
     <br />
     <br />
 
-    <Scorelist />
+    <Scorelist :listing="scoreUpper" />
+    <Scorelist :listing="scoreLower" />
 </template>

@@ -7,7 +7,7 @@ const back = 'back';
 
 const initUpper = () => {
     return [
-        {id: 1, title: 'Enen', scored: 0, final: 9001, yonus: 'null', locked: klik},
+        {id: 1, title: 'Enen', scored: 0, final: 0, yonus: 'null', locked: klik},
         {id: 2, title: 'Tweeën', scored: 0, final: 0, yonus: 'null', locked: klik},
         {id: 3, title: 'Drieën', scored: 0, final: 0, yonus: 'null', locked: klik},
         {id: 4, title: 'Vieren', scored: 0, final: 0, yonus: 'null', locked: klik},
@@ -20,6 +20,8 @@ const initUpper = () => {
 };
 
 const listing = defineModel('listing', {type: Array, default: []});
+
+listing.value = initUpper();
 
 const arrayEntry = (array, key, content) => {
     for (const entry of array.value) {

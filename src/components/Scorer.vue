@@ -65,7 +65,7 @@ const cuboid = index => {
     }
 };
 
-const scoreUpper = reactive({
+const scoreUpper = ref({
     scores: [
         {id: 1, title: 'Enen', scored: 0, final: 0, yonus: 'null', locked: klik},
         {id: 2, title: 'Tweeën', scored: 0, final: 0, yonus: 'null', locked: klik},
@@ -79,7 +79,7 @@ const scoreUpper = reactive({
     ],
 });
 
-const scoreLower = reactive({
+const scoreLower = ref({
     scores: [
         {id: 'three', title: '3 Gelijke', scored: 0, final: 0, yonus: 'null', locked: klik},
         {id: 'four', title: '4 Gelijke', scored: 0, final: 0, yonus: 'null', locked: klik},
@@ -93,6 +93,10 @@ const scoreLower = reactive({
         {id: 'total', title: 'Geheel Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
     ],
 });
+
+const scoress = list => {
+    return list.value.scores;
+};
 
 const multiples = reactive({
     counts: [],
@@ -164,7 +168,7 @@ const summing = () => {
 const countUpper = () => {
     let index = 1;
 
-    for (const entry of scoreUpper.scores) {
+    for (const entry of scoress(scoreUpper)) {
         if (entry.locked != back && entry.locked != lack) {
             const score = arrayEntry(multiples.counts, 'id', entry.id).count * entry.id;
             entryLocking(entry, score);
@@ -221,19 +225,19 @@ const finalSummer = list => {
 };
 
 const sumUpper = () => {
-    const scores = scoreUpper.scores;
-    const summed = finalSummer(scores);
+    const scoresU = scoress(scoreUpper);
+    const summed = finalSummer(scoresU);
 
-    arrayEntry(scores, 'id', 'summed').final = summed;
+    arrayEntry(scoresU, 'id', 'summed').final = summed;
     const bonus = summed >= 63 ? 35 : 0;
-    arrayEntry(scores, 'id', 'bonus').final = bonus;
-    arrayEntry(scores, 'id', 'upper').final = summed + bonus;
+    arrayEntry(scoresU, 'id', 'bonus').final = bonus;
+    arrayEntry(scoresU, 'id', 'upper').final = summed + bonus;
 
-    lockList(scores);
+    lockList(scoresU);
 };
 
 const multiYahtzee = () => {
-    moreYahtzee = arrayEntry(scoreLower.scores, 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0;
+    moreYahtzee = arrayEntry(scoress(scoreLower), 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0;
 };
 
 const deklak = list => {
@@ -245,23 +249,23 @@ const deklak = list => {
 };
 
 const klikable = () => {
-    deklak(scoreUpper.scores);
-    deklak(scoreLower.scores);
+    const scoresU = scoress(scoreUpper);
+    const scoresL = scoress(scoreLower);
+
+    deklak(scoresU);
+    deklak(scoresL);
 
     if (moreYahtzee) {
-        if (
-            arrayEntry(scoreUpper.scores, 'id', yahtzeeNumber.value).locked != lock ||
-            lockCount(scoreLower.scores) + 3 < scoreLower.scores.length
-        ) {
-            for (const entry of scoreUpper.scores) {
+        if (arrayEntry(scoresU, 'id', yahtzeeNumber.value).locked != lock || lockCount(scoresL) + 3 < scoresL.length) {
+            for (const entry of scoresU) {
                 if (entry.locked === klik && entry.id != yahtzeeNumber.value) {
                     entry.locked = klak;
                 }
             }
         }
 
-        if (arrayEntry(scoreUpper.scores, 'id', yahtzeeNumber.value).locked != lock) {
-            for (const entry of scoreLower.scores) {
+        if (arrayEntry(scoresU, 'id', yahtzeeNumber.value).locked != lock) {
+            for (const entry of scoresL) {
                 if (entry.locked === klik) {
                     entry.locked = klak;
                 }
@@ -320,7 +324,7 @@ const lowerScoring = () => {
 const countLower = () => {
     const scoreSheet = lowerScoring();
 
-    for (const entry of scoreLower.scores) {
+    for (const entry of scoress(scoreLower)) {
         if (entry.locked != back) {
             entryLocking(entry, arrayEntry(scoreSheet, 'id', entry.id).score);
         }
@@ -332,16 +336,17 @@ const fullyLocking = list => {
 };
 
 const sumLower = () => {
-    const scores = scoreLower.scores;
-    const summed = finalSummer(scores);
+    const scoresU = scoress(scoreUpper);
+    const scoresL = scoress(scoreLower);
+    const summed = finalSummer(scoresL);
 
-    arrayEntry(scores, 'id', 'yonus').final = extraYahtzee.value * 100;
-    arrayEntry(scores, 'id', 'lower').final = summed;
-    arrayEntry(scores, 'id', 'total').final =
-        summed + extraYahtzee.value * 100 + arrayEntry(scoreUpper.scores, 'id', 'upper').final;
+    arrayEntry(scoresL, 'id', 'yonus').final = extraYahtzee.value * 100;
+    arrayEntry(scoresL, 'id', 'lower').final = summed;
+    arrayEntry(scoresL, 'id', 'total').final =
+        summed + extraYahtzee.value * 100 + arrayEntry(scoresU, 'id', 'upper').final;
 
-    if (fullyLocking(scoreUpper.scores)) {
-        lockList(scores);
+    if (fullyLocking(scoresU)) {
+        lockList(scoresL);
     }
 };
 
@@ -363,8 +368,8 @@ recount();
 const yahtzeeClicking = index => {
     return (
         index === yahtzeeNumber.value ||
-        (arrayEntry(scoreUpper.scores, 'id', yahtzeeNumber.value).locked === lock && typeof index != 'number') ||
-        lockCount(scoreLower.scores) + 3 === scoreLower.scores.length
+        (arrayEntry(scoress(scoreUpper), 'id', yahtzeeNumber.value).locked === lock && typeof index != 'number') ||
+        lockCount(scoress(scoreLower)) + 3 === scoress(scoreLower).length
     );
 };
 
@@ -409,8 +414,6 @@ const uptick = index => {
 
     recount();
 };
-
-// <Scorelist :listing="scoreUpper.scores" />
 </script>
 
 <template>
@@ -474,4 +477,6 @@ const uptick = index => {
 
     <br />
     <br />
+
+    <Scorelist />
 </template>

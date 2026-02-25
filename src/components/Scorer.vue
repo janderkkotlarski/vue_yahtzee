@@ -1,5 +1,6 @@
 <script setup>
 import {ref, reactive} from 'vue';
+import 'VarInit.vue';
 import Dice from './Dice.vue';
 import Scorelist from './Scorelist.vue';
 
@@ -65,19 +66,21 @@ const cuboid = index => {
     }
 };
 
-const scoreUpper = ref({
-    scores: [
-        {id: 1, title: 'Enen', scored: 0, final: 0, yonus: 'null', locked: klik},
-        {id: 2, title: 'Tweeën', scored: 0, final: 0, yonus: 'null', locked: klik},
-        {id: 3, title: 'Drieën', scored: 0, final: 0, yonus: 'null', locked: klik},
-        {id: 4, title: 'Vieren', scored: 0, final: 0, yonus: 'null', locked: klik},
-        {id: 5, title: 'Vijfen', scored: 0, final: 0, yonus: 'null', locked: klik},
-        {id: 6, title: 'Zessen', scored: 0, final: 0, yonus: 'null', locked: klik},
-        {id: 'summed', title: 'Getallen', scored: ' ', final: 0, yonus: 'never', locked: back},
-        {id: 'bonus', title: 'Bonus', scored: ' ', final: 0, yonus: 'never', locked: back},
-        {id: 'upper', title: 'Boven Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
-    ],
-});
+// const scoreUpper = ref({
+//     scores: [
+//         {id: 1, title: 'Enen', scored: 0, final: 0, yonus: 'null', locked: klik},
+//         {id: 2, title: 'Tweeën', scored: 0, final: 0, yonus: 'null', locked: klik},
+//         {id: 3, title: 'Drieën', scored: 0, final: 0, yonus: 'null', locked: klik},
+//         {id: 4, title: 'Vieren', scored: 0, final: 0, yonus: 'null', locked: klik},
+//         {id: 5, title: 'Vijfen', scored: 0, final: 0, yonus: 'null', locked: klik},
+//         {id: 6, title: 'Zessen', scored: 0, final: 0, yonus: 'null', locked: klik},
+//         {id: 'summed', title: 'Getallen', scored: ' ', final: 0, yonus: 'never', locked: back},
+//         {id: 'bonus', title: 'Bonus', scored: ' ', final: 0, yonus: 'never', locked: back},
+//         {id: 'upper', title: 'Boven Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
+//     ],
+// });
+
+const scoreUpper = ref(scoreUpperInit);
 
 const scoreLower = ref({
     scores: [

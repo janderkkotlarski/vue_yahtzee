@@ -1,5 +1,11 @@
-<script setup>
-const scoreUpperInit = {
+export const klik = 'klik';
+export const klak = 'klak';
+export const lock = 'lock';
+
+export const back = 'back';
+export const lack = 'lack';
+
+export const scoreUpperInit = {
     scores: [
         {id: 1, title: 'Enen', scored: 0, final: 0, yonus: 'null', locked: klik},
         {id: 2, title: 'Tweeën', scored: 0, final: 0, yonus: 'null', locked: klik},
@@ -13,7 +19,7 @@ const scoreUpperInit = {
     ],
 };
 
-const scoreLowerInit = {
+export const scoreLowerInit = {
     scores: [
         {id: 'three', title: '3 Gelijke', scored: 0, final: 0, yonus: 'null', locked: klik},
         {id: 'four', title: '4 Gelijke', scored: 0, final: 0, yonus: 'null', locked: klik},
@@ -27,4 +33,3 @@ const scoreLowerInit = {
         {id: 'total', title: 'Geheel Totaal', scored: ' ', final: 0, yonus: 'never', locked: back},
     ],
 };
-</script>

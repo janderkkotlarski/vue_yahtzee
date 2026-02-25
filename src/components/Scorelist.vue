@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue';
+// import {ref} from 'vue';
 
 // Make sure that every entry is intelligible for the compiler, so do recreate variables when needed
 const klik = 'klik';

@@ -370,6 +370,12 @@ const uptick = index => {
 
     recount();
 };
+
+const lessYahtzee = () => {
+    --extraYahtzee;
+};
+
+const habbened = ref(0);
 </script>
 
 <template>
@@ -434,5 +440,9 @@ const uptick = index => {
     <br />
     <br />
 
-    <Scorelist :scoreListing="scoreUpper" />
+    <Scorelist @habbening="habbened += 1" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+
+    <div>
+        {{ habbened }}
+    </div>
 </template>

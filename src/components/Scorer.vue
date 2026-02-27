@@ -2,7 +2,6 @@
 import {ref, reactive} from 'vue';
 import Dice from './Dice.vue';
 import Scorelist from './Scorelist.vue';
-import ScoreLine from './ScoreLine.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
 const valueMax = 6;
@@ -11,7 +10,7 @@ const diceAmount = 5;
 const normal = '______';
 
 let sameMax = 0;
-let extraYahtzee = 0;
+const extraYahtzee = ref(0);
 let yahtzeeNumber = 0;
 let moreYahtzee = false;
 
@@ -308,9 +307,10 @@ const sumLower = () => {
     const scoresL = scoress(scoreLower);
     const summed = finalSummer(scoresL);
 
-    arrayEntry(scoresL, 'id', 'yonus').final = extraYahtzee * 100;
+    arrayEntry(scoresL, 'id', 'yonus').final = extraYahtzee.value * 100;
     arrayEntry(scoresL, 'id', 'lower').final = summed;
-    arrayEntry(scoresL, 'id', 'total').final = summed + extraYahtzee * 100 + arrayEntry(scoresU, 'id', 'upper').final;
+    arrayEntry(scoresL, 'id', 'total').final =
+        summed + extraYahtzee.value * 100 + arrayEntry(scoresU, 'id', 'upper').final;
 
     if (fullyLocking(scoresU)) {
         lockList(scoresL);
@@ -332,21 +332,13 @@ const recount = () => {
 
 recount();
 
-const kliksplay = locked => {
-    if (locked === klik) {
-        return klik;
-    }
-
-    return ' ';
-};
-
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
     if (score.locked === klik && typeof score.scored === 'number') {
         // When another yahtzee is scored, up the bonus
         if (moreYahtzee) {
-            ++extraYahtzee;
+            ++extraYahtzee.value;
         }
 
         score.final = score.scored;
@@ -371,29 +363,14 @@ const uptick = index => {
     recount();
 };
 
-const lessYahtzee = () => {
-    --extraYahtzee;
+const test = ref(0);
+
+const tester = (test2, test3) => {
+    test.value += test3;
 };
 
-const habbened = ref(0);
-</script>
-
-<template>
-    <div>
-        <Dice
-            @click="uptick(cube.id)"
-            v-for="cube in diceArray.dice"
-            :key="cube.id"
-            v-model:eyeValue="cube.rolled"
-            :class="normal"
-            :inverted="normal"
-        />
-    </div>
-
-    <br />
-    <br />
-
-    <div class="inlined">
+/*
+<div class="inlined">
         <table>
             <tr>
                 <th>Combinatie</th>
@@ -436,13 +413,24 @@ const habbened = ref(0);
             </tr>
         </table>
     </div>
+    */
+</script>
 
-    <br />
-    <br />
-
-    <Scorelist @habbening="habbened += 1" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-
+<template>
     <div>
-        {{ habbened }}
+        <Dice
+            @click="uptick(cube.id)"
+            v-for="cube in diceArray.dice"
+            :key="cube.id"
+            v-model:eyeValue="cube.rolled"
+            :class="normal"
+            :inverted="normal"
+        />
     </div>
+
+    <br />
+    <br />
+
+    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 </template>

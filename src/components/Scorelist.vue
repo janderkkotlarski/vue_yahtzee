@@ -1,7 +1,7 @@
 <script setup>
 // import {ref} from 'vue';
 
-import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
+import {klik} from './Varinit.mjs';
 
 const scoreListing = defineModel('scoreListing', {type: Object});
 
@@ -13,35 +13,6 @@ const yahtzeeVars = defineModel('yahtzeeVars', {
     },
 });
 
-const scoress = list => {
-    return list.value.scores;
-};
-
-const arrayEntry = (array, key, content) => {
-    for (const entry of array.value) {
-        if (entry[key] === content) {
-            return entry;
-        }
-    }
-};
-
-const lockEntry = index => {
-    const score = arrayEntry(scoress(listing), 'id', index);
-
-    if (score.locked === klik && typeof score.scored === 'number') {
-        // When another yahtzee is scored, up the bonus
-        // if (yahtzeeVars.moreYahtzee) {
-        //     ++yahtzeeVars.extraYahtzee;
-        // }
-
-        score.final = score.scored;
-        score.locked = lock;
-
-        rolling(number);
-        recount();
-    }
-};
-
 const kliksplay = locked => {
     if (locked === klik) {
         return klik;
@@ -49,13 +20,6 @@ const kliksplay = locked => {
 
     return ' ';
 };
-
-// // stel: de gegooide stenen vind je in model
-// const ones = computed(() => {
-//     return model.filter(item => item === 1).length * 1;
-// });
-
-//@click="lockEntry(score.id)"
 </script>
 
 <template>
@@ -67,16 +31,17 @@ const kliksplay = locked => {
                 <th>Gescoord</th>
                 <th>Klikbaar</th>
             </tr>
-            <tr @click="$emit('habbening')" v-for="score in scoreListing.scores" :key="score.id" :class="score.locked">
+            <tr
+                @click="$emit('locker', scoreListing, score.id)"
+                v-for="score in scoreListing.scores"
+                :key="score.id"
+                :class="score.locked"
+            >
                 <td>{{ score.title }}</td>
                 <td>{{ score.scored }}</td>
                 <td>{{ score.final }}</td>
                 <td>{{ kliksplay(score.locked) }}</td>
             </tr>
         </table>
-    </div>
-
-    <div class="inlined">
-        {{ yahtzeeVars }}
     </div>
 </template>

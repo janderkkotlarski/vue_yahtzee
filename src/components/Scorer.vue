@@ -1,6 +1,7 @@
 <script setup>
 import {ref, reactive} from 'vue';
 import Dice from './Dice.vue';
+import RollTest from './RollTest.vue';
 import Scorelist from './Scorelist.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
@@ -11,7 +12,7 @@ const normal = '______';
 
 let sameMax = 0;
 const extraYahtzee = ref(0);
-let yahtzeeNumber = 0;
+const yahtzeeNumber = ref(0);
 let moreYahtzee = false;
 
 const diceArray = reactive({
@@ -48,7 +49,7 @@ const rolling = number => {
     }
 };
 
-const number = 6;
+const number = 4;
 
 rolling(number);
 
@@ -99,9 +100,10 @@ const arrayEntry = (array, key, value) => {
 
 const countMultiples = () => {
     sameMax = 0;
-    yahtzeeNumber = 0;
+    yahtzeeNumber.value = 0;
 
     let index = 1;
+    let yahtzee = false;
 
     for (const amount of multiples.counts) {
         amount.count = countNumber(index);
@@ -110,8 +112,11 @@ const countMultiples = () => {
             sameMax = amount.count;
         }
 
-        if (sameMax === diceAmount) {
-            yahtzeeNumber = index;
+        // yahtzee needed so yahtzeenNumber does not go to 6 when index gets upped
+        if (sameMax === diceAmount && !yahtzee) {
+            yahtzeeNumber.value = index;
+
+            yahtzee = true;
         }
 
         ++index;
@@ -137,7 +142,7 @@ const countUpper = () => {
 
     for (const entry of scoress(scoreUpper)) {
         if (entry.locked != back && entry.locked != lack) {
-            const score = arrayEntry(multiples.counts, 'id', entry.id).count * entry.id;
+            const score = arrayEntry(multiples.counts, 'id', entry.id).count; //  * entry.id;
             entryLocking(entry, score);
         }
 
@@ -204,7 +209,7 @@ const sumUpper = () => {
 };
 
 const multiYahtzee = () => {
-    moreYahtzee = arrayEntry(scoress(scoreLower), 'id', 'yahtzee').final === 50 && yahtzeeNumber != 0;
+    moreYahtzee = arrayEntry(scoress(scoreLower), 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0;
 };
 
 const deklak = list => {
@@ -223,15 +228,15 @@ const klikable = () => {
     deklak(scoresL);
 
     if (moreYahtzee) {
-        if (arrayEntry(scoresU, 'id', yahtzeeNumber).locked != lock || lockCount(scoresL) + 3 < scoresL.length) {
+        if (arrayEntry(scoresU, 'id', yahtzeeNumber.value).locked != lock || lockCount(scoresL) + 3 < scoresL.length) {
             for (const entry of scoresU) {
-                if (entry.locked === klik && entry.id != yahtzeeNumber) {
+                if (entry.locked === klik && entry.id != yahtzeeNumber.value) {
                     entry.locked = klak;
                 }
             }
         }
 
-        if (arrayEntry(scoresU, 'id', yahtzeeNumber).locked != lock) {
+        if (arrayEntry(scoresU, 'id', yahtzeeNumber.value).locked != lock) {
             for (const entry of scoresL) {
                 if (entry.locked === klik) {
                     entry.locked = klak;
@@ -363,12 +368,6 @@ const uptick = index => {
     recount();
 };
 
-const test = ref(0);
-
-const tester = (test2, test3) => {
-    test.value += test3;
-};
-
 /*
 <div class="inlined">
         <table>
@@ -414,6 +413,8 @@ const tester = (test2, test3) => {
         </table>
     </div>
     */
+
+// <RollTest />;
 </script>
 
 <template>
@@ -430,6 +431,8 @@ const tester = (test2, test3) => {
 
     <br />
     <br />
+
+    <div>{{ yahtzeeNumber }}</div>
 
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
     <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />

@@ -23,13 +23,13 @@ const diceArray = ref({
     dice: [],
 });
 
-const diceArrayFilling = () => {
-    for (let index = 1; index <= diceAmount; ++index) {
-        diceArray.value.dice.push({id: index, rolled: index});
-    }
-};
+// const diceArrayFilling = () => {
+//     for (let index = 1; index <= diceAmount; ++index) {
+//         diceArray.value.dice.push({id: index, rolled: index});
+//     }
+// };
 
-diceArrayFilling();
+// diceArrayFilling();
 
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
@@ -451,12 +451,11 @@ const uptick = index => {
     */
 
 // <RollTest />
+// <div>{{ yahtzeeNumber }}</div>
 </script>
 
 <template>
-    <div>{{ yahtzeeNumber }}</div>
-
-    <RollTest :diceLine="diceArray" />
+    <RollTest @rescan="recount" :diceLine="diceArray" />
 
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
     <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />

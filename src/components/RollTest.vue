@@ -2,12 +2,36 @@
 import {ref, reactive} from 'vue';
 import Dice from './Dice.vue';
 
+const emit = defineEmits(['inFocus', 'rescan']);
+
 const diceLine = defineModel('diceLine', {type: Object, default: {dice: []}});
 
 const valueMax = 6;
 const diceAmount = 5;
 
 const normal = '______';
+
+const roll = () => Math.floor(valueMax * Math.random()) + 1;
+
+const diceReroll = () => {
+    for (const cube of diceLine.value.dice) {
+        cube.rolled = roll();
+    }
+};
+
+const rollYahtzee = number => {
+    for (const cube of diceLine.value.dice) {
+        cube.rolled = number;
+    }
+};
+
+const rolling = number => {
+    if (number >= 1 && number <= valueMax) {
+        rollYahtzee(number);
+    } else {
+        diceReroll();
+    }
+};
 
 // const diceLine = ref({
 //     dice: [],
@@ -95,6 +119,8 @@ const uptick = index => {
             cubid.rolled -= valueMax;
         }
     }
+
+    emit('rescan');
 
     // recount();
 };

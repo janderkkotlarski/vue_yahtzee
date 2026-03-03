@@ -1,41 +1,38 @@
 <script setup>
-import {reactive} from 'vue';
+import {ref, reactive} from 'vue';
 import Dice from './Dice.vue';
+
+const diceLine = defineModel('diceLine', {type: Object, default: {dice: []}});
 
 const valueMax = 6;
 const diceAmount = 5;
 
 const normal = '______';
 
-const diceArray = reactive({
-    dice: [],
-});
-
-// const diceArray = defineModel('diceArray', {
-//     type: Object,
-//     default: {
-//         dice: [],
-//     },
+// const diceLine = ref({
+//     dice: [],
 // });
 
-const diceArrayFilling = () => {
-    for (let index = 1; index <= diceAmount; ++index) {
-        diceArray.dice.push({id: index, rolled: index});
-    }
-};
+// const diceArrayFilling = () => {
+//     for (let index = 1; index <= diceAmount; ++index) {
+//         diceLine.value.dice.push({id: index, rolled: index});
+//     }
+// };
 
-diceArrayFilling();
+// diceArrayFilling();
+
+/*
 
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
 const diceReroll = () => {
-    for (const cube of diceArray.dice) {
+    for (const cube of diceLine.value.dice) {
         cube.rolled = roll();
     }
 };
 
 const rollYahtzee = number => {
-    for (const cube of diceArray.dice) {
+    for (const cube of diceLine.value.dice) {
         cube.rolled = number;
     }
 };
@@ -54,7 +51,7 @@ rolling(number);
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
-        return diceArray.dice[index - 1];
+        return diceLine.value.dice[index - 1];
     }
 };
 
@@ -62,7 +59,7 @@ const countNumber = number => {
     let count = 0;
 
     for (let index = 0; index < diceAmount; ++index) {
-        if (diceArray.dice[index].rolled === number) {
+        if (diceLine.value.dice[index].rolled === number) {
             ++count;
         }
     }
@@ -75,8 +72,16 @@ let diceSum = 0;
 const summing = () => {
     diceSum = 0;
 
-    for (const cube of diceArray.dice) {
+    for (const cube of diceLine.value.dice) {
         diceSum += cube.rolled;
+    }
+};
+
+*/
+
+const cuboid = index => {
+    if (index > 0 && index <= diceAmount) {
+        return diceLine.value.dice[index - 1];
     }
 };
 
@@ -94,26 +99,36 @@ const uptick = index => {
     // recount();
 };
 
-/*
-<Dice
-            @click="uptick(cube.id)"
-            v-for="cube in diceArray.dice"
-            :key="cube.id"
-            v-model:eyeValue="cube.rolled"
-            :class="normal"
-            :inverted="normal"
-        />
-        */
+let indexer = 0;
+
+const upwick = () => {
+    ++indexer;
+
+    // if (index > 0 && index <= diceAmount) {
+    //     // const cubid = diceLine.value.dice[index - 1];
+
+    //     indexer = index;
+
+    //     // if (diceLine.dice[index - 1].rolled > valueMax) {
+    //     //     diceLine.dice[index - 1].rolled -= valueMax;
+    //     // }
+    // }
+};
+
+//
 </script>
 
 <template>
     <div>
         <Dice
-            v-for="cube in diceArray.dice"
+            @click="uptick(cube.id)"
+            v-for="cube in diceLine.dice"
             :key="cube.id"
             v-model:eyeValue="cube.rolled"
             :class="normal"
             :inverted="normal"
         />
     </div>
+
+    {{ indexer }}
 </template>

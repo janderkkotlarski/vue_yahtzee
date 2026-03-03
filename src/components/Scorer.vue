@@ -15,13 +15,17 @@ const extraYahtzee = ref(0);
 const yahtzeeNumber = ref(0);
 let moreYahtzee = false;
 
-const diceArray = reactive({
+// const diceArray = reactive({
+//     dice: [],
+// });
+
+const diceArray = ref({
     dice: [],
 });
 
 const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
-        diceArray.dice.push({id: index, rolled: index});
+        diceArray.value.dice.push({id: index, rolled: index});
     }
 };
 
@@ -30,13 +34,13 @@ diceArrayFilling();
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
 const diceReroll = () => {
-    for (const cube of diceArray.dice) {
+    for (const cube of diceArray.value.dice) {
         cube.rolled = roll();
     }
 };
 
 const rollYahtzee = number => {
-    for (const cube of diceArray.dice) {
+    for (const cube of diceArray.value.dice) {
         cube.rolled = number;
     }
 };
@@ -55,7 +59,7 @@ rolling(number);
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
-        return diceArray.dice[index - 1];
+        return diceArray.value.dice[index - 1];
     }
 };
 
@@ -82,7 +86,7 @@ const countNumber = number => {
     let count = 0;
 
     for (let index = 0; index < diceAmount; ++index) {
-        if (diceArray.dice[index].rolled === number) {
+        if (diceArray.value.dice[index].rolled === number) {
             ++count;
         }
     }
@@ -132,7 +136,7 @@ let diceSum = 0;
 const summing = () => {
     diceSum = 0;
 
-    for (const cube of diceArray.dice) {
+    for (const cube of diceArray.value.dice) {
         diceSum += cube.rolled;
     }
 };
@@ -414,11 +418,8 @@ const uptick = index => {
     </div>
     */
 
-// <RollTest />;
-</script>
-
-<template>
-    <div>
+/*
+ <div>
         <Dice
             @click="uptick(cube.id)"
             v-for="cube in diceArray.dice"
@@ -429,11 +430,36 @@ const uptick = index => {
         />
     </div>
 
-    <br />
-    <br />
-
     <div>{{ yahtzeeNumber }}</div>
 
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
     <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+
+
+
+<div>
+        <Dice
+            @click="uptick(cube.id)"
+            v-for="cube in diceArray.dice"
+            :key="cube.id"
+            v-model:eyeValue="cube.rolled"
+            :class="normal"
+            :inverted="normal"
+        />
+    </div>
+
+    */
+
+// <RollTest />
+</script>
+
+<template>
+    <div>{{ yahtzeeNumber }}</div>
+
+    <RollTest :diceLine="diceArray" />
+
+    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <br />
+    <br />
 </template>

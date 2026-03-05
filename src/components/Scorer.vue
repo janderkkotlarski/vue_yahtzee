@@ -23,13 +23,13 @@ const diceArray = ref({
     dice: [],
 });
 
-// const diceArrayFilling = () => {
-//     for (let index = 1; index <= diceAmount; ++index) {
-//         diceArray.value.dice.push({id: index, rolled: index});
-//     }
-// };
+const diceArrayFilling = () => {
+    for (let index = 1; index <= diceAmount; ++index) {
+        diceArray.value.dice.push({id: index, rolled: index});
+    }
+};
 
-// diceArrayFilling();
+diceArrayFilling();
 
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
@@ -146,7 +146,7 @@ const countUpper = () => {
 
     for (const entry of scoress(scoreUpper)) {
         if (entry.locked != back && entry.locked != lack) {
-            const score = arrayEntry(multiples.counts, 'id', entry.id).count; //  * entry.id;
+            const score = arrayEntry(multiples.counts, 'id', entry.id).count * entry.id;
             entryLocking(entry, score);
         }
 
@@ -372,6 +372,14 @@ const uptick = index => {
     recount();
 };
 
+const kliksplay = locked => {
+    if (locked === klik) {
+        return klik;
+    }
+
+    return ' ';
+};
+
 /*
 <div class="inlined">
         <table>
@@ -452,13 +460,28 @@ const uptick = index => {
 
 // <RollTest />
 // <div>{{ yahtzeeNumber }}</div>
+
+// <RollTest @rescan="recount" :diceLine="diceArray" />
+
+// <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+// <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 </script>
 
 <template>
-    <RollTest @rescan="recount" :diceLine="diceArray" />
+    <div>
+        <Dice
+            @click="uptick(cube.id)"
+            v-for="cube in diceArray.dice"
+            :key="cube.id"
+            v-model:eyeValue="cube.rolled"
+            :class="normal"
+            :inverted="normal"
+        />
+    </div>
+    {{ diceArray }}
+    <br />
+    <br />
 
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
     <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-    <br />
-    <br />
 </template>

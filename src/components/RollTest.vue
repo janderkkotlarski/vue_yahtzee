@@ -33,17 +33,19 @@ const rolling = number => {
     }
 };
 
+rolling();
+
 // const diceLine = ref({
 //     dice: [],
 // });
 
-// const diceArrayFilling = () => {
-//     for (let index = 1; index <= diceAmount; ++index) {
-//         diceLine.value.dice.push({id: index, rolled: index});
-//     }
-// };
+const diceArrayFilling = () => {
+    for (let index = 1; index <= diceAmount; ++index) {
+        diceLine.value.dice.push({id: index, rolled: index});
+    }
+};
 
-// diceArrayFilling();
+diceArrayFilling();
 
 /*
 

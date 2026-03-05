@@ -14,23 +14,23 @@ const invert = 'invert';
 
 const buttonMessage = 'Gooien: ';
 
-const publicDice = defineModel('publicRolls', {type: Array, default: []});
+// const publicDice = defineModel('publicRolls', {type: Array, default: []});
 
-const diceArray = reactive({
-    dice: [],
-    clicked: maxClicks,
-});
-
-// const diceArray = ref({
+// const diceArray = reactive({
 //     dice: [],
 //     clicked: maxClicks,
 // });
+
+const diceArray = ref({
+    dice: [],
+    clicked: maxClicks,
+});
 
 // Really nested and powerful way of changing reactive objects
 // Feels a bit like passing parameters by reference in C++
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
-        return diceArray.dice[index - 1];
+        return diceArray.value.dice[index - 1];
     }
 };
 
@@ -43,7 +43,7 @@ const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
         diceArray.dice.push({id: index, rolled: 0, inversion: normal});
 
-        publicDice.value.push({id: index, rolled: 0});
+        // publicDice.value.push({id: index, rolled: 0});
     }
 };
 
@@ -57,10 +57,10 @@ const diceArrayReset = () => {
         cubid.rolled = 0;
         cubid.inversion = normal;
 
-        publicDice.value[index - 1].rolled = 0;
+        // publicDice.value[index - 1].rolled = 0;
     }
 
-    diceArray.clicked = maxClicks;
+    diceArray.value.clicked = maxClicks;
 };
 
 // Roll all dice that are rollable
@@ -72,7 +72,7 @@ const diceRoll = () => {
         if (cubid.inversion === normal) {
             cubid.rolled = roll();
 
-            publicDice.value[index - 1].rolled = cubid.rolled;
+            // publicDice.value[index - 1].rolled = cubid.rolled;
         }
     }
 };
@@ -81,7 +81,7 @@ let throwing = false;
 
 // Throw dice a number of times and space them apart in time
 const diceRolling = () => {
-    if (diceArray.clicked > 0 && !throwing) {
+    if (diceArray.value.clicked > 0 && !throwing) {
         throwing = true;
 
         for (let throws = 0; throws < maxThrows; ++throws) {
@@ -95,7 +95,7 @@ const diceRolling = () => {
             throwing = false;
         }, millis * maxThrows);
 
-        --diceArray.clicked;
+        --diceArray.value.clicked;
     }
 };
 

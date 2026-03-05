@@ -21,6 +21,11 @@ const diceArray = reactive({
     clicked: maxClicks,
 });
 
+// const diceArray = ref({
+//     dice: [],
+//     clicked: maxClicks,
+// });
+
 // Really nested and powerful way of changing reactive objects
 // Feels a bit like passing parameters by reference in C++
 const cuboid = index => {
@@ -72,14 +77,23 @@ const diceRoll = () => {
     }
 };
 
+let throwing = false;
+
 // Throw dice a number of times and space them apart in time
 const diceRolling = () => {
-    if (diceArray.clicked > 0) {
+    if (diceArray.clicked > 0 && !throwing) {
+        throwing = true;
+
         for (let throws = 0; throws < maxThrows; ++throws) {
             setTimeout(function () {
                 diceRoll();
             }, millis * throws);
         }
+
+        // Pace throwing
+        setTimeout(function () {
+            throwing = false;
+        }, millis * maxThrows);
 
         --diceArray.clicked;
     }

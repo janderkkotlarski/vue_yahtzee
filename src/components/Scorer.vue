@@ -468,17 +468,8 @@ const kliksplay = locked => {
 </script>
 
 <template>
-    <div>
-        <Dice
-            @click="uptick(cube.id)"
-            v-for="cube in diceArray.dice"
-            :key="cube.id"
-            v-model:eyeValue="cube.rolled"
-            :class="normal"
-            :inverted="normal"
-        />
-    </div>
-    {{ diceArray }}
+    <RollTest @rescan="recount" :diceLine="diceArray" />
+
     <br />
     <br />
 

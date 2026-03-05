@@ -33,7 +33,7 @@ const rolling = number => {
     }
 };
 
-rolling();
+// rolling();
 
 // const diceLine = ref({
 //     dice: [],
@@ -45,7 +45,7 @@ const diceArrayFilling = () => {
     }
 };
 
-diceArrayFilling();
+// diceArrayFilling();
 
 /*
 
@@ -123,27 +123,7 @@ const uptick = index => {
     }
 
     emit('rescan');
-
-    // recount();
 };
-
-let indexer = 0;
-
-const upwick = () => {
-    ++indexer;
-
-    // if (index > 0 && index <= diceAmount) {
-    //     // const cubid = diceLine.value.dice[index - 1];
-
-    //     indexer = index;
-
-    //     // if (diceLine.dice[index - 1].rolled > valueMax) {
-    //     //     diceLine.dice[index - 1].rolled -= valueMax;
-    //     // }
-    // }
-};
-
-//
 </script>
 
 <template>
@@ -157,6 +137,4 @@ const upwick = () => {
             :inverted="normal"
         />
     </div>
-
-    {{ indexer }}
 </template>

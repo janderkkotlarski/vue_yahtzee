@@ -9,5 +9,5 @@ import RollTest from './components/RollTest.vue';
 </script>
 
 <template>
-    <Scorer />
+    <Roller />
 </template>

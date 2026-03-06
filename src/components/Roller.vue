@@ -1,5 +1,5 @@
 <script setup>
-import {reactive} from 'vue';
+import {ref, reactive} from 'vue';
 import Dice from './Dice.vue';
 
 // Simple constants
@@ -14,23 +14,30 @@ const invert = 'invert';
 
 const buttonMessage = 'Gooien: ';
 
-// const publicDice = defineModel('publicRolls', {type: Array, default: []});
+const publicDice = defineModel('publicRolls', {type: Array, default: []});
+const diceLine = defineModel('diceLine', {
+    type: Object,
+    default: {
+        dice: [],
+        clicked: maxClicks,
+    },
+});
 
 // const diceArray = reactive({
 //     dice: [],
 //     clicked: maxClicks,
 // });
 
-const diceArray = ref({
-    dice: [],
-    clicked: maxClicks,
-});
+// const diceLine = ref({
+//     dice: [],
+//     clicked: maxClicks,
+// });
 
 // Really nested and powerful way of changing reactive objects
 // Feels a bit like passing parameters by reference in C++
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
-        return diceArray.value.dice[index - 1];
+        return diceLine.value.dice[index - 1];
     }
 };
 
@@ -41,7 +48,7 @@ const roll = () => Math.floor(valueMax * Math.random()) + 1;
 // Do the same for the publicDice defineModel object
 const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
-        diceArray.dice.push({id: index, rolled: 0, inversion: normal});
+        diceLine.value.dice.push({id: index, rolled: 0, inversion: normal});
 
         // publicDice.value.push({id: index, rolled: 0});
     }
@@ -60,7 +67,7 @@ const diceArrayReset = () => {
         // publicDice.value[index - 1].rolled = 0;
     }
 
-    diceArray.value.clicked = maxClicks;
+    diceLine.value.clicked = maxClicks;
 };
 
 // Roll all dice that are rollable
@@ -81,7 +88,7 @@ let throwing = false;
 
 // Throw dice a number of times and space them apart in time
 const diceRolling = () => {
-    if (diceArray.value.clicked > 0 && !throwing) {
+    if (diceLine.value.clicked > 0 && !throwing) {
         throwing = true;
 
         for (let throws = 0; throws < maxThrows; ++throws) {
@@ -95,8 +102,12 @@ const diceRolling = () => {
             throwing = false;
         }, millis * maxThrows);
 
-        --diceArray.value.clicked;
+        --diceLine.value.clicked;
     }
+};
+
+const declick = () => {
+    diceLine.value.clicked -= 1;
 };
 
 // flip between free and locked
@@ -113,13 +124,12 @@ const flip = index => {
 const restart = () => {
     location.reload();
 };
-</script>
 
-<template>
+/*
     <div>
         <Dice
             @click="flip(cube.id)"
-            v-for="cube in diceArray.dice"
+            v-for="cube in diceLine.dice"
             :key="cube.id"
             v-model:eyeValue="cube.rolled"
             :class="cube.inversion"
@@ -127,11 +137,32 @@ const restart = () => {
         />
     </div>
     <br />
-    <button @click="diceRolling">{{ buttonMessage }} {{ diceArray.clicked }}</button>
+    <button @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
     <br />
     <br />
     <button @click="diceArrayReset">Nieuwe Ronde</button>
     <br />
     <br />
     <button @click="restart">Herstart</button>
+    */
+</script>
+
+<template>
+    <div>
+        <Dice
+            @click="flip(cube.id)"
+            v-for="cube in diceLine.dice"
+            :key="cube.id"
+            v-model:eyeValue="cube.rolled"
+            :class="cube.inversion"
+            :inverted="cube.inversion"
+        />
+    </div>
+    <br />
+    <button @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
+    <br />
+    <button @click="declick">Gooier: {{ diceLine.clicked }}</button>
+    <div>
+        {{ diceLine }}
+    </div>
 </template>

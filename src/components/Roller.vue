@@ -14,7 +14,6 @@ const invert = 'invert';
 
 const buttonMessage = 'Gooien: ';
 
-const publicDice = defineModel('publicRolls', {type: Array, default: []});
 const diceLine = defineModel('diceLine', {
     type: Object,
     default: {
@@ -22,16 +21,6 @@ const diceLine = defineModel('diceLine', {
         clicked: maxClicks,
     },
 });
-
-// const diceArray = reactive({
-//     dice: [],
-//     clicked: maxClicks,
-// });
-
-// const diceLine = ref({
-//     dice: [],
-//     clicked: maxClicks,
-// });
 
 // Really nested and powerful way of changing reactive objects
 // Feels a bit like passing parameters by reference in C++
@@ -52,6 +41,8 @@ const diceArrayFilling = () => {
 
         // publicDice.value.push({id: index, rolled: 0});
     }
+
+    diceLine.value.clicked = maxClicks;
 };
 
 diceArrayFilling();
@@ -106,10 +97,6 @@ const diceRolling = () => {
     }
 };
 
-const declick = () => {
-    diceLine.value.clicked -= 1;
-};
-
 // flip between free and locked
 const flip = index => {
     if (index > 0 && index <= diceAmount) {
@@ -124,8 +111,9 @@ const flip = index => {
 const restart = () => {
     location.reload();
 };
+</script>
 
-/*
+<template>
     <div>
         <Dice
             @click="flip(cube.id)"
@@ -144,25 +132,4 @@ const restart = () => {
     <br />
     <br />
     <button @click="restart">Herstart</button>
-    */
-</script>
-
-<template>
-    <div>
-        <Dice
-            @click="flip(cube.id)"
-            v-for="cube in diceLine.dice"
-            :key="cube.id"
-            v-model:eyeValue="cube.rolled"
-            :class="cube.inversion"
-            :inverted="cube.inversion"
-        />
-    </div>
-    <br />
-    <button @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
-    <br />
-    <button @click="declick">Gooier: {{ diceLine.clicked }}</button>
-    <div>
-        {{ diceLine }}
-    </div>
 </template>

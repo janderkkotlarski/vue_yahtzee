@@ -7,16 +7,24 @@ import RollTest from './components/RollTest.vue';
 
 // Need to place this here to serve as the starting base for the defineModel in the child component
 // Or else it will not work
-const diceArray = ref({
-    dice: [],
-    clicked: 0,
-});
+// It also is a good shared
+// const diceArray = ref({
+//     dice: [],
+//     clicked: 0,
+// });
 
-// <Roller />
+const recount = () => {
+    let none = 0;
+
+    ++none;
+};
+
+// <Roller :diceLine="diceArray" />
+// <RollTest :diceLine="diceArray" />
 
 // <Scorer />
 </script>
 
 <template>
-    <Roller :diceLine="diceArray" />
+    <Scorer />
 </template>

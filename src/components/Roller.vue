@@ -54,8 +54,6 @@ const diceArrayReset = () => {
 
         cubid.rolled = 0;
         cubid.inversion = normal;
-
-        // publicDice.value[index - 1].rolled = 0;
     }
 
     diceLine.value.clicked = maxClicks;

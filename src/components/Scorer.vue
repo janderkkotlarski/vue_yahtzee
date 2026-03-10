@@ -7,6 +7,7 @@ import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Va
 
 const valueMax = 6;
 const diceAmount = 5;
+const rollNumber = 0;
 
 const normal = '______';
 
@@ -14,10 +15,6 @@ let sameMax = 0;
 const extraYahtzee = ref(0);
 const yahtzeeNumber = ref(0);
 let moreYahtzee = false;
-
-// const diceArray = reactive({
-//     dice: [],
-// });
 
 const diceArray = ref({
     dice: [],
@@ -33,29 +30,13 @@ diceArrayFilling();
 
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
-const diceReroll = () => {
+const rolling = () => {
     for (const cube of diceArray.value.dice) {
-        cube.rolled = roll();
+        cube.rolled = rollNumber >= 1 && rollNumber <= valueMax ? rollNumber : roll();
     }
 };
 
-const rollYahtzee = number => {
-    for (const cube of diceArray.value.dice) {
-        cube.rolled = number;
-    }
-};
-
-const rolling = number => {
-    if (number >= 1 && number <= valueMax) {
-        rollYahtzee(number);
-    } else {
-        diceReroll();
-    }
-};
-
-const number = 4;
-
-rolling(number);
+rolling();
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
@@ -116,7 +97,7 @@ const countMultiples = () => {
             sameMax = amount.count;
         }
 
-        // yahtzee needed so yahtzeenNumber does not go to 6 when index gets upped
+        // yahtzee needed so yahtzeeNumber does not go to 6 when index gets upped
         if (sameMax === diceAmount && !yahtzee) {
             yahtzeeNumber.value = index;
 
@@ -331,10 +312,8 @@ const recount = () => {
     multiYahtzee();
     klikable();
     summing();
-
     countUpper();
     sumUpper();
-
     countLower();
     sumLower();
 };
@@ -353,7 +332,7 @@ const lockEntry = (box, index) => {
         score.final = score.scored;
         score.locked = lock;
 
-        rolling(number);
+        rolling();
         recount();
     }
 };

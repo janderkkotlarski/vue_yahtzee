@@ -1,5 +1,5 @@
 <script setup>
-import {ref, reactive} from 'vue';
+import {ref, reactive, computed} from 'vue';
 import Dice from './Dice.vue';
 
 const emit = defineEmits(['inFocus', 'rescan']);
@@ -13,27 +13,26 @@ const normal = '______';
 
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
-const diceReroll = () => {
-    for (const cube of diceLine.value.dice) {
-        cube.rolled = roll();
-    }
-};
+const numberLine = 3;
 
-const rollYahtzee = number => {
-    for (const cube of diceLine.value.dice) {
-        cube.rolled = number;
-    }
-};
+// const diceReroll = () => {
+//     for (const cube of diceLine.value.dice) {
+//         cube.rolled = roll();
+//     }
+// };
 
-const rolling = number => {
-    if (number >= 1 && number <= valueMax) {
-        rollYahtzee(number);
-    } else {
-        diceReroll();
-    }
-};
+// const rollDice = () => {
 
-// rolling();
+//      {
+//         cube.rolled = numberLine;
+//     }
+// };
+
+// const rolling = computed(() => {
+//     for (const cube of diceLine.value.dice) {
+//         cube.rolled = numberLine >= 1 && numberLine <= valueMax ? numberLine : roll();
+//     }
+// });
 
 // const diceLine = ref({
 //     dice: [],
@@ -46,40 +45,7 @@ const diceArrayFilling = () => {
 };
 
 // diceArrayFilling();
-
-/*
-
-const roll = () => Math.floor(valueMax * Math.random()) + 1;
-
-const diceReroll = () => {
-    for (const cube of diceLine.value.dice) {
-        cube.rolled = roll();
-    }
-};
-
-const rollYahtzee = number => {
-    for (const cube of diceLine.value.dice) {
-        cube.rolled = number;
-    }
-};
-
-const rolling = number => {
-    if (number >= 1 && number <= valueMax) {
-        rollYahtzee(number);
-    } else {
-        diceReroll();
-    }
-};
-
-const number = 0;
-
-rolling(number);
-
-const cuboid = index => {
-    if (index > 0 && index <= diceAmount) {
-        return diceLine.value.dice[index - 1];
-    }
-};
+// rolling();
 
 const countNumber = number => {
     let count = 0;
@@ -103,8 +69,6 @@ const summing = () => {
     }
 };
 
-*/
-
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
         return diceLine.value.dice[index - 1];
@@ -124,6 +88,18 @@ const uptick = index => {
 
     emit('rescan');
 };
+
+// @click="uptick(cube.id)"
+
+// <div>
+//         <Dice
+//             v-for="cube in diceLine.dice"
+//             :key="cube.id"
+//             v-model:eyeValue="cube.rolled"
+//             :class="normal"
+//             :inverted="normal"
+//         />
+//     </div>
 </script>
 
 <template>

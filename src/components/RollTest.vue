@@ -15,18 +15,25 @@ const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
 const numberLine = 3;
 
-// const diceReroll = () => {
-//     for (const cube of diceLine.value.dice) {
-//         cube.rolled = roll();
-//     }
-// };
+const diceReroll = () => {
+    for (const cube of diceLine.value.dice) {
+        cube.rolled = roll();
+    }
+};
 
-// const rollDice = () => {
+const rollDice = () => {
+    for (const cube of diceLine.value.dice) {
+        cube.rolled = numberLine;
+    }
+};
 
-//      {
-//         cube.rolled = numberLine;
-//     }
-// };
+const rolling = () => {
+    if (numberLine >= 1 && numberLine <= valueMax) {
+        diceReroll();
+    } else {
+        rollDice();
+    }
+};
 
 // const rolling = computed(() => {
 //     for (const cube of diceLine.value.dice) {
@@ -38,14 +45,14 @@ const numberLine = 3;
 //     dice: [],
 // });
 
-const diceArrayFilling = () => {
-    for (let index = 1; index <= diceAmount; ++index) {
-        diceLine.value.dice.push({id: index, rolled: index});
-    }
-};
+// const diceArrayFilling = () => {
+//     for (let index = 1; index <= diceAmount; ++index) {
+//         diceLine.value.dice.push({id: index, rolled: index});
+//     }
+// };
 
 // diceArrayFilling();
-// rolling();
+rolling();
 
 const countNumber = number => {
     let count = 0;

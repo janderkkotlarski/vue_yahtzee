@@ -1,9 +1,11 @@
 <script setup>
-import {ref, reactive} from 'vue';
+import {ref} from 'vue';
 import Dice from './Dice.vue';
 import RollTest from './RollTest.vue';
 import Scorelist from './Scorelist.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
+
+import {countMultiples_} from './Functinit.mjs';
 
 const valueMax = 6;
 const diceAmount = 5;
@@ -19,6 +21,8 @@ let moreYahtzee = false;
 const diceArray = ref({
     dice: [],
 });
+
+const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
 
 const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
@@ -36,7 +40,7 @@ const rolling = () => {
     }
 };
 
-rolling();
+// rolling();
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
@@ -51,13 +55,13 @@ const scoress = list => {
     return list.value.scores;
 };
 
-const multiples = reactive({
+const multiples = ref({
     counts: [],
 });
 
 const initMultiples = () => {
     for (let index = 1; index <= valueMax; ++index) {
-        multiples.counts.push({id: index, count: 0});
+        multiples.value.counts.push({id: index, count: 0});
     }
 };
 
@@ -90,7 +94,7 @@ const countMultiples = () => {
     let index = 1;
     let yahtzee = false;
 
-    for (const amount of multiples.counts) {
+    for (const amount of multiples.value.counts) {
         amount.count = countNumber(index);
 
         if (sameMax < amount.count) {
@@ -127,7 +131,7 @@ const countUpper = () => {
 
     for (const entry of scoress(scoreUpper)) {
         if (entry.locked != back && entry.locked != lack) {
-            const score = arrayEntry(multiples.counts, 'id', entry.id).count * entry.id;
+            const score = arrayEntry(multiples.value.counts, 'id', entry.id).count * entry.id;
             entryLocking(entry, score);
         }
 
@@ -234,7 +238,7 @@ const klikable = () => {
 // Check if there are 3 dice with a value and 2 dice with another value
 const filledHouse = () => {
     if (sameMax === 3) {
-        for (const amount of multiples.counts) {
+        for (const amount of multiples.value.counts) {
             if (amount.count == 2) {
                 return true;
             }
@@ -249,7 +253,7 @@ const consecutive = () => {
     let consec = 0;
     let counted = 0;
 
-    for (const amount of multiples.counts) {
+    for (const amount of multiples.value.counts) {
         counted = amount.count ? counted + 1 : 0;
 
         if (counted > consec) {
@@ -308,6 +312,7 @@ const sumLower = () => {
 };
 
 const recount = () => {
+    // countMultiples_(multiples, yahtzeeNumber, diceAmount, sameMax);
     countMultiples();
     multiYahtzee();
     klikable();
@@ -332,7 +337,7 @@ const lockEntry = (box, index) => {
         score.final = score.scored;
         score.locked = lock;
 
-        rolling();
+        // rolling();
         recount();
     }
 };

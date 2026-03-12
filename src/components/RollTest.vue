@@ -2,6 +2,8 @@
 import {ref, reactive, computed} from 'vue';
 import Dice from './Dice.vue';
 
+const props = defineProps(['rolls']);
+
 const emit = defineEmits(['inFocus', 'rescan']);
 
 const diceLine = defineModel('diceLine', {type: Object, default: {dice: []}});
@@ -33,7 +35,13 @@ const rolling = () => {
     } else {
         rollDice();
     }
+
+    props.rolls = false;
 };
+
+defineExpose({
+    rolling,
+});
 
 // const rolling = computed(() => {
 //     for (const cube of diceLine.value.dice) {

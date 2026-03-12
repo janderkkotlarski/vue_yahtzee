@@ -7,6 +7,12 @@ import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Va
 
 import {countMultiples_} from './Functinit.mjs';
 
+const rollingRef = ref(null);
+
+const rollingParent = () => {
+    rollingRef.value.rolling();
+};
+
 const valueMax = 6;
 const diceAmount = 5;
 const rollNumber = 0;
@@ -34,11 +40,11 @@ diceArrayFilling();
 
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
-const rolling = () => {
-    for (const cube of diceArray.value.dice) {
-        cube.rolled = rollNumber >= 1 && rollNumber <= valueMax ? rollNumber : roll();
-    }
-};
+// const rolling = () => {
+//     for (const cube of diceArray.value.dice) {
+//         cube.rolled = rollNumber >= 1 && rollNumber <= valueMax ? rollNumber : roll();
+//     }
+// };
 
 // rolling();
 
@@ -325,6 +331,8 @@ const recount = () => {
 
 recount();
 
+const roller = ref(false);
+
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
@@ -338,6 +346,9 @@ const lockEntry = (box, index) => {
         score.locked = lock;
 
         // rolling();
+
+        rollingParent();
+
         recount();
     }
 };
@@ -452,7 +463,7 @@ const kliksplay = locked => {
 </script>
 
 <template>
-    <RollTest @rescan="recount" :diceLine="diceArray" />
+    <RollTest @rescan="recount" ref="rollingRef" :diceLine="diceArray" />
 
     <br />
     <br />

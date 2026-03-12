@@ -3,6 +3,7 @@ import {ref} from 'vue';
 import Dice from './Dice.vue';
 import RollTest from './RollTest.vue';
 import Scorelist from './Scorelist.vue';
+import Scoring from './Scoring.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
 import {countMultiples_} from './Functinit.mjs';
@@ -11,6 +12,12 @@ const rollingRef = ref(null);
 
 const rollingParent = () => {
     rollingRef.value.rolling();
+};
+
+const recountRef = ref(null);
+
+const recountParent = () => {
+    recountRef.value.recount();
 };
 
 const valueMax = 6;
@@ -37,16 +44,6 @@ const diceArrayFilling = () => {
 };
 
 diceArrayFilling();
-
-const roll = () => Math.floor(valueMax * Math.random()) + 1;
-
-// const rolling = () => {
-//     for (const cube of diceArray.value.dice) {
-//         cube.rolled = rollNumber >= 1 && rollNumber <= valueMax ? rollNumber : roll();
-//     }
-// };
-
-// rolling();
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
@@ -329,9 +326,7 @@ const recount = () => {
     sumLower();
 };
 
-recount();
-
-const roller = ref(false);
+recountParent();
 
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
@@ -345,113 +340,13 @@ const lockEntry = (box, index) => {
         score.final = score.scored;
         score.locked = lock;
 
-        // rolling();
-
         rollingParent();
 
-        recount();
+        // recount();
+
+        recountParent();
     }
 };
-
-const uptick = index => {
-    if (index > 0 && index <= diceAmount) {
-        const cubid = cuboid(index);
-
-        ++cubid.rolled;
-
-        if (cubid.rolled > valueMax) {
-            cubid.rolled -= valueMax;
-        }
-    }
-
-    recount();
-};
-
-const kliksplay = locked => {
-    if (locked === klik) {
-        return klik;
-    }
-
-    return ' ';
-};
-
-/*
-<div class="inlined">
-        <table>
-            <tr>
-                <th>Combinatie</th>
-                <th>Punten</th>
-                <th>Gescoord</th>
-                <th>Klikbaar</th>
-            </tr>
-            <tr
-                @click="lockEntry(scoreUpper, score.id)"
-                v-for="score in scoreUpper.scores"
-                :key="score.id"
-                :class="score.locked"
-            >
-                <td>{{ score.title }}</td>
-                <td>{{ score.scored }}</td>
-                <td>{{ score.final }}</td>
-                <td>{{ kliksplay(score.locked) }}</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="inlined">
-        <table>
-            <tr>
-                <th>Combinatie</th>
-                <th>Punten</th>
-                <th>Gescoord</th>
-                <th>Klikbaar</th>
-            </tr>
-            <tr
-                @click="lockEntry(scoreLower, score.id)"
-                v-for="score in scoreLower.scores"
-                :key="score.id"
-                :class="score.locked"
-            >
-                <td>{{ score.title }}</td>
-                <td>{{ score.scored }}</td>
-                <td>{{ score.final }}</td>
-                <td>{{ kliksplay(score.locked) }}</td>
-            </tr>
-        </table>
-    </div>
-    */
-
-/*
- <div>
-        <Dice
-            @click="uptick(cube.id)"
-            v-for="cube in diceArray.dice"
-            :key="cube.id"
-            v-model:eyeValue="cube.rolled"
-            :class="normal"
-            :inverted="normal"
-        />
-    </div>
-
-    <div>{{ yahtzeeNumber }}</div>
-
-    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-    <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-
-
-
-<div>
-        <Dice
-            @click="uptick(cube.id)"
-            v-for="cube in diceArray.dice"
-            :key="cube.id"
-            v-model:eyeValue="cube.rolled"
-            :class="normal"
-            :inverted="normal"
-        />
-    </div>
-
-    */
 
 // <RollTest />
 // <div>{{ yahtzeeNumber }}</div>
@@ -467,6 +362,8 @@ const kliksplay = locked => {
 
     <br />
     <br />
+
+    <Scoring ref="recountRef" :scoreUpperList="scoreUpper" :scoreLowerList="scoreLower" />
 
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
     <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />

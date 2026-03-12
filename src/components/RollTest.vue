@@ -35,8 +35,6 @@ const rolling = () => {
     } else {
         rollDice();
     }
-
-    props.rolls = false;
 };
 
 defineExpose({

@@ -2,7 +2,15 @@
 import {ref, reactive, computed} from 'vue';
 import Dice from './Dice.vue';
 
-const props = defineProps(['rolls']);
+// const props = defineProps(['rolls']);
+
+// const props = defineProps({
+//     { tester: Number, default: 5 },
+// });
+
+// // props.tester = 6;
+
+// console.log(props.tester);
 
 const emit = defineEmits(['inFocus', 'rescan']);
 
@@ -37,6 +45,8 @@ const rolling = () => {
     }
 };
 
+rolling();
+
 defineExpose({
     rolling,
 });
@@ -58,7 +68,6 @@ defineExpose({
 // };
 
 // diceArrayFilling();
-rolling();
 
 const countNumber = number => {
     let count = 0;

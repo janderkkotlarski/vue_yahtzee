@@ -1,16 +1,16 @@
 <script setup>
 import {ref} from 'vue';
 import Dice from './Dice.vue';
-// import RollTest from './RollTest.vue';
+import RollTest from './RollTest.vue';
 // import Scorelist from './Scorelist.vue';
 // import Scoring from './Scoring.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
-// const rollingRef = ref(null);
+const rollingRef = ref(null);
 
-// const rollingParent = () => {
-//     rollingRef.value.rolling();
-// };
+const rollingParent = () => {
+    rollingRef.value.rolling();
+};
 
 // const recountRef = ref(null);
 
@@ -33,7 +33,11 @@ const diceArray = ref({
     dice: [],
 });
 
-const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
+// const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
+
+const roll = () => Math.floor(valueMax * Math.random()) + 1;
+
+const numberLine = 3;
 
 const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
@@ -42,6 +46,30 @@ const diceArrayFilling = () => {
 };
 
 diceArrayFilling();
+
+// const diceReroll = () => {
+//     for (const cube of diceArray.value.dice) {
+//         cube.rolled = roll();
+//     }
+// };
+
+// const rollDice = () => {
+//     for (const cube of diceArray.value.dice) {
+//         cube.rolled = numberLine;
+//     }
+// };
+
+// const rolling = () => {
+//     if (numberLine >= 1 && numberLine <= valueMax) {
+//         diceReroll();
+//     } else {
+//         rollDice();
+//     }
+// };
+
+// rolling();
+
+/*
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
@@ -340,13 +368,17 @@ const lockEntry = (box, index) => {
         score.final = score.scored;
         score.locked = lock;
 
-        rollingParent();
+        rolling();
+
+        // rollingParent();
 
         recount();
 
         // recountParent();
     }
 };
+
+*/
 
 // <RollTest />
 // <div>{{ yahtzeeNumber }}</div>
@@ -359,9 +391,15 @@ const lockEntry = (box, index) => {
 
 // <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 // <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+
+const recant = () => {
+    rollingParent();
+};
 </script>
 
 <template>
+    <RollTest @rescan="recant" ref="rollingRef" :diceLine="diceArray" />
+
     <br />
     <br />
 </template>

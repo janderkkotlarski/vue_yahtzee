@@ -5,8 +5,6 @@ import RollTest from './RollTest.vue';
 import Scorelist from './Scorelist.vue';
 import {klik, klak, lock, back, lack} from './Varinit.mjs';
 
-import {countMultiples_} from './Functinit.mjs';
-
 const valueMax = 6;
 const diceAmount = 5;
 const rollNumber = 0;

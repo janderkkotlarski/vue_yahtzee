@@ -1,7 +1,7 @@
 <script setup>
 // import {ref} from 'vue';
 
-import Roller from './components/Roller.vue';
+// import Roller from './components/Roller.vue';
 import Scorer from './components/Scorer.vue';
 // import RollTest from './components/RollTest.vue';
 
@@ -19,4 +19,6 @@ import Scorer from './components/Scorer.vue';
 // <Scorer />
 </script>
 
-<template>Hoi</template>
+<template>
+    <Scorer />
+</template>

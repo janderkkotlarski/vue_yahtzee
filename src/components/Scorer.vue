@@ -1,24 +1,22 @@
 <script setup>
 import {ref} from 'vue';
 import Dice from './Dice.vue';
-import RollTest from './RollTest.vue';
-import Scorelist from './Scorelist.vue';
-import Scoring from './Scoring.vue';
+// import RollTest from './RollTest.vue';
+// import Scorelist from './Scorelist.vue';
+// import Scoring from './Scoring.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
-import {countMultiples_} from './Functinit.mjs';
+// const rollingRef = ref(null);
 
-const rollingRef = ref(null);
+// const rollingParent = () => {
+//     rollingRef.value.rolling();
+// };
 
-const rollingParent = () => {
-    rollingRef.value.rolling();
-};
+// const recountRef = ref(null);
 
-const recountRef = ref(null);
-
-const recountParent = () => {
-    recountRef.value.recount();
-};
+// const recountParent = () => {
+//     recountRef.value.recount();
+// };
 
 const valueMax = 6;
 const diceAmount = 5;
@@ -326,7 +324,9 @@ const recount = () => {
     sumLower();
 };
 
-recountParent();
+recount();
+
+// recountParent();
 
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
@@ -342,9 +342,9 @@ const lockEntry = (box, index) => {
 
         rollingParent();
 
-        // recount();
+        recount();
 
-        recountParent();
+        // recountParent();
     }
 };
 
@@ -353,18 +353,15 @@ const lockEntry = (box, index) => {
 
 // <RollTest @rescan="recount" :diceLine="diceArray" />
 
+// <RollTest @rescan="recount" ref="rollingRef" :diceLine="diceArray" />
+
+// <Scoring ref="recountRef" :scoreUpperList="scoreUpper" :scoreLowerList="scoreLower" />
+
 // <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 // <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 </script>
 
 <template>
-    <RollTest @rescan="recount" ref="rollingRef" :diceLine="diceArray" />
-
     <br />
     <br />
-
-    <Scoring ref="recountRef" :scoreUpperList="scoreUpper" :scoreLowerList="scoreLower" />
-
-    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-    <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 </template>

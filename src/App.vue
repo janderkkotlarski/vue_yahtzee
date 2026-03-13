@@ -1,9 +1,9 @@
 <script setup>
-import {ref} from 'vue';
+// import {ref} from 'vue';
 
 import Roller from './components/Roller.vue';
 import Scorer from './components/Scorer.vue';
-import RollTest from './components/RollTest.vue';
+// import RollTest from './components/RollTest.vue';
 
 // Need to place this here to serve as the starting base for the defineModel in the child component
 // Or else it will not work
@@ -13,18 +13,10 @@ import RollTest from './components/RollTest.vue';
 //     clicked: 0,
 // });
 
-const recount = () => {
-    let none = 0;
-
-    ++none;
-};
-
 // <Roller :diceLine="diceArray" />
 // <RollTest :diceLine="diceArray" />
 
 // <Scorer />
 </script>
 
-<template>
-    <Scorer />
-</template>
+<template>Hoi</template>

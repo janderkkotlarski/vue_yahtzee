@@ -33,19 +33,20 @@ const diceArray = ref({
     dice: [],
 });
 
-// const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
+const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
 
-const roll = () => Math.floor(valueMax * Math.random()) + 1;
+// const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
-const numberLine = 3;
+// const numberLine = 3;
 
 const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
-        diceArray.value.dice.push({id: index, rolled: index});
+        diceRow.value.dice.push({id: index, rolled: -index});
     }
 };
 
 diceArrayFilling();
+// rollingParent();
 
 // const diceReroll = () => {
 //     for (const cube of diceArray.value.dice) {
@@ -398,7 +399,7 @@ const recant = () => {
 </script>
 
 <template>
-    <RollTest @rescan="recant" ref="rollingRef" :diceLine="diceArray" />
+    <RollTest @rescan="recant" ref="rollingRef" :diceLine="diceRow" />
 
     <br />
     <br />

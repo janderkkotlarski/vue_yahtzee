@@ -14,8 +14,6 @@ import Dice from './Dice.vue';
 
 const emit = defineEmits(['inFocus', 'rescan']);
 
-const diceLine = defineModel('diceLine', {type: Object, default: {dice: []}});
-
 const valueMax = 6;
 const diceAmount = 5;
 
@@ -25,25 +23,47 @@ const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
 const numberLine = 3;
 
+// const diceReroll = () => {
+//     for (const cube of diceLine.value.dice) {
+//         cube.rolled = roll();
+//     }
+// };
+
+// const rollDice = () => {
+//     for (const cube of diceLine.value.dice) {
+//         cube.rolled = numberLine;
+//     }
+// };
+
 const diceReroll = () => {
-    for (const cube of diceLine.value.dice) {
-        cube.rolled = roll();
+    const dices = {};
+
+    for (let index = 1; index <= diceAmount; ++index) {
+        let eyes = roll();
+
+        if (numberLine >= 1 && numberLine <= valueMax) {
+            eyes = numberLine;
+        }
+
+        dices.push({id: index, rolled: eyes});
     }
+
+    return dices;
 };
 
-const rollDice = () => {
-    for (const cube of diceLine.value.dice) {
-        cube.rolled = numberLine;
-    }
-};
+const diceRolls = diceReroll();
 
-const rolling = () => {
-    if (numberLine >= 1 && numberLine <= valueMax) {
-        diceReroll();
-    } else {
-        rollDice();
-    }
-};
+const diceLine = defineModel('diceLine', {type: Object, default: {dice: diceRolls}});
+
+// const rolling = () => {
+//     if (numberLine >= 1 && numberLine <= valueMax) {
+//         diceReroll();
+//     } else {
+//         rollDice();
+//     }
+// };
+
+// const diceLine = defineModel('diceLine', {type: Object, default: {dice: []}});
 
 rolling();
 

@@ -45,13 +45,11 @@ const diceReroll = () => {
 
 const diceRolls = diceReroll();
 
-const diceLine = defineModel('diceLine', {type: Object, default: []});
+const diceLine = defineModel('diceLine');
 
 const runs = ref(0);
 
 const initDiceRolls = () => {
-    ++runs.value;
-
     if (diceLine.value === undefined) {
         diceLine.value = diceRolls;
     }

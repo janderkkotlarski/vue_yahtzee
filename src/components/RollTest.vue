@@ -1,16 +1,8 @@
 <script setup>
 import {ref, reactive, computed, watch} from 'vue';
-// import Dice from './Dice.vue';
+import Dice from './Dice.vue';
 
 // const props = defineProps(['rolls']);
-
-// const props = defineProps({
-//     { tester: Number, default: 5 },
-// });
-
-// // props.tester = 6;
-
-// console.log(props.tester);
 
 const emit = defineEmits(['inFocus', 'rescan']);
 
@@ -21,7 +13,7 @@ const normal = '______';
 
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
-const numberLine = 3;
+const numberLine = 0;
 
 // const diceReroll = () => {
 //     for (const cube of diceLine.value.dice) {
@@ -55,7 +47,11 @@ const diceRolls = diceReroll();
 
 const diceLine = defineModel('diceLine', {type: Object, default: []});
 
+const runs = ref(0);
+
 const initDiceRolls = () => {
+    ++runs.value;
+
     if (diceLine.value === undefined) {
         diceLine.value = diceRolls;
     }
@@ -155,5 +151,7 @@ const uptick = index => {
 </script>
 
 <template>
-    {{ diceRolls }}
+    {{ runs }}
+    <br />
+    {{ diceLine }}
 </template>

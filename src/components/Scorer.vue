@@ -1,16 +1,22 @@
 <script setup>
 import {ref} from 'vue';
-import Dice from './Dice.vue';
+// import Dice from './Dice.vue';
 import RollTest from './RollTest.vue';
 // import Scorelist from './Scorelist.vue';
 // import Scoring from './Scoring.vue';
-import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
+// import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
-const rollingRef = ref(null);
+// const rollingRef = ref(null);
 
-const rollingParent = () => {
-    rollingRef.value.rolling();
-};
+// const rollingParent = () => {
+//     rollingRef.value.rolling();
+// };
+
+// const diceRollsRef = ref(null);
+
+// const diceRollsParent = () => {
+//     diceRollsRef.value.diceRolls;
+// };
 
 // const recountRef = ref(null);
 
@@ -18,34 +24,32 @@ const rollingParent = () => {
 //     recountRef.value.recount();
 // };
 
-const valueMax = 6;
-const diceAmount = 5;
-const rollNumber = 0;
+// const valueMax = 6;
+// const diceAmount = 5;
+// const rollNumber = 0;
 
-const normal = '______';
+// const normal = '______';
 
-let sameMax = 0;
-const extraYahtzee = ref(0);
-const yahtzeeNumber = ref(0);
-let moreYahtzee = false;
+// let sameMax = 0;
+// const extraYahtzee = ref(0);
+// const yahtzeeNumber = ref(0);
+// let moreYahtzee = false;
 
-const diceArray = ref({
-    dice: [],
-});
+const diceArray = ref();
 
-const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
+// const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
 
 // const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
 // const numberLine = 3;
 
-const diceArrayFilling = () => {
-    for (let index = 1; index <= diceAmount; ++index) {
-        diceRow.value.dice.push({id: index, rolled: -index});
-    }
-};
+// const diceArrayFilling = () => {
+//     for (let index = 1; index <= diceAmount; ++index) {
+//         diceRow.value.dice.push({id: index, rolled: -index});
+//     }
+// };
 
-diceArrayFilling();
+// diceArrayFilling();
 // rollingParent();
 
 // const diceReroll = () => {
@@ -399,7 +403,7 @@ const recant = () => {
 </script>
 
 <template>
-    <RollTest @rescan="recant" ref="rollingRef" :diceLine="diceRow" />
+    <RollTest :diceLine="diceArray" />
 
     <br />
     <br />

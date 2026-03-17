@@ -1,6 +1,6 @@
 <script setup>
-import {ref, reactive, computed} from 'vue';
-import Dice from './Dice.vue';
+import {ref, reactive, computed, watch} from 'vue';
+// import Dice from './Dice.vue';
 
 // const props = defineProps(['rolls']);
 
@@ -36,7 +36,7 @@ const numberLine = 3;
 // };
 
 const diceReroll = () => {
-    const dices = {};
+    const dices = [];
 
     for (let index = 1; index <= diceAmount; ++index) {
         let eyes = roll();
@@ -53,7 +53,17 @@ const diceReroll = () => {
 
 const diceRolls = diceReroll();
 
-const diceLine = defineModel('diceLine', {type: Object, default: {dice: diceRolls}});
+const diceLine = defineModel('diceLine', {type: Object, default: []});
+
+const initDiceRolls = () => {
+    if (diceLine.value === undefined) {
+        diceLine.value = diceRolls;
+    }
+};
+
+initDiceRolls();
+
+watch(diceLine, initDiceRolls);
 
 // const rolling = () => {
 //     if (numberLine >= 1 && numberLine <= valueMax) {
@@ -65,11 +75,11 @@ const diceLine = defineModel('diceLine', {type: Object, default: {dice: diceRoll
 
 // const diceLine = defineModel('diceLine', {type: Object, default: {dice: []}});
 
-rolling();
+// rolling();
 
-defineExpose({
-    rolling,
-});
+// defineExpose({
+//     rolling,
+// });
 
 // const rolling = computed(() => {
 //     for (const cube of diceLine.value.dice) {
@@ -145,14 +155,5 @@ const uptick = index => {
 </script>
 
 <template>
-    <div>
-        <Dice
-            @click="uptick(cube.id)"
-            v-for="cube in diceLine.dice"
-            :key="cube.id"
-            v-model:eyeValue="cube.rolled"
-            :class="normal"
-            :inverted="normal"
-        />
-    </div>
+    {{ diceRolls }}
 </template>

@@ -1,5 +1,4 @@
 <script setup>
-import {ref, reactive} from 'vue';
 import Dice from './Dice.vue';
 
 // Simple constants

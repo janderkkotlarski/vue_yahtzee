@@ -5,6 +5,7 @@ import Roller from './components/Roller.vue';
 import Scorer from './components/Scorer.vue';
 import Scorelist from './components/Scorelist.vue';
 import RollTest from './components/RollTest.vue';
+import RollTester from './components/RollTester.vue';
 
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './components/Varinit.mjs';
 
@@ -28,5 +29,5 @@ const diceClap = ref({dice: [], clicked: 0});
 </script>
 
 <template>
-    <RollTest :diceLine="diceArray" />
+    <RollTester :diceLine="diceArray" />
 </template>

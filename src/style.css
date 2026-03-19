@@ -149,3 +149,7 @@ th, td {
 .row {
   display: inline-block;
 }
+
+.hidden {
+  color: #202020;
+}

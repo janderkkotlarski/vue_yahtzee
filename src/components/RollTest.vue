@@ -28,19 +28,6 @@ const diceInit = () => {
 
 const runs = ref(0);
 
-// A way of initializing defineModel without needing outside initialization
-const initDiceRolls = () => {
-    if (diceLine.value === undefined) {
-        diceInit();
-    }
-};
-
-// Initialization
-initDiceRolls();
-
-// Check the initialization and needs watch to be imported from vue
-watch(diceLine, initDiceRolls);
-
 const rolling = () => {
     for (const cube of diceLine.value.dice) {
         if (numberLine > 0 && numberLine <= valueMax) {
@@ -50,6 +37,23 @@ const rolling = () => {
         }
     }
 };
+
+// A way of initializing defineModel without needing outside initialization
+const initDiceRolls = () => {
+    // if (diceLine.value === undefined) {
+    //     diceInit();
+    // } else {
+
+    // }
+
+    diceInit();
+};
+
+// Initialization
+initDiceRolls();
+
+// Check the initialization and needs watch to be imported from vue
+watch(diceLine, initDiceRolls);
 
 rolling();
 
@@ -97,18 +101,35 @@ const cuboid = index => {
     }
 };
 
+// const uptick = index => {
+//     if (index > 0 && index <= diceAmount) {
+//         const cubid = cuboid(index);
+
+//         ++cubid.rolled;
+
+//         if (cubid.rolled > valueMax) {
+//             cubid.rolled -= valueMax;
+//         }
+//     }
+
+//     // emit('rescan');
+// };
+
+const count = ref(0);
+let bount = 0;
+
 const uptick = index => {
-    if (index > 0 && index <= diceAmount) {
-        const cubid = cuboid(index);
+    ++count.value;
 
-        ++cubid.rolled;
+    for (const cube of diceLine.value.dice) {
+        if (cube.id === index) {
+            ++cube.rolled;
+        }
 
-        if (cubid.rolled > valueMax) {
-            cubid.rolled -= valueMax;
+        if (cube.rolled > valueMax) {
+            cube.rolled -= valueMax;
         }
     }
-
-    // emit('rescan');
 };
 
 // @click="uptick(cube.id)"
@@ -121,14 +142,14 @@ const uptick = index => {
 //             :class="normal"
 //             :inverted="normal"
 //         />
+// //     </div>
+
+//  <div v-for="cube in diceLine.dice" :key="cube.id">
+//         {{ cube.rolled }}
 //     </div>
 </script>
 
 <template>
-    <div v-for="cube in diceLine.dice" :key="cube.id">
-        {{ cube.rolled }}
-    </div>
-
     <Dice
         @click="uptick(cube.id)"
         v-for="cube in diceLine.dice"
@@ -137,4 +158,6 @@ const uptick = index => {
         :class="normal"
         :inverted="normal"
     />
+
+    <div class="hidden">{{ count }}</div>
 </template>

@@ -2,7 +2,7 @@
 import {ref} from 'vue';
 // import Dice from './Dice.vue';
 import RollTest from './RollTest.vue';
-// import Scorelist from './Scorelist.vue';
+import Scorelist from './Scorelist.vue';
 // import Scoring from './Scoring.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
@@ -47,8 +47,6 @@ const cuboid = index => {
 
 const scoreUpper = ref(scoreUpperInit);
 const scoreLower = ref(scoreLowerInit);
-
-/*
 
 const scoress = list => {
     return list.value.scores;
@@ -321,6 +319,7 @@ const recount = () => {
     sumLower();
 };
 
+/*
 recount();
 
 // recountParent();
@@ -347,23 +346,25 @@ const lockEntry = (box, index) => {
     }
 };
 
-*/
+
 
 const lockEntry = (box, index) => {
-    // const score = arrayEntry(box.scores, 'id', index);
-    // if (score.locked === klik && typeof score.scored === 'number') {
-    //     // When another yahtzee is scored, up the bonus
-    //     if (moreYahtzee) {
-    //         ++extraYahtzee.value;
-    //     }
-    //     score.final = score.scored;
-    //     score.locked = lock;
-    //     rolling();
-    //     // rollingParent();
-    //     recount();
-    //     // recountParent();
-    // }
+    const score = arrayEntry(box.scores, 'id', index);
+    if (score.locked === klik && typeof score.scored === 'number') {
+        // When another yahtzee is scored, up the bonus
+        if (moreYahtzee) {
+            ++extraYahtzee.value;
+        }
+        score.final = score.scored;
+        score.locked = lock;
+        rolling();
+        // rollingParent();
+        recount();
+        // recountParent();
+    }
 };
+
+*/
 
 // <RollTest />
 // <div>{{ yahtzeeNumber }}</div>
@@ -377,15 +378,13 @@ const lockEntry = (box, index) => {
 // <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 // <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 
-const recant = () => {
-    rollingParent();
-};
+// const recant = () => {
+//     rollingParent();
+// };
 </script>
 
 <template>
-    <div>{{ scoreUpper }}</div>
-
-    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <RollTest :diceLine="diceArray" />
 
     <br />
     <br />

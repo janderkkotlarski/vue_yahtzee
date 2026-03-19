@@ -20,6 +20,8 @@ const kliksplay = locked => {
 
     return ' ';
 };
+
+// @click="$emit('locker', scoreListing, score.id)"
 </script>
 
 <template>
@@ -31,12 +33,7 @@ const kliksplay = locked => {
                 <th>Gescoord</th>
                 <th>Klikbaar</th>
             </tr>
-            <tr
-                @click="$emit('locker', scoreListing, score.id)"
-                v-for="score in scoreListing.scores"
-                :key="score.id"
-                :class="score.locked"
-            >
+            <tr v-for="score in scoreListing.scores" :key="score.id" :class="score.locked">
                 <td>{{ score.title }}</td>
                 <td>{{ score.scored }}</td>
                 <td>{{ score.final }}</td>

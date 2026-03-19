@@ -1,8 +1,6 @@
 <script setup>
-import {ref, reactive, computed, watch} from 'vue';
+import {ref, watch} from 'vue';
 import Dice from './Dice.vue';
-
-// const props = defineProps(['rolls']);
 
 const emit = defineEmits(['inFocus', 'rescan']);
 
@@ -14,73 +12,50 @@ const normal = '______';
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
 
 const numberLine = 0;
+const diceLine = defineModel('diceLine');
 
-// const diceReroll = () => {
-//     for (const cube of diceLine.value.dice) {
-//         cube.rolled = roll();
-//     }
-// };
-
-// const rollDice = () => {
-//     for (const cube of diceLine.value.dice) {
-//         cube.rolled = numberLine;
-//     }
-// };
-
-const diceReroll = () => {
+const diceInit = () => {
     const dices = [];
 
     for (let index = 1; index <= diceAmount; ++index) {
-        let eyes = roll();
-
-        if (numberLine >= 1 && numberLine <= valueMax) {
-            eyes = numberLine;
-        }
-
-        dices.push({id: index, rolled: eyes});
+        dices.push({id: index, rolled: 0});
     }
 
-    return dices;
+    const diceArray = {dice: dices, clicked: 0};
+
+    diceLine.value = diceArray;
 };
-
-const diceRolls = diceReroll();
-
-const diceLine = defineModel('diceLine');
 
 const runs = ref(0);
 
-// A way of initializing that what needs outside initialization without needing that
+// A way of initializing defineModel without needing outside initialization
 const initDiceRolls = () => {
     if (diceLine.value === undefined) {
-        diceLine.value = diceRolls;
+        diceInit();
     }
 };
 
+// Initialization
 initDiceRolls();
 
+// Check the initialization and needs watch to be imported from vue
 watch(diceLine, initDiceRolls);
 
-// const rolling = () => {
-//     if (numberLine >= 1 && numberLine <= valueMax) {
-//         diceReroll();
-//     } else {
-//         rollDice();
-//     }
-// };
+const rolling = () => {
+    for (const cube of diceLine.value.dice) {
+        if (numberLine > 0 && numberLine <= valueMax) {
+            cube.rolled = numberLine;
+        } else {
+            cube.rolled = roll();
+        }
+    }
+};
 
-// const diceLine = defineModel('diceLine', {type: Object, default: {dice: []}});
+rolling();
 
-// rolling();
-
-// defineExpose({
-//     rolling,
-// });
-
-// const rolling = computed(() => {
-//     for (const cube of diceLine.value.dice) {
-//         cube.rolled = numberLine >= 1 && numberLine <= valueMax ? numberLine : roll();
-//     }
-// });
+defineExpose({
+    rolling,
+});
 
 // const diceLine = ref({
 //     dice: [],
@@ -94,27 +69,27 @@ watch(diceLine, initDiceRolls);
 
 // diceArrayFilling();
 
-const countNumber = number => {
-    let count = 0;
+// const countNumber = number => {
+//     let count = 0;
 
-    for (let index = 0; index < diceAmount; ++index) {
-        if (diceLine.value.dice[index].rolled === number) {
-            ++count;
-        }
-    }
+//     for (let index = 0; index < diceAmount; ++index) {
+//         if (diceLine.value.dice[index].rolled === number) {
+//             ++count;
+//         }
+//     }
 
-    return count;
-};
+//     return count;
+// };
 
-let diceSum = 0;
+// let diceSum = 0;
 
-const summing = () => {
-    diceSum = 0;
+// const summing = () => {
+//     diceSum = 0;
 
-    for (const cube of diceLine.value.dice) {
-        diceSum += cube.rolled;
-    }
-};
+//     for (const cube of diceLine.value.dice) {
+//         diceSum += cube.rolled;
+//     }
+// };
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
@@ -133,7 +108,7 @@ const uptick = index => {
         }
     }
 
-    emit('rescan');
+    // emit('rescan');
 };
 
 // @click="uptick(cube.id)"
@@ -150,7 +125,16 @@ const uptick = index => {
 </script>
 
 <template>
-    {{ runs }}
-    <br />
-    {{ diceLine }}
+    <div v-for="cube in diceLine.dice" :key="cube.id">
+        {{ cube.rolled }}
+    </div>
+
+    <Dice
+        @click="uptick(cube.id)"
+        v-for="cube in diceLine.dice"
+        :key="cube.id"
+        v-model:eyeValue="cube.rolled"
+        :class="normal"
+        :inverted="normal"
+    />
 </template>

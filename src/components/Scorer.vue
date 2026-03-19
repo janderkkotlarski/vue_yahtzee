@@ -4,7 +4,7 @@ import {ref} from 'vue';
 import RollTest from './RollTest.vue';
 // import Scorelist from './Scorelist.vue';
 // import Scoring from './Scoring.vue';
-// import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
+import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
 // const rollingRef = ref(null);
 
@@ -18,63 +18,26 @@ import RollTest from './RollTest.vue';
 //     diceRollsRef.value.diceRolls;
 // };
 
-// const recountRef = ref(null);
+const recountRef = ref(null);
 
-// const recountParent = () => {
-//     recountRef.value.recount();
-// };
+const recountParent = () => {
+    recountRef.value.recount();
+};
 
-// const valueMax = 6;
-// const diceAmount = 5;
-// const rollNumber = 0;
+const valueMax = 6;
+const diceAmount = 5;
+const rollNumber = 0;
 
-// const normal = '______';
+const normal = '______';
 
-// let sameMax = 0;
-// const extraYahtzee = ref(0);
-// const yahtzeeNumber = ref(0);
-// let moreYahtzee = false;
+let sameMax = 0;
+const extraYahtzee = ref(0);
+const yahtzeeNumber = ref(0);
+let moreYahtzee = false;
 
 const diceArray = ref();
 
-// const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
-
-// const roll = () => Math.floor(valueMax * Math.random()) + 1;
-
-// const numberLine = 3;
-
-// const diceArrayFilling = () => {
-//     for (let index = 1; index <= diceAmount; ++index) {
-//         diceRow.value.dice.push({id: index, rolled: -index});
-//     }
-// };
-
-// diceArrayFilling();
-// rollingParent();
-
-// const diceReroll = () => {
-//     for (const cube of diceArray.value.dice) {
-//         cube.rolled = roll();
-//     }
-// };
-
-// const rollDice = () => {
-//     for (const cube of diceArray.value.dice) {
-//         cube.rolled = numberLine;
-//     }
-// };
-
-// const rolling = () => {
-//     if (numberLine >= 1 && numberLine <= valueMax) {
-//         diceReroll();
-//     } else {
-//         rollDice();
-//     }
-// };
-
-// rolling();
-
-/*
+const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
@@ -84,6 +47,8 @@ const cuboid = index => {
 
 const scoreUpper = ref(scoreUpperInit);
 const scoreLower = ref(scoreLowerInit);
+
+/*
 
 const scoress = list => {
     return list.value.scores;
@@ -346,7 +311,6 @@ const sumLower = () => {
 };
 
 const recount = () => {
-    // countMultiples_(multiples, yahtzeeNumber, diceAmount, sameMax);
     countMultiples();
     multiYahtzee();
     klikable();
@@ -385,6 +349,22 @@ const lockEntry = (box, index) => {
 
 */
 
+const lockEntry = (box, index) => {
+    // const score = arrayEntry(box.scores, 'id', index);
+    // if (score.locked === klik && typeof score.scored === 'number') {
+    //     // When another yahtzee is scored, up the bonus
+    //     if (moreYahtzee) {
+    //         ++extraYahtzee.value;
+    //     }
+    //     score.final = score.scored;
+    //     score.locked = lock;
+    //     rolling();
+    //     // rollingParent();
+    //     recount();
+    //     // recountParent();
+    // }
+};
+
 // <RollTest />
 // <div>{{ yahtzeeNumber }}</div>
 
@@ -403,7 +383,9 @@ const recant = () => {
 </script>
 
 <template>
-    <RollTest :diceLine="diceArray" />
+    <div>{{ scoreUpper }}</div>
+
+    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 
     <br />
     <br />

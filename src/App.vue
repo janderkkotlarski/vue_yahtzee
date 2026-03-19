@@ -3,6 +3,7 @@
 
 // import Roller from './components/Roller.vue';
 import Scorer from './components/Scorer.vue';
+import Scorelist from './components/Scorelist.vue';
 // import RollTest from './components/RollTest.vue';
 
 // Need to place this here to serve as the starting base for the defineModel in the child component
@@ -20,5 +21,6 @@ import Scorer from './components/Scorer.vue';
 </script>
 
 <template>
-    <Scorer />
+    <Scorelist />
+    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 </template>

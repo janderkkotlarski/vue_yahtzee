@@ -49,6 +49,7 @@ const diceLine = defineModel('diceLine');
 
 const runs = ref(0);
 
+// A way of initializing that what needs outside initialization without needing that
 const initDiceRolls = () => {
     if (diceLine.value === undefined) {
         diceLine.value = diceRolls;

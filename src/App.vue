@@ -30,4 +30,6 @@ const diceClap = ref({dice: [], clicked: 0});
 
 <template>
     <RollTester :diceLine="diceArray" />
+
+    <Roller :diceLine="diceClap" />
 </template>

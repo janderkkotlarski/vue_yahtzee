@@ -2,6 +2,7 @@
 import {ref} from 'vue';
 // import Dice from './Dice.vue';
 import RollTest from './RollTest.vue';
+import RollTester from './RollTester.vue';
 import Scorelist from './Scorelist.vue';
 // import Scoring from './Scoring.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
@@ -44,6 +45,14 @@ const cuboid = index => {
         return diceArray.value.dice[index - 1];
     }
 };
+
+const rolled = () => {
+    for (let index = 1; index <= diceAmount; ++index) {
+        diceRow.value.dice.push({id: index, rolled: index + 1});
+    }
+};
+
+// rolled();
 
 const scoreUpper = ref(scoreUpperInit);
 const scoreLower = ref(scoreLowerInit);
@@ -384,7 +393,7 @@ const lockEntry = (box, index) => {
 </script>
 
 <template>
-    <RollTest :diceLine="diceArray" />
+    <RollTester :diceLine="diceArray" />
 
     <br />
     <br />

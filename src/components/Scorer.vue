@@ -1,6 +1,7 @@
 <script setup>
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 // import Dice from './Dice.vue';
+import Roller from './Roller.vue';
 import RollTest from './RollTest.vue';
 import RollTester from './RollTester.vue';
 import Scorelist from './Scorelist.vue';
@@ -21,6 +22,8 @@ import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Va
 
 const recountRef = ref(null);
 
+const testCount = ref(0);
+
 const recountParent = () => {
     recountRef.value.recount();
 };
@@ -36,23 +39,13 @@ const extraYahtzee = ref(0);
 const yahtzeeNumber = ref(0);
 let moreYahtzee = false;
 
-const diceArray = ref();
-
-const diceRow = defineModel('diceRow', {type: Object, default: {dice: []}});
+const diceArray = ref({dice: [], clicked: 0});
 
 const cuboid = index => {
     if (index > 0 && index <= diceAmount) {
         return diceArray.value.dice[index - 1];
     }
 };
-
-const rolled = () => {
-    for (let index = 1; index <= diceAmount; ++index) {
-        diceRow.value.dice.push({id: index, rolled: index + 1});
-    }
-};
-
-// rolled();
 
 const scoreUpper = ref(scoreUpperInit);
 const scoreLower = ref(scoreLowerInit);
@@ -117,6 +110,8 @@ const countMultiples = () => {
         ++index;
     }
 };
+
+// countMultiples();
 
 const entryLocking = (entry, score) => {
     entry.scored = entry.locked === lock ? 0 : score;
@@ -318,14 +313,16 @@ const sumLower = () => {
 };
 
 const recount = () => {
+    ++testCount.value;
+
     countMultiples();
     multiYahtzee();
-    klikable();
-    summing();
-    countUpper();
-    sumUpper();
-    countLower();
-    sumLower();
+    // klikable();
+    // summing();
+    // countUpper();
+    // sumUpper();
+    // countLower();
+    // sumLower();
 };
 
 /*
@@ -355,7 +352,7 @@ const lockEntry = (box, index) => {
     }
 };
 
-
+*/
 
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
@@ -373,8 +370,6 @@ const lockEntry = (box, index) => {
     }
 };
 
-*/
-
 // <RollTest />
 // <div>{{ yahtzeeNumber }}</div>
 
@@ -390,11 +385,34 @@ const lockEntry = (box, index) => {
 // const recant = () => {
 //     rollingParent();
 // };
+
+const plusplusTestCount = () => {
+    recount;
+};
 </script>
 
 <template>
-    <RollTester :diceLine="diceArray" />
+    <Roller @recounting="recount" :diceLine="diceArray" />
 
     <br />
     <br />
+
+    DiceArray length: {{ diceArray.dice.length }}
+
+    <br />
+    {{ diceArray }}
+    <br />
+    <br />
+
+    {{ testCount }}
+
+    <br />
+    <br />
+
+    {{ multiples }}
+
+    <br />
+    <br />
+
+    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 </template>

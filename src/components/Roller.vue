@@ -13,6 +13,8 @@ const invert = 'invert';
 
 const buttonMessage = 'Gooien: ';
 
+const emit = defineEmits(['recounting']);
+
 const diceLine = defineModel('diceLine', {
     type: Object,
     default: {
@@ -91,6 +93,8 @@ const diceRolling = () => {
         }, millis * maxThrows);
 
         --diceLine.value.clicked;
+
+        emit('recounting');
     }
 };
 

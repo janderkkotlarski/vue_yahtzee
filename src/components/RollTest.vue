@@ -18,7 +18,7 @@ const diceInit = () => {
     const dices = [];
 
     for (let index = 1; index <= diceAmount; ++index) {
-        dices.push({id: index, rolled: 0});
+        dices.push({id: index, rolled: 0, inversion: normal});
     }
 
     const diceArray = {dice: dices, clicked: 0};
@@ -40,13 +40,11 @@ const rolling = () => {
 
 // A way of initializing defineModel without needing outside initialization
 const initDiceRolls = () => {
-    // if (diceLine.value === undefined) {
-    //     diceInit();
-    // } else {
+    if (diceLine.value === undefined) {
+        diceInit();
+    }
 
-    // }
-
-    diceInit();
+    // diceInit();
 };
 
 // Initialization
@@ -115,22 +113,33 @@ const cuboid = index => {
 //     // emit('rescan');
 // };
 
-const count = ref(0);
-let bount = 0;
-
 const uptick = index => {
-    ++count.value;
+    if (index > 0 && index <= diceAmount) {
+        const cubid = cuboid(index);
 
-    for (const cube of diceLine.value.dice) {
-        if (cube.id === index) {
-            ++cube.rolled;
-        }
+        // const cubid = diceLine.value.dice[index - 1];
 
-        if (cube.rolled > valueMax) {
-            cube.rolled -= valueMax;
+        ++cubid.rolled;
+
+        if (cubid.rolled > valueMax) {
+            cubid.rolled -= valueMax;
         }
     }
 };
+
+// const uptick = index => {
+//     ++count.value;
+
+//     for (const cube of diceLine.value.dice) {
+//         if (cube.id === index) {
+//             ++cube.rolled;
+//         }
+
+//         if (cube.rolled > valueMax) {
+//             cube.rolled -= valueMax;
+//         }
+//     }
+// };
 
 // @click="uptick(cube.id)"
 
@@ -150,14 +159,15 @@ const uptick = index => {
 </script>
 
 <template>
-    <Dice
-        @click="uptick(cube.id)"
-        v-for="cube in diceLine.dice"
-        :key="cube.id"
-        v-model:eyeValue="cube.rolled"
-        :class="normal"
-        :inverted="normal"
-    />
-
-    <div class="hidden">{{ count }}</div>
+    <div>
+        <Dice
+            @click="uptick(cube.id)"
+            v-for="cube in diceLine.dice"
+            :key="cube.id"
+            v-model:eyeValue="cube.rolled"
+            :class="normal"
+            :inverted="normal"
+        />
+    </div>
+    <div>Rolltest: {{ diceLine }}</div>
 </template>

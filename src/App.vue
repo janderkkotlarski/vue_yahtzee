@@ -22,6 +22,14 @@ const diceArray = ref({dice: [], clicked: 0});
 
 const diceClap = ref({dice: [], clicked: 0});
 
+// const diceSpam = ref();
+
+// <RollTest :diceLine="diceSpam" />
+
+//     <RollTester :diceLine="diceArray" />
+
+//     <Roller :diceLine="diceClap" />
+
 // <Roller :diceLine="diceArray" />
 // <RollTest :diceLine="diceArray" />
 // <Scorelist :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
@@ -29,7 +37,5 @@ const diceClap = ref({dice: [], clicked: 0});
 </script>
 
 <template>
-    <RollTester :diceLine="diceArray" />
-
-    <Roller :diceLine="diceClap" />
+    <Scorer />
 </template>

@@ -91,9 +91,9 @@ const rolling = () => {
 
 const uptick = index => {
     if (index > 0 && index <= diceAmount) {
-        // const cubid = cuboid(index);
+        const cubid = cuboid(index);
 
-        const cubid = diceLine.value.dice[index - 1];
+        // const cubid = diceLine.value.dice[index - 1];
 
         ++cubid.rolled;
 
@@ -127,7 +127,7 @@ const flip = index => {
 <template>
     <div>
         <Dice
-            @click="flip(cube.id)"
+            @click="uptick(cube.id)"
             v-for="cube in diceLine.dice"
             :key="cube.id"
             v-model:eyeValue="cube.rolled"
@@ -135,4 +135,5 @@ const flip = index => {
             :inverted="cube.inversion"
         />
     </div>
+    <div>Rolltester: {{ diceLine }}</div>
 </template>

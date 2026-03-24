@@ -7,6 +7,7 @@ const diceAmount = 5;
 const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;
+const numberLine = 3;
 
 const normal = '______';
 const invert = 'invert';
@@ -39,8 +40,6 @@ const roll = () => Math.floor(valueMax * Math.random()) + 1;
 const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
         diceLine.value.dice.push({id: index, rolled: 0, inversion: normal});
-
-        // publicDice.value.push({id: index, rolled: 0});
     }
 
     diceLine.value.clicked = maxClicks;
@@ -69,7 +68,9 @@ const diceRoll = () => {
         if (cubid.inversion === normal) {
             cubid.rolled = roll();
 
-            // publicDice.value[index - 1].rolled = cubid.rolled;
+            if (numberLine > 0 && numberLine <= valueMax) {
+                cubid.rolled = numberLine;
+            }
         }
     }
 };
@@ -112,6 +113,16 @@ const flip = index => {
 const restart = () => {
     location.reload();
 };
+
+defineExpose({
+    diceArrayReset,
+});
+
+/*
+<button @click="diceArrayReset">Nieuwe Ronde</button>
+    <br />
+    <br />
+*/
 </script>
 
 <template>
@@ -127,9 +138,6 @@ const restart = () => {
     </div>
     <br />
     <button @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
-    <br />
-    <br />
-    <button @click="diceArrayReset">Nieuwe Ronde</button>
     <br />
     <br />
     <button @click="restart">Herstart</button>

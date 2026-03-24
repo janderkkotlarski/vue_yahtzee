@@ -90,11 +90,11 @@ const diceRolling = () => {
         // Pace throwing
         setTimeout(function () {
             throwing = false;
+
+            emit('recounting');
         }, millis * maxThrows);
 
         --diceLine.value.clicked;
-
-        emit('recounting');
     }
 };
 

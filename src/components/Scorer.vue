@@ -78,6 +78,8 @@ const countNumber = number => {
     return count;
 };
 
+const countOne = ref(0);
+
 const arrayEntry = (array, key, value) => {
     for (const entry of array) {
         if (entry[key] === value) {
@@ -92,6 +94,8 @@ const countMultiples = () => {
 
     let index = 1;
     let yahtzee = false;
+
+    // countOne.value = countNumber(1);
 
     for (const amount of multiples.value.counts) {
         amount.count = countNumber(index);
@@ -404,7 +408,7 @@ const plusplusTestCount = () => {
     <br />
     <br />
 
-    {{ testCount }}
+    {{ countOne }}
 
     <br />
     <br />

@@ -64,13 +64,13 @@ const startLocking = () => {
 
     if (sameMax === 0) {
         for (const entry of scoresU) {
-            if (entry.locked != back && entry.locked != lack && entry.scored === ' ') {
+            if (entry.locked != back && entry.locked != lack && entry.locked != lock) {
                 entry.locked = klak;
             }
         }
 
         for (const entry of scoresL) {
-            if (entry.locked != back && entry.locked != lack && entry.scored === ' ') {
+            if (entry.locked != back && entry.locked != lack && entry.locked != lock) {
                 entry.locked = klak;
             }
         }
@@ -387,7 +387,6 @@ const lockEntry = (box, index) => {
             ++extraYahtzee.value;
         }
         score.final = score.scored;
-        score.scored = ' ';
         score.locked = lock;
         resetParent();
         // rollingParent();

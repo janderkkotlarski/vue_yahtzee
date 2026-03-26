@@ -1,7 +1,7 @@
 <script setup>
-// import {ref} from 'vue';
+import {ref} from 'vue';
 
-// import Roller from './components/Roller.vue';
+import Roller from './Roller.vue';
 import Scorer from './Scorer.vue';
 // import Scorelist from './components/Scorelist.vue';
 
@@ -15,7 +15,7 @@ import Scorer from './Scorer.vue';
 // Need to place this here to serve as the starting base for the defineModel in the child component
 // Or else it will not work
 // It also is a good shared
-// const diceArray = ref({dice: [], clicked: 0});
+const diceArray = ref({dice: [], clicked: 0});
 
 // const diceClap = ref({dice: [], clicked: 0});
 
@@ -27,5 +27,7 @@ import Scorer from './Scorer.vue';
 </script>
 
 <template>
+    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" />
+
     <Scorer />
 </template>

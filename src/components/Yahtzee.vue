@@ -7,6 +7,14 @@ import Scorer from './Scorer.vue';
 
 // import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './components/Varinit.mjs';
 
+const rollerNumber = 0;
+
+const resetRef = ref(null);
+
+const resetParent = () => {
+    resetRef.value.diceArrayReset();
+};
+
 // const extraYahtzee = ref(0);
 // const yahtzeeNumber = ref(0);
 
@@ -27,7 +35,11 @@ const diceArray = ref({dice: [], clicked: 0});
 </script>
 
 <template>
-    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" />
+    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" :numberLine="rollerNumber" />
+
+    <div>
+        <button @click="resetParent">Herklikken</button>
+    </div>
 
     <Scorer />
 </template>

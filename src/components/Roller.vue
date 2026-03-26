@@ -7,7 +7,6 @@ const diceAmount = 5;
 const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;
-const numberLine = 3;
 
 const normal = '______';
 const invert = 'invert';
@@ -16,6 +15,13 @@ const buttonMessage = 'Gooien: ';
 
 /// define emits to let the parent do the recount function upon emitting this
 const emit = defineEmits(['recounting']);
+
+const numberLine = defineModel('numberLine', {
+    type: Number,
+    default: 0,
+});
+
+// const numberLine = defineModel('numberLine', {type: Number, default: 0});
 
 // the 'ref' that the parent can fill in and access
 const diceLine = defineModel('diceLine', {
@@ -70,8 +76,8 @@ const diceRoll = () => {
         if (cubid.inversion === normal) {
             cubid.rolled = roll();
 
-            if (numberLine > 0 && numberLine <= valueMax) {
-                cubid.rolled = numberLine;
+            if (numberLine.value > 0 && numberLine.value <= valueMax) {
+                cubid.rolled = numberLine.value;
             }
         }
     }

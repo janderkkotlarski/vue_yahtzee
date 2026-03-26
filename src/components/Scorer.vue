@@ -12,6 +12,7 @@ const resetParent = () => {
 
 const valueMax = 6;
 const diceAmount = 5;
+const rollNumber = 4;
 
 let sameMax = 0;
 const extraYahtzee = ref(0);
@@ -341,7 +342,7 @@ const restart = () => {
 </script>
 
 <template>
-    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" />
+    <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
 
     <br />
     <br />

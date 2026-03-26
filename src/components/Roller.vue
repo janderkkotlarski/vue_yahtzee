@@ -110,19 +110,9 @@ const flip = index => {
     }
 };
 
-const restart = () => {
-    location.reload();
-};
-
 defineExpose({
     diceArrayReset,
 });
-
-/*
-<button @click="diceArrayReset">Nieuwe Ronde</button>
-    <br />
-    <br />
-*/
 </script>
 
 <template>
@@ -138,7 +128,4 @@ defineExpose({
     </div>
     <br />
     <button @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
-    <br />
-    <br />
-    <button @click="restart">Herstart</button>
 </template>

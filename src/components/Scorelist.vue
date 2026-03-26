@@ -1,6 +1,4 @@
 <script setup>
-import {ref} from 'vue';
-
 import {klik} from './Varinit.mjs';
 
 const scoreListing = defineModel('scoreListing', {type: Object});
@@ -20,8 +18,6 @@ const kliksplay = locked => {
 
     return ' ';
 };
-
-// @click="$emit('locker', scoreListing, score.id)"
 </script>
 
 <template>

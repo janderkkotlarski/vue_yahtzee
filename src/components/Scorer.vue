@@ -19,10 +19,20 @@ const extraYahtzee = ref(0);
 const yahtzeeNumber = ref(0);
 let moreYahtzee = false;
 
-const diceArray = ref({dice: [], clicked: 0});
+// const diceArray = ref({dice: [], clicked: 0});
+
+const diceArray = defineModel('diceArray', {
+    type: Object,
+    default: {
+        dice: [],
+        clicked: 0,
+    },
+});
 
 const scoreUpper = ref(scoreUpperInit);
 const scoreLower = ref(scoreLowerInit);
+
+const emit = defineEmits(['reroll']);
 
 const scoress = list => {
     return list.value.scores;
@@ -331,7 +341,10 @@ const lockEntry = (box, index) => {
         }
         score.final = score.scored;
         score.locked = lock;
-        resetParent();
+
+        emit('reroll');
+
+        // resetParent();
         recount();
     }
 };
@@ -339,11 +352,11 @@ const lockEntry = (box, index) => {
 const restart = () => {
     location.reload();
 };
+
+// <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
 </script>
 
 <template>
-    <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
-
     <br />
     <br />
 

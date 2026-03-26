@@ -23,7 +23,11 @@ const resetParent = () => {
 // Need to place this here to serve as the starting base for the defineModel in the child component
 // Or else it will not work
 // It also is a good shared
-const diceArray = ref({dice: [], clicked: 0});
+const diceRow = ref({dice: [], clicked: 0});
+
+const rerolling = () => {
+    resetParent();
+};
 
 // const diceClap = ref({dice: [], clicked: 0});
 
@@ -35,11 +39,11 @@ const diceArray = ref({dice: [], clicked: 0});
 </script>
 
 <template>
-    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" :numberLine="rollerNumber" />
+    <Roller ref="resetRef" @recounting="recount" :diceLine="diceRow" :numberLine="rollerNumber" />
 
     <div>
         <button @click="resetParent">Herklikken</button>
     </div>
 
-    <Scorer />
+    <Scorer @reroll="rerolling" :diceArray="diceRow" />
 </template>

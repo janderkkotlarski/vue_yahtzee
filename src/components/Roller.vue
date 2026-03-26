@@ -14,8 +14,10 @@ const invert = 'invert';
 
 const buttonMessage = 'Gooien: ';
 
+/// define emits to let the parent do the recount function upon emitting this
 const emit = defineEmits(['recounting']);
 
+// the 'ref' that the parent can fill in and access
 const diceLine = defineModel('diceLine', {
     type: Object,
     default: {
@@ -110,6 +112,7 @@ const flip = index => {
     }
 };
 
+// Give function access to the parent
 defineExpose({
     diceArrayReset,
 });

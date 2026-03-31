@@ -33,17 +33,15 @@ const rerolling = () => {
 
 //     <Roller :diceLine="diceClap" />
 
+//      <div>
+//          <button @click="resetParent">Herklikken</button>
+//      </div>
+
 // <Roller :diceLine="diceArray" />
 // <Scorelist :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 // <Scorer />
 </script>
 
 <template>
-    <Roller ref="resetRef" @recounting="recount" :diceLine="diceRow" :numberLine="rollerNumber" />
-
-    <div>
-        <button @click="resetParent">Herklikken</button>
-    </div>
-
     <Scorer @reroll="rerolling" :diceArray="diceRow" />
 </template>

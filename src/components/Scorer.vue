@@ -342,9 +342,9 @@ const lockEntry = (box, index) => {
         score.final = score.scored;
         score.locked = lock;
 
-        emit('reroll');
+        // emit('reroll');
 
-        // resetParent();
+        resetParent();
         recount();
     }
 };
@@ -353,10 +353,22 @@ const restart = () => {
     location.reload();
 };
 
+const rerolling = () => {
+    resetParent();
+};
+
 // <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
 </script>
 
 <template>
+    <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
+    <br />
+    <br />
+
+    <div>
+        {{ scoreLower }}
+    </div>
+
     <br />
     <br />
 

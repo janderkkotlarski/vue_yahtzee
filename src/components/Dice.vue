@@ -6,8 +6,14 @@ const normal = '______';
 const invert = 'invert';
 
 // Default is for empty die
-const eyeValue = defineModel('eyeValue', {type: Number, default: 0});
-const inverted = defineModel('inverted', {type: String, default: normal});
+// const eyeValue = defineModel('eyeValue', {type: Number, default: 0});
+// const inverted = defineModel('inverted', {type: String, default: normal});
+
+// And more defineProps applicability
+const props = defineProps({
+    eyeValue: {type: Number, default: 0},
+    inverted: {type: String, default: normal},
+});
 
 // Most effective array config for v-for coding standards
 const diceLines = [

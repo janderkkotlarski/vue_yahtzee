@@ -77,7 +77,9 @@ const diceArrayReset = () => {
 
 const normalDicing = () => {
     for (let index = 1; index <= diceAmount; ++index) {
-        cuboid(index).inversion = normal;
+        if (cuboid(index).inversion === starts) {
+            cuboid(index).inversion = normal;
+        }
     }
 };
 
@@ -87,7 +89,7 @@ const diceRoll = () => {
         const cubid = cuboid(index);
 
         // If not locked, then roll
-        if (cubid.inversion === normal) {
+        if (cubid.inversion != invert) {
             cubid.rolled = roll();
 
             if (numberLine.value > 0 && numberLine.value <= valueMax) {
@@ -125,7 +127,8 @@ const diceRolling = () => {
 
 // flip between free and locked
 const flip = index => {
-    if (index > 0 && index <= diceAmount) {
+    // Once one cannot roll, flipping the roll/hold state is useless
+    if (index > 0 && index <= diceAmount && diceLine.value.clicked > 0) {
         const cubid = cuboid(index);
 
         if (cubid.rolled > 0 && cubid.rolled <= valueMax) {
@@ -157,6 +160,8 @@ defineExpose({
         />
     </div>
     <br />
-    <button v-if="buttonVisible" class="switch" @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
-    <button v-else class="switch" @click="restart">Herstart</button>
+    <button v-if="buttonVisible && diceLine.clicked > 0" class="switch" @click="diceRolling">
+        {{ buttonMessage }} {{ diceLine.clicked }}
+    </button>
+    <button v-if="!buttonVisible" class="switch" @click="restart">Herstart</button>
 </template>

@@ -2,8 +2,14 @@
 import Eye from './Eye.vue';
 
 // Default is for empty line
-const selected = defineModel('selected', {type: Number, default: 0});
-const inverted = defineModel('inversion', {type: String, default: '______'});
+// const selected = defineModel('selected', {type: Number, default: 0});
+// const inverted = defineModel('inversion', {type: String, default: '______'});
+
+// Another case of defineProps being enough
+const props = defineProps({
+    selected: {type: Number, default: 0},
+    inversion: {type: String, default: '______'},
+});
 
 const eyeLines = [
     {id: 1, eyes: ['_______', 'visible', '_______', '_______', 'visible']},

@@ -12,27 +12,30 @@ const resetParent = () => {
 
 const valueMax = 6;
 const diceAmount = 5;
-const rollNumber = 4;
+const rollNumber = 0;
 
 let sameMax = 0;
 const extraYahtzee = ref(0);
 const yahtzeeNumber = ref(0);
 let moreYahtzee = false;
 
-// const diceArray = ref({dice: [], clicked: 0});
+const rollVisible = ref(true);
 
-const diceArray = defineModel('diceArray', {
-    type: Object,
-    default: {
-        dice: [],
-        clicked: 0,
-    },
+const diceArray = ref({
+    dice: [],
+    clicked: 0,
 });
+
+// defineModel('diceArray', {
+//     type: Object,
+//     default: {
+//         dice: [],
+//         clicked: 0,
+//     },
+// });
 
 const scoreUpper = ref(scoreUpperInit);
 const scoreLower = ref(scoreLowerInit);
-
-const emit = defineEmits(['reroll']);
 
 const scoress = list => {
     return list.value.scores;
@@ -326,10 +329,6 @@ const recount = () => {
     sumLower();
 };
 
-const lockedUpper = ref(0);
-
-const lockedLower = ref(0);
-
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
@@ -350,11 +349,12 @@ const lockEntry = (box, index) => {
             lockList(scoresL);
         }
 
-        // emit('reroll');
+        resetParent();
+
         if (!fullyLocking(scoresU) || !fullyLocking(scoresL)) {
-            resetParent();
             recount();
         } else {
+            rollVisible.value = false;
         }
     }
 };
@@ -367,15 +367,13 @@ const restart = () => {
 </script>
 
 <template>
-    <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
-    <br />
-    <br />
-
-    <div>
-        {{ lockedUpper }}
-        <br />
-        {{ lockedLower }}
-    </div>
+    <Roller
+        ref="resetRef"
+        @recounting="recount"
+        :numberLine="rollNumber"
+        :diceLine="diceArray"
+        :buttonVisible="rollVisible"
+    />
 
     <br />
     <br />
@@ -386,5 +384,5 @@ const restart = () => {
     <br />
     <br />
 
-    <button class="switch" @click="restart">Herstart</button>
+    <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
 </template>

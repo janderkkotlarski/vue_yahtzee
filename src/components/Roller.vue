@@ -13,6 +13,13 @@ const invert = 'invert';
 const starts = 'starts';
 
 const buttonMessage = 'Gooien: ';
+// let buttonVisible = true;
+
+// const {buttonVisible = true} = defineProps<{buttonVisible?: Boolean}>;
+
+const props = defineProps({
+    buttonVisible: Boolean,
+});
 
 /// define emits to let the parent do the recount function upon emitting this
 const emit = defineEmits(['recounting']);
@@ -127,9 +134,14 @@ const flip = index => {
     }
 };
 
+const restart = () => {
+    location.reload();
+};
+
 // Give function access to the parent
 defineExpose({
     diceArrayReset,
+    // buttonVisible,
 });
 </script>
 
@@ -145,5 +157,6 @@ defineExpose({
         />
     </div>
     <br />
-    <button class="switch" @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
+    <button v-if="buttonVisible" class="switch" @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
+    <button v-else class="switch" @click="restart">Herstart</button>
 </template>

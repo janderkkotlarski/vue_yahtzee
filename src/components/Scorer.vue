@@ -365,13 +365,6 @@ const rerolling = () => {
     <br />
     <br />
 
-    <div>
-        {{ scoreLower }}
-    </div>
-
-    <br />
-    <br />
-
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
     <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 

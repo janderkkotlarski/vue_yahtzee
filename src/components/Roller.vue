@@ -47,7 +47,7 @@ const roll = () => Math.floor(valueMax * Math.random()) + 1;
 // Do the same for the publicDice defineModel object
 const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
-        diceLine.value.dice.push({id: index, rolled: 0, inversion: normal});
+        diceLine.value.dice.push({id: index, rolled: 0, inversion: invert});
     }
 
     diceLine.value.clicked = maxClicks;
@@ -61,10 +61,16 @@ const diceArrayReset = () => {
         const cubid = cuboid(index);
 
         cubid.rolled = 0;
-        cubid.inversion = normal;
+        cubid.inversion = invert;
     }
 
     diceLine.value.clicked = maxClicks;
+};
+
+const normalDicing = () => {
+    for (let index = 1; index <= diceAmount; ++index) {
+        cuboid(index).inversion = normal;
+    }
 };
 
 // Roll all dice that are rollable
@@ -89,6 +95,8 @@ let throwing = false;
 const diceRolling = () => {
     if (diceLine.value.clicked > 0 && !throwing) {
         throwing = true;
+
+        normalDicing();
 
         for (let throws = 0; throws < maxThrows; ++throws) {
             setTimeout(function () {

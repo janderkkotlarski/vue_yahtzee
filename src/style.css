@@ -104,6 +104,11 @@ table, th, td {
   background-color: #c08020;
 }
 
+.switch {  
+  color: #c08020;
+  background-color: #802020;
+}
+
 th, td {
   padding: 0.25em;
 }
@@ -127,7 +132,7 @@ th, td {
   color: #c08020;
 }
 
-.visible.invert {
+.visible.invert, .visible.starts {
   color: #2040c0;
 }
 
@@ -141,7 +146,7 @@ th, td {
   display: inline-block;
 }
 
-.dice.invert {
+.dice.invert, .dice.starts {
   color: #2040c0;
   background-color: #c08020;
 }

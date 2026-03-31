@@ -201,8 +201,6 @@ const sumUpper = () => {
     const bonus = summed >= 63 ? 35 : 0;
     arrayEntry(scoresU, 'id', 'bonus').final = bonus;
     arrayEntry(scoresU, 'id', 'upper').final = summed + bonus;
-
-    lockList(scoresU);
 };
 
 const multiYahtzee = () => {
@@ -315,10 +313,6 @@ const sumLower = () => {
     arrayEntry(scoresL, 'id', 'lower').final = summed;
     arrayEntry(scoresL, 'id', 'total').final =
         summed + extraYahtzee.value * 100 + arrayEntry(scoresU, 'id', 'upper').final;
-
-    if (fullyLocking(scoresU)) {
-        lockList(scoresL);
-    }
 };
 
 const recount = () => {
@@ -332,9 +326,17 @@ const recount = () => {
     sumLower();
 };
 
+const lockedUpper = ref(0);
+
+const lockedLower = ref(0);
+
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
+
     if (score.locked === klik && typeof score.scored === 'number') {
+        const scoresU = scoress(scoreUpper);
+        const scoresL = scoress(scoreLower);
+
         // When another yahtzee is scored, up the bonus
         if (moreYahtzee) {
             ++extraYahtzee.value;
@@ -342,19 +344,23 @@ const lockEntry = (box, index) => {
         score.final = score.scored;
         score.locked = lock;
 
-        // emit('reroll');
+        lockList(scoresU);
 
-        resetParent();
-        recount();
+        if (fullyLocking(scoresU)) {
+            lockList(scoresL);
+        }
+
+        // emit('reroll');
+        if (!fullyLocking(scoresU) || !fullyLocking(scoresL)) {
+            resetParent();
+            recount();
+        } else {
+        }
     }
 };
 
 const restart = () => {
     location.reload();
-};
-
-const rerolling = () => {
-    resetParent();
 };
 
 // <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
@@ -365,11 +371,20 @@ const rerolling = () => {
     <br />
     <br />
 
+    <div>
+        {{ lockedUpper }}
+        <br />
+        {{ lockedLower }}
+    </div>
+
+    <br />
+    <br />
+
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
     <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 
     <br />
     <br />
 
-    <button @click="restart">Herstart</button>
+    <button class="switch" @click="restart">Herstart</button>
 </template>

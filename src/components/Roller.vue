@@ -10,6 +10,7 @@ const maxClicks = 3;
 
 const normal = '______';
 const invert = 'invert';
+const starts = 'starts';
 
 const buttonMessage = 'Gooien: ';
 
@@ -47,7 +48,7 @@ const roll = () => Math.floor(valueMax * Math.random()) + 1;
 // Do the same for the publicDice defineModel object
 const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
-        diceLine.value.dice.push({id: index, rolled: 0, inversion: invert});
+        diceLine.value.dice.push({id: index, rolled: 0, inversion: starts});
     }
 
     diceLine.value.clicked = maxClicks;
@@ -61,7 +62,7 @@ const diceArrayReset = () => {
         const cubid = cuboid(index);
 
         cubid.rolled = 0;
-        cubid.inversion = invert;
+        cubid.inversion = starts;
     }
 
     diceLine.value.clicked = maxClicks;
@@ -144,5 +145,5 @@ defineExpose({
         />
     </div>
     <br />
-    <button @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
+    <button class="switch" @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
 </template>

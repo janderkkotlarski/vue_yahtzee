@@ -18,6 +18,14 @@ const kliksplay = locked => {
 
     return ' ';
 };
+
+const clickClass = locked => {
+    if (locked === klik) {
+        return 'switch';
+    }
+
+    return ' ';
+};
 </script>
 
 <template>
@@ -33,7 +41,9 @@ const kliksplay = locked => {
                 <td>{{ score.title }}</td>
                 <td>{{ score.scored }}</td>
                 <td>{{ score.final }}</td>
-                <td @click="$emit('locker', scoreListing, score.id)">{{ kliksplay(score.locked) }}</td>
+                <td :class="clickClass(score.locked)" @click="$emit('locker', scoreListing, score.id)">
+                    {{ kliksplay(score.locked) }}
+                </td>
             </tr>
         </table>
     </div>

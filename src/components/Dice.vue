@@ -3,6 +3,7 @@ import Line from './Line.vue';
 
 // Makes conditional displaying easier
 const normal = '______';
+const invert = 'invert';
 
 // Default is for empty die
 const eyeValue = defineModel('eyeValue', {type: Number, default: 0});
@@ -24,7 +25,7 @@ const diceLines = [
             :selected="diceLine.lines[eyeValue]"
             :inversion="inverted"
         />
-        <b v-if="inverted === normal">Werpen</b>
-        <b v-else>Houden</b>
+        <b v-if="inverted === invert">Houden</b>
+        <b v-else>Gooien</b>
     </div>
 </template>

@@ -104,7 +104,9 @@ const diceRolling = () => {
     if (diceLine.value.clicked > 0 && !throwing) {
         throwing = true;
 
-        normalDicing();
+        if (diceLine.value.clicked === 3) {
+            normalDicing();
+        }
 
         for (let throws = 0; throws < maxThrows; ++throws) {
             setTimeout(function () {

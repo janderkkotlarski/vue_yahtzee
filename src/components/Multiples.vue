@@ -4,6 +4,13 @@
 // });
 
 const props = defineProps({
+    diceLine: {
+        type: Object,
+        default: {
+            dice: [],
+            clicked: 0,
+        },
+    },
     moarYahtzee: {type: Boolean, default: false},
 });
 
@@ -28,7 +35,7 @@ const countNumber = number => {
     let count = 0;
 
     for (let index = 0; index < diceAmount; ++index) {
-        if (diceArray.value.dice[index].rolled === number) {
+        if (diceLine.value.dice[index].rolled === number) {
             ++count;
         }
     }
@@ -69,5 +76,3 @@ const consecutive = () => {
     return consec;
 };
 </script>
-
-<template></template>

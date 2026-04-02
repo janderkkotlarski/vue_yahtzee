@@ -355,7 +355,7 @@ const restart = () => {
 </script>
 
 <template>
-    <Multiples :multiples="multiplex" :moarYahtzee="moreYahtzee" />
+    <Multiples :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
 
     <div>
         {{ multiplex }}

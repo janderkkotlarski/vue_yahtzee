@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from 'vue';
+import Multiples from './Multiples.vue';
 import Roller from './Roller.vue';
 import Scorelist from './Scorelist.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
@@ -10,7 +11,6 @@ const resetParent = () => {
     resetRef.value.diceArrayReset();
 };
 
-const valueMax = 6;
 const diceAmount = 5;
 const rollNumber = 0;
 
@@ -26,14 +26,6 @@ const diceArray = ref({
     clicked: 0,
 });
 
-// defineModel('diceArray', {
-//     type: Object,
-//     default: {
-//         dice: [],
-//         clicked: 0,
-//     },
-// });
-
 const scoreUpper = ref(scoreUpperInit);
 const scoreLower = ref(scoreLowerInit);
 
@@ -41,7 +33,7 @@ const scoress = list => {
     return list.value.scores;
 };
 
-const multiples = ref({
+const multiplex = ref({
     counts: [],
 });
 
@@ -64,15 +56,15 @@ const startLocking = () => {
     }
 };
 
-const initMultiples = () => {
-    for (let index = 1; index <= valueMax; ++index) {
-        multiples.value.counts.push({id: index, count: 0});
-    }
+startLocking();
 
-    startLocking();
-};
+// const initMultiples = () => {
+//     for (let index = 1; index <= valueMax; ++index) {
+//         multiples.value.counts.push({id: index, count: 0});
+//     }
+// };
 
-initMultiples();
+// initMultiples();
 
 const countNumber = number => {
     let count = 0;
@@ -101,9 +93,7 @@ const countMultiples = () => {
     let index = 1;
     let yahtzee = false;
 
-    // countOne.value = countNumber(1);
-
-    for (const amount of multiples.value.counts) {
+    for (const amount of multiplex.value.counts) {
         amount.count = countNumber(index);
 
         if (sameMax < amount.count) {
@@ -121,20 +111,8 @@ const countMultiples = () => {
     }
 };
 
-// countMultiples();
-
 const entryLocking = (entry, score) => {
     entry.scored = entry.locked === lock ? 0 : score;
-};
-
-let diceSum = 0;
-
-const summing = () => {
-    diceSum = 0;
-
-    for (const cube of diceArray.value.dice) {
-        diceSum += cube.rolled;
-    }
 };
 
 const countUpper = () => {
@@ -142,7 +120,7 @@ const countUpper = () => {
 
     for (const entry of scoress(scoreUpper)) {
         if (entry.locked != back && entry.locked != lack) {
-            const score = arrayEntry(multiples.value.counts, 'id', entry.id).count * entry.id;
+            const score = arrayEntry(multiplex.value.counts, 'id', entry.id).count * entry.id;
             entryLocking(entry, score);
         }
 
@@ -246,37 +224,47 @@ const klikable = () => {
     }
 };
 
-// Check if there are 3 dice with a value and 2 dice with another value
-const filledHouse = () => {
-    if (sameMax === 3) {
-        for (const amount of multiples.value.counts) {
-            if (amount.count == 2) {
-                return true;
-            }
-        }
+// // Check if there are 3 dice with a value and 2 dice with another value
+// const filledHouse = () => {
+//     if (sameMax === 3) {
+//         for (const amount of multiples.value.counts) {
+//             if (amount.count == 2) {
+//                 return true;
+//             }
+//         }
+//     }
+
+//     return moreYahtzee;
+// };
+
+// // Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
+// const consecutive = () => {
+//     let consec = 0;
+//     let counted = 0;
+
+//     for (const amount of multiples.value.counts) {
+//         counted = amount.count ? counted + 1 : 0;
+
+//         if (counted > consec) {
+//             consec = counted;
+//         }
+//     }
+
+//     if (moreYahtzee) {
+//         consec = 5;
+//     }
+
+//     return consec;
+// };
+
+let diceSum = 0;
+
+const summing = () => {
+    diceSum = 0;
+
+    for (const cube of diceArray.value.dice) {
+        diceSum += cube.rolled;
     }
-
-    return moreYahtzee;
-};
-
-// Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
-const consecutive = () => {
-    let consec = 0;
-    let counted = 0;
-
-    for (const amount of multiples.value.counts) {
-        counted = amount.count ? counted + 1 : 0;
-
-        if (counted > consec) {
-            consec = counted;
-        }
-    }
-
-    if (moreYahtzee) {
-        consec = 5;
-    }
-
-    return consec;
 };
 
 const lowerScoring = () => {
@@ -367,6 +355,12 @@ const restart = () => {
 </script>
 
 <template>
+    <Multiples :multiples="multiplex" :moarYahtzee="moreYahtzee" />
+
+    <div>
+        {{ multiplex }}
+    </div>
+
     <Roller
         ref="resetRef"
         @recounting="recount"

@@ -1,4 +1,5 @@
 <script setup>
+import {ref} from 'vue';
 import Dice from './Dice.vue';
 
 // Simple constants
@@ -10,6 +11,7 @@ const numberLine = 0;
 const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;
+const leftClicks = ref(maxClicks);
 
 const normal = '______';
 const invert = 'invert';
@@ -29,21 +31,8 @@ const diceLine = defineModel('diceLine', {
     type: Object,
     default: {
         dice: [],
-        clicked: maxClicks,
     },
 });
-
-const isADice = index => {
-    return index > 0 && index <= diceAmount;
-};
-
-// Really nested and powerful way of changing reactive objects
-// Feels a bit like passing parameters by reference in C++
-const cuboid = index => {
-    if (isADice(index)) {
-        return diceLine.value.dice[index - 1];
-    }
-};
 
 // Simple dice roll function
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
@@ -54,11 +43,16 @@ const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
         diceLine.value.dice.push({id: index, rolled: 0, inversion: starts});
     }
-
-    diceLine.value.clicked = maxClicks;
 };
 
 diceArrayFilling();
+
+// Really nested and powerful way of changing reactive objects
+// Feels a bit like passing parameters by reference in C++
+// Got rid of the superfluous index restriction
+const cuboid = index => {
+    return diceLine.value.dice[index - 1];
+};
 
 // For the next round
 const diceArrayReset = () => {
@@ -69,7 +63,7 @@ const diceArrayReset = () => {
         cubid.inversion = starts;
     }
 
-    diceLine.value.clicked = maxClicks;
+    leftClicks.value = maxClicks;
 };
 
 const normalDicing = () => {
@@ -97,7 +91,7 @@ const diceRoll = () => {
 let throwing = false;
 
 const throwable = () => {
-    return diceLine.value.clicked > 0 && !throwing;
+    return leftClicks.value > 0 && !throwing;
 };
 
 // Throw dice a number of times and space them apart in time
@@ -105,7 +99,7 @@ const diceRolling = () => {
     if (throwable()) {
         throwing = true;
 
-        if (diceLine.value.clicked === 3) {
+        if (leftClicks.value === 3) {
             normalDicing();
         }
 
@@ -122,13 +116,13 @@ const diceRolling = () => {
             emit('recounting');
         }, millis * maxThrows);
 
-        --diceLine.value.clicked;
+        --leftClicks.value;
     }
 };
 
 // flip between free and locked
 const flip = index => {
-    if (isADice(index) && throwable()) {
+    if (throwable()) {
         const cubid = cuboid(index);
 
         if (cubid.rolled > 0 && cubid.rolled <= valueMax) {
@@ -159,6 +153,9 @@ defineExpose({
         />
     </div>
     <br />
-    <button v-if="buttonVisible" class="switch" @click="diceRolling">{{ buttonMessage }} {{ diceLine.clicked }}</button>
+    <button v-if="buttonVisible && leftClicks > 0" class="switch" @click="diceRolling">
+        {{ buttonMessage }} {{ leftClicks }}
+    </button>
     <button v-else class="switch" @click="restart">Herstart</button>
+    <button v-if="leftClicks === 0" class="switch" @click="diceArrayReset">Nieuwe ronde</button>
 </template>

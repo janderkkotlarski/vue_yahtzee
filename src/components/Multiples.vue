@@ -8,7 +8,6 @@ const props = defineProps({
         type: Object,
         default: {
             dice: [],
-            clicked: 0,
         },
     },
     moarYahtzee: {type: Boolean, default: false},
@@ -21,6 +20,11 @@ const multiples = defineModel('multiples', {
     default: {
         counts: [],
     },
+});
+
+const yahtzeeChevron = defineModel('yahtzeeChevron', {
+    type: Number,
+    default: 0,
 });
 
 const initMultiples = () => {
@@ -45,7 +49,7 @@ const countNumber = number => {
 
 const countMultiples = () => {
     sameMax = 0;
-    yahtzeeNumber.value = 0;
+    yahtzeeChevron.value = 0;
 
     let index = 1;
     let yahtzee = false;
@@ -57,9 +61,9 @@ const countMultiples = () => {
             sameMax = amount.count;
         }
 
-        // yahtzee needed so yahtzeeNumber does not go to 6 when index gets upped
+        // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
         if (sameMax === diceAmount && !yahtzee) {
-            yahtzeeNumber.value = index;
+            yahtzeeChevron.value = index;
 
             yahtzee = true;
         }

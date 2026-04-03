@@ -11,8 +11,13 @@ const resetParent = () => {
     resetRef.value.diceArrayReset();
 };
 
+const countMultiplesRef = ref(null);
+
+const countMultiplesParent = () => {
+    countMultiplesRef.value.countMultiples();
+};
+
 const diceAmount = 5;
-const rollNumber = 0;
 
 let sameMax = 0;
 const extraYahtzee = ref(0);
@@ -66,16 +71,45 @@ startLocking();
 
 // initMultiples();
 
-const countNumber = number => {
-    let count = 0;
+// const countNumber = number => {
+//     let count = 0;
 
-    for (let index = 0; index < diceAmount; ++index) {
-        if (diceArray.value.dice[index].rolled === number) {
-            ++count;
-        }
-    }
+//     for (let index = 0; index < diceAmount; ++index) {
+//         if (diceArray.value.dice[index].rolled === number) {
+//             ++count;
+//         }
+//     }
 
-    return count;
+//     return count;
+// };
+
+// const countMultiples = () => {
+//     sameMax = 0;
+//     yahtzeeNumber.value = 0;
+
+//     let index = 1;
+//     let yahtzee = false;
+
+//     for (const amount of multiplex.value.counts) {
+//         amount.count = countNumber(index);
+
+//         if (sameMax < amount.count) {
+//             sameMax = amount.count;
+//         }
+
+//         // yahtzee needed so yahtzeeNumber does not go to 6 when index gets upped
+//         if (sameMax === diceAmount && !yahtzee) {
+//             yahtzeeNumber.value = index;
+
+//             yahtzee = true;
+//         }
+
+//         ++index;
+//     }
+// };
+
+const entryLocking = (entry, score) => {
+    entry.scored = entry.locked === lock ? 0 : score;
 };
 
 const arrayEntry = (array, key, value) => {
@@ -84,35 +118,6 @@ const arrayEntry = (array, key, value) => {
             return entry;
         }
     }
-};
-
-const countMultiples = () => {
-    sameMax = 0;
-    yahtzeeNumber.value = 0;
-
-    let index = 1;
-    let yahtzee = false;
-
-    for (const amount of multiplex.value.counts) {
-        amount.count = countNumber(index);
-
-        if (sameMax < amount.count) {
-            sameMax = amount.count;
-        }
-
-        // yahtzee needed so yahtzeeNumber does not go to 6 when index gets upped
-        if (sameMax === diceAmount && !yahtzee) {
-            yahtzeeNumber.value = index;
-
-            yahtzee = true;
-        }
-
-        ++index;
-    }
-};
-
-const entryLocking = (entry, score) => {
-    entry.scored = entry.locked === lock ? 0 : score;
 };
 
 const countUpper = () => {
@@ -272,7 +277,9 @@ const lowerScoring = () => {
 
     scoreSheet.push({id: 'three', score: sameMax >= 3 ? diceSum : 0});
     scoreSheet.push({id: 'four', score: sameMax >= 4 ? diceSum : 0});
+    // filledHouseParent()
     scoreSheet.push({id: 'full', score: filledHouse() ? 25 : 0});
+    // consecutiveParent()
     scoreSheet.push({id: 'small', score: consecutive() > 3 ? 30 : 0});
     scoreSheet.push({id: 'large', score: consecutive() > 4 ? 40 : 0});
     scoreSheet.push({id: 'chance', score: diceSum});
@@ -307,7 +314,8 @@ const sumLower = () => {
 };
 
 const recount = () => {
-    countMultiples();
+    countMultiplesParent();
+    // countMultiples();
     multiYahtzee();
     klikable();
     summing();
@@ -351,25 +359,8 @@ const restart = () => {
     location.reload();
 };
 
-// <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
-</script>
-
-<template>
-    <Multiples :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
-
-    <div>
-        {{ multiplex }}
-    </div>
-
-    <Roller
-        ref="resetRef"
-        @recounting="recount"
-        :numberLine="rollNumber"
-        :diceLine="diceArray"
-        :buttonVisible="rollVisible"
-    />
-
-    <br />
+/*
+<br />
     <br />
 
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
@@ -379,4 +370,17 @@ const restart = () => {
     <br />
 
     <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
+*/
+
+// <Roller ref="resetRef" @recounting="recount" :numberLine="numberRoll" :diceLine="diceArray" />
+</script>
+
+<template>
+    <Multiples ref="countMultiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
+
+    <div>
+        {{ multiplex }}
+    </div>
+
+    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" :buttonVisible="rollVisible" />
 </template>

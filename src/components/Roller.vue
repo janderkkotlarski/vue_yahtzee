@@ -4,6 +4,9 @@ import Dice from './Dice.vue';
 // Simple constants
 const valueMax = 6;
 const diceAmount = 5;
+// Had numberLine as an imported value, worked wonky at times
+// Simplify where possible
+const numberLine = 0;
 const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;
@@ -13,9 +16,6 @@ const invert = 'invert';
 const starts = 'starts';
 
 const buttonMessage = 'Gooien: ';
-// let buttonVisible = true;
-
-// const {buttonVisible = true} = defineProps<{buttonVisible?: Boolean}>;
 
 const props = defineProps({
     buttonVisible: Boolean,
@@ -23,13 +23,6 @@ const props = defineProps({
 
 /// define emits to let the parent do the recount function upon emitting this
 const emit = defineEmits(['recounting']);
-
-const numberLine = defineModel('numberLine', {
-    type: Number,
-    default: 0,
-});
-
-// const numberLine = defineModel('numberLine', {type: Number, default: 0});
 
 // the 'ref' that the parent can fill in and access
 const diceLine = defineModel('diceLine', {
@@ -40,10 +33,14 @@ const diceLine = defineModel('diceLine', {
     },
 });
 
+const isADice = index => {
+    return index > 0 && index <= diceAmount;
+};
+
 // Really nested and powerful way of changing reactive objects
 // Feels a bit like passing parameters by reference in C++
 const cuboid = index => {
-    if (index > 0 && index <= diceAmount) {
+    if (isADice(index)) {
         return diceLine.value.dice[index - 1];
     }
 };
@@ -90,8 +87,8 @@ const diceRoll = () => {
         if (cubid.inversion === normal) {
             cubid.rolled = roll();
 
-            if (numberLine.value > 0 && numberLine.value <= valueMax) {
-                cubid.rolled = numberLine.value;
+            if (numberLine > 0 && numberLine <= valueMax) {
+                cubid.rolled = numberLine;
             }
         }
     }
@@ -99,9 +96,13 @@ const diceRoll = () => {
 
 let throwing = false;
 
+const throwable = () => {
+    return diceLine.value.clicked > 0 && !throwing;
+};
+
 // Throw dice a number of times and space them apart in time
 const diceRolling = () => {
-    if (diceLine.value.clicked > 0 && !throwing) {
+    if (throwable()) {
         throwing = true;
 
         if (diceLine.value.clicked === 3) {
@@ -127,7 +128,7 @@ const diceRolling = () => {
 
 // flip between free and locked
 const flip = index => {
-    if (index > 0 && index <= diceAmount) {
+    if (isADice(index) && throwable()) {
         const cubid = cuboid(index);
 
         if (cubid.rolled > 0 && cubid.rolled <= valueMax) {
@@ -143,7 +144,6 @@ const restart = () => {
 // Give function access to the parent
 defineExpose({
     diceArrayReset,
-    // buttonVisible,
 });
 </script>
 

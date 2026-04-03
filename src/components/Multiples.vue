@@ -43,6 +43,31 @@ const countNumber = number => {
     return count;
 };
 
+const countMultiples = () => {
+    sameMax = 0;
+    yahtzeeNumber.value = 0;
+
+    let index = 1;
+    let yahtzee = false;
+
+    for (const amount of multiples.value.counts) {
+        amount.count = countNumber(index);
+
+        if (sameMax < amount.count) {
+            sameMax = amount.count;
+        }
+
+        // yahtzee needed so yahtzeeNumber does not go to 6 when index gets upped
+        if (sameMax === diceAmount && !yahtzee) {
+            yahtzeeNumber.value = index;
+
+            yahtzee = true;
+        }
+
+        ++index;
+    }
+};
+
 // Check if there are 3 dice with a value and 2 dice with another value
 const filledHouse = () => {
     if (sameMax === 3) {
@@ -75,4 +100,8 @@ const consecutive = () => {
 
     return consec;
 };
+
+defineExpose({
+    countMultiples,
+});
 </script>

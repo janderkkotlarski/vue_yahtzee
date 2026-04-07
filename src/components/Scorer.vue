@@ -28,7 +28,6 @@ const rollVisible = ref(true);
 
 const diceArray = ref({
     dice: [],
-    clicked: 0,
 });
 
 const scoreUpper = ref(scoreUpperInit);
@@ -372,7 +371,22 @@ const restart = () => {
         :moarYahtzee="moreYahtzee"
     />
 
+    <Multiples :multiples="multiplex" :diceLine="diceArray" />
 
+    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" :buttonVisible="rollVisible" />
+
+    <div>
+        {{ multiplex }}
+    </div>
+
+    <br />
+
+    <div>
+        {{ diceArray }}
+    </div>
+
+
+    <button @click="recount">Tellen</button>
 <br />
     <br />
 
@@ -389,31 +403,5 @@ const restart = () => {
 </script>
 
 <template>
-    <Multiples :multiples="multiplex" :diceLine="diceArray" />
-
-    <br />
-
-    <div>
-        {{ multiplex }}
-    </div>
-
-    <br />
-
-    <div>
-        {{ diceArray }}
-    </div>
-
-    <br />
-
-    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" :buttonVisible="rollVisible" />
-
-    <br />
-
-    <button @click="recount">Tellen</button>
-
-    <br />
-
-    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-
-    <br />
+    <Roller />
 </template>

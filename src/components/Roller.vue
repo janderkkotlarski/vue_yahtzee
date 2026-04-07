@@ -1,4 +1,5 @@
 <script setup>
+import {ref} from 'vue';
 import Dice from './Dice.vue';
 
 // Simple constants
@@ -7,6 +8,7 @@ const diceAmount = 5;
 const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;
+const clicked = ref(maxClicks);
 
 const normal = '______';
 const invert = 'invert';
@@ -24,13 +26,14 @@ const emit = defineEmits(['recounting']);
 const numberLine = 5;
 
 // the 'ref' that the parent can fill in and access
-const diceLine = defineModel('diceLine', {
-    type: Object,
-    default: {
-        dice: [],
-        clicked: maxClicks,
-    },
-});
+// const diceLine = defineModel('diceLine', {
+//     type: Object,
+//     default: {
+//         dice: [],
+//     },
+// });
+
+const diceLine = ref({dice: []});
 
 // Simple dice roll function
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
@@ -41,8 +44,6 @@ const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
         diceLine.value.dice.push({id: index, rolled: 0, inversion: starts});
     }
-
-    diceLine.value.clicked = maxClicks;
 };
 
 diceArrayFilling();
@@ -62,7 +63,7 @@ const diceArrayReset = () => {
         cubid.inversion = starts;
     }
 
-    diceLine.value.clicked = maxClicks;
+    clicked.value = maxClicks;
 };
 
 const normalDicing = () => {
@@ -93,7 +94,7 @@ let throwing = false;
 
 // Throw dice a number of times and space them apart in time
 const diceRolling = () => {
-    if (diceLine.value.clicked > 0 && !throwing) {
+    if (clicked.value > 0 && !throwing) {
         throwing = true;
 
         normalDicing();
@@ -111,14 +112,14 @@ const diceRolling = () => {
             emit('recounting');
         }, millis * maxThrows);
 
-        --diceLine.value.clicked;
+        --clicked.value;
     }
 };
 
 // flip between free and locked
 const flip = index => {
     // Once one cannot roll, flipping the roll/hold state is useless
-    if (index > 0 && index <= diceAmount && diceLine.value.clicked > 0) {
+    if (index > 0 && index <= diceAmount && clicked.value > 0) {
         const cubid = cuboid(index);
 
         if (cubid.rolled > 0 && cubid.rolled <= valueMax) {
@@ -132,13 +133,13 @@ const restart = () => {
 };
 
 // Give function access to the parent
-defineExpose({
-    diceArrayReset,
-});
-</script>
+// defineExpose({
+//     diceArrayReset,
+// });
 
-<template>
-    <div>
+/*
+
+<div>
         <Dice
             @click="flip(cube.id)"
             v-for="cube in diceLine.dice"
@@ -148,10 +149,16 @@ defineExpose({
             :inverted="cube.inversion"
         />
     </div>
-    <br />
-    <button v-if="buttonVisible && diceLine.clicked > 0" class="switch" @click="diceRolling">
-        {{ buttonMessage }} {{ diceLine.clicked }}
+
+<button v-if="buttonVisible && clicked.value > 0" class="switch" @click="diceRolling">
+        {{ buttonMessage }} {{ clicked }}
     </button>
-    <button v-if="diceLine.clicked === 0" class="switch" @click="diceArrayReset">Nieuwe Ronde</button>
+    <button v-if="clicked === 0" class="switch" @click="diceArrayReset">Nieuwe Ronde</button>
+
     <button v-if="!buttonVisible" class="switch" @click="restart">Herstart</button>
+*/
+</script>
+
+<template>
+    <div>Insanium Sanctum</div>
 </template>

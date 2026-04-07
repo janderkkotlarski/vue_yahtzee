@@ -1,8 +1,15 @@
 <script setup>
 import {ref} from 'vue';
+import Multiples from './Multiples.vue';
 import Roller from './Roller.vue';
 import Scorelist from './Scorelist.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
+
+const countMultiplesRef = ref(null);
+
+const countMultiplesParent = () => {
+    countMultiplesRef.value.countMultiplesRef();
+};
 
 const resetRef = ref(null);
 
@@ -10,9 +17,7 @@ const resetParent = () => {
     resetRef.value.diceArrayReset();
 };
 
-const valueMax = 6;
 const diceAmount = 5;
-const rollNumber = 0;
 
 let sameMax = 0;
 const extraYahtzee = ref(0);
@@ -26,14 +31,6 @@ const diceArray = ref({
     clicked: 0,
 });
 
-// defineModel('diceArray', {
-//     type: Object,
-//     default: {
-//         dice: [],
-//         clicked: 0,
-//     },
-// });
-
 const scoreUpper = ref(scoreUpperInit);
 const scoreLower = ref(scoreLowerInit);
 
@@ -41,7 +38,7 @@ const scoress = list => {
     return list.value.scores;
 };
 
-const multiples = ref({
+const multiplex = ref({
     counts: [],
 });
 
@@ -64,15 +61,17 @@ const startLocking = () => {
     }
 };
 
-const initMultiples = () => {
-    for (let index = 1; index <= valueMax; ++index) {
-        multiples.value.counts.push({id: index, count: 0});
-    }
+startLocking();
 
-    startLocking();
-};
+// const initMultiples = () => {
+//     for (let index = 1; index <= valueMax; ++index) {
+//         multiplex.value.counts.push({id: index, count: 0});
+//     }
 
-initMultiples();
+//     startLocking();
+// };
+
+// initMultiples();
 
 const countNumber = number => {
     let count = 0;
@@ -103,7 +102,7 @@ const countMultiples = () => {
 
     // countOne.value = countNumber(1);
 
-    for (const amount of multiples.value.counts) {
+    for (const amount of multiplex.value.counts) {
         amount.count = countNumber(index);
 
         if (sameMax < amount.count) {
@@ -142,7 +141,7 @@ const countUpper = () => {
 
     for (const entry of scoress(scoreUpper)) {
         if (entry.locked != back && entry.locked != lack) {
-            const score = arrayEntry(multiples.value.counts, 'id', entry.id).count * entry.id;
+            const score = arrayEntry(multiplex.value.counts, 'id', entry.id).count * entry.id;
             entryLocking(entry, score);
         }
 
@@ -249,7 +248,7 @@ const klikable = () => {
 // Check if there are 3 dice with a value and 2 dice with another value
 const filledHouse = () => {
     if (sameMax === 3) {
-        for (const amount of multiples.value.counts) {
+        for (const amount of multiplex.value.counts) {
             if (amount.count == 2) {
                 return true;
             }
@@ -264,7 +263,7 @@ const consecutive = () => {
     let consec = 0;
     let counted = 0;
 
-    for (const amount of multiples.value.counts) {
+    for (const amount of multiplex.value.counts) {
         counted = amount.count ? counted + 1 : 0;
 
         if (counted > consec) {
@@ -319,14 +318,15 @@ const sumLower = () => {
 };
 
 const recount = () => {
-    countMultiples();
-    multiYahtzee();
-    klikable();
-    summing();
-    countUpper();
-    sumUpper();
-    countLower();
-    sumLower();
+    // countMultiples();
+    countMultiplesParent();
+    // multiYahtzee();
+    // klikable();
+    // summing();
+    // countUpper();
+    // sumUpper();
+    // countLower();
+    // sumLower();
 };
 
 const lockEntry = (box, index) => {
@@ -389,7 +389,7 @@ const restart = () => {
 </script>
 
 <template>
-    <Multiples :multiples="multiplex" />
+    <Multiples ref="countMultiplesRef" :multiples="multiplex" :diceLine="diceArray" :yahtzeeChevron="yahtzeeNumber" />
 
     <br />
 
@@ -406,4 +406,10 @@ const restart = () => {
     <br />
 
     <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" :buttonVisible="rollVisible" />
+
+    <br />
+
+    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+
+    <br />
 </template>

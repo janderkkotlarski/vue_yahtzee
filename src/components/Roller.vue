@@ -13,9 +13,6 @@ const invert = 'invert';
 const starts = 'starts';
 
 const buttonMessage = 'Gooien: ';
-// let buttonVisible = true;
-
-// const {buttonVisible = true} = defineProps<{buttonVisible?: Boolean}>;
 
 const props = defineProps({
     buttonVisible: Boolean,
@@ -24,12 +21,7 @@ const props = defineProps({
 /// define emits to let the parent do the recount function upon emitting this
 const emit = defineEmits(['recounting']);
 
-const numberLine = defineModel('numberLine', {
-    type: Number,
-    default: 0,
-});
-
-// const numberLine = defineModel('numberLine', {type: Number, default: 0});
+const numberLine = 5;
 
 // the 'ref' that the parent can fill in and access
 const diceLine = defineModel('diceLine', {
@@ -39,14 +31,6 @@ const diceLine = defineModel('diceLine', {
         clicked: maxClicks,
     },
 });
-
-// Really nested and powerful way of changing reactive objects
-// Feels a bit like passing parameters by reference in C++
-const cuboid = index => {
-    if (index > 0 && index <= diceAmount) {
-        return diceLine.value.dice[index - 1];
-    }
-};
 
 // Simple dice roll function
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
@@ -63,15 +47,12 @@ const diceArrayFilling = () => {
 
 diceArrayFilling();
 
-<<<<<<< HEAD
-=======
 // Feels a bit like passing parameters by reference in C++
 // Got rid of the superfluous index restriction
 const cuboid = index => {
     return diceLine.value.dice[index - 1];
 };
 
->>>>>>> d43cdaf (Taking a look at the issues with multiples, yahtzeeChevron, diceLine and maybe more in Multiples.vue)
 // For the next round
 const diceArrayReset = () => {
     for (let index = 1; index <= diceAmount; ++index) {
@@ -101,8 +82,8 @@ const diceRoll = () => {
         if (cubid.inversion != invert) {
             cubid.rolled = roll();
 
-            if (numberLine.value > 0 && numberLine.value <= valueMax) {
-                cubid.rolled = numberLine.value;
+            if (numberLine > 0 && numberLine <= valueMax) {
+                cubid.rolled = numberLine;
             }
         }
     }
@@ -153,7 +134,6 @@ const restart = () => {
 // Give function access to the parent
 defineExpose({
     diceArrayReset,
-    // buttonVisible,
 });
 </script>
 

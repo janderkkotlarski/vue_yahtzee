@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <script setup>
 import {ref} from 'vue';
 
@@ -10,7 +8,7 @@ const props = defineProps({
             dice: [],
         },
     },
-    moarYahtzee: {type: Boolean, default: false},
+    // moarYahtzee: {type: Boolean, default: false},
 });
 
 const valueMax = 6;
@@ -22,10 +20,10 @@ const multiples = defineModel('multiples', {
     },
 });
 
-// const yahtzeeChevron = defineModel('yahtzeeChevron', {
-//     type: Number,
-//     default: 0,
-// });
+const yahtzeeChevron = defineModel('yahtzeeChevron', {
+    type: Number,
+    default: 0,
+});
 
 const initMultiples = () => {
     for (let index = 1; index <= valueMax; ++index) {
@@ -47,7 +45,7 @@ const countNumber = number => {
     return count;
 };
 
-const yahtzeeChevron = ref(0);
+// const yahtzeeChevron = ref(0);
 
 const countMultiples = () => {
     sameMax = 0;
@@ -110,11 +108,15 @@ const consecutive = () => {
 defineExpose({
     countMultiples,
 });
+
+/*
+<div>diceLine: {{ diceLine }}</div>
+
+    <div>yahtzeeChevron: {{ yahtzeeChevron }}</div>
+
+*/
 </script>
 
 <template>
-    <div>diceLine: {{ diceLine }}</div>
-
     <div>yahtzeeChevron: {{ yahtzeeChevron }}</div>
 </template>
->>>>>>> d43cdaf (Taking a look at the issues with multiples, yahtzeeChevron, diceLine and maybe more in Multiples.vue)

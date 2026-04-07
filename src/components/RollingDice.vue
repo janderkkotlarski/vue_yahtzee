@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue';
-import Dice from './Dice-lines.vue';
+import Dice from './DiceLines.vue';
 
 // Simple constants
 const valueMax = 6;

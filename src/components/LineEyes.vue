@@ -1,12 +1,9 @@
 <script setup>
-import Eye from './Eye-dot.vue';
-
-// Default is for empty line
-// const selected = defineModel('selected', {type: Number, default: 0});
-// const inverted = defineModel('inversion', {type: String, default: '______'});
+import Eye from './EyeDot.vue';
 
 // Another case of defineProps being enough
 const props = defineProps({
+    // Default is for empty line
     selected: {type: Number, default: 0},
     inversion: {type: String, default: '______'},
 });
@@ -16,8 +13,6 @@ const eyeLines = [
     {id: 2, eyes: ['_______', '_______', 'visible', '_______', '_______']},
     {id: 3, eyes: ['_______', '_______', '_______', 'visible', 'visible']},
 ];
-
-const temp = 'invert';
 </script>
 
 <template>

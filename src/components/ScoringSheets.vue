@@ -1,8 +1,8 @@
 <script setup>
 import {ref} from 'vue';
-import Multiples from './Multiple-counts.vue';
-import Roller from './Rolling-dice.vue';
-import Scorelist from './Score-list.vue';
+import Multiples from './MultipleCounts.vue';
+import Roller from './RollingDice.vue';
+import Scorelist from './ScoreList.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
 const countMultiplesRef = ref(null);

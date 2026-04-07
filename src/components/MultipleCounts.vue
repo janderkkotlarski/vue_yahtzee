@@ -3,9 +3,9 @@ import {ref} from 'vue';
 
 const props = defineProps({
     diceLine: {
-        type: Object,
-        default: {
-            dice: [],
+        type: Function,
+        default: () => {
+            [];
         },
     },
     // moarYahtzee: {type: Boolean, default: false},
@@ -17,7 +17,7 @@ const valueMax = 6;
 const multiples = defineModel('multiples', {
     type: Object,
     default: {
-        counts: [],
+        return: {counts: []},
     },
 });
 

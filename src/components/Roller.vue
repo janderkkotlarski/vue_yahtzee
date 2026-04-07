@@ -63,6 +63,15 @@ const diceArrayFilling = () => {
 
 diceArrayFilling();
 
+<<<<<<< HEAD
+=======
+// Feels a bit like passing parameters by reference in C++
+// Got rid of the superfluous index restriction
+const cuboid = index => {
+    return diceLine.value.dice[index - 1];
+};
+
+>>>>>>> d43cdaf (Taking a look at the issues with multiples, yahtzeeChevron, diceLine and maybe more in Multiples.vue)
 // For the next round
 const diceArrayReset = () => {
     for (let index = 1; index <= diceAmount; ++index) {

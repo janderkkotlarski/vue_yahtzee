@@ -363,19 +363,17 @@ const restart = () => {
     location.reload();
 };
 
-// <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
-</script>
-
-<template>
-    <Roller
-        ref="resetRef"
-        @recounting="recount"
-        :numberLine="rollNumber"
+/*
+<Multiples
+        ref="countMultiplesRef"
+        :multiples="multiplex"
         :diceLine="diceArray"
-        :buttonVisible="rollVisible"
+        :yahtzeeChevron="yahtzeeNumber"
+        :moarYahtzee="moreYahtzee"
     />
 
-    <br />
+
+<br />
     <br />
 
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
@@ -385,4 +383,27 @@ const restart = () => {
     <br />
 
     <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
+*/
+
+// <Roller ref="resetRef" @recounting="recount" :numberLine="numberRoll" :diceLine="diceArray" />
+</script>
+
+<template>
+    <Multiples :multiples="multiplex" />
+
+    <br />
+
+    <div>
+        {{ multiplex }}
+    </div>
+
+    <br />
+
+    <div>
+        {{ diceArray }}
+    </div>
+
+    <br />
+
+    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" :buttonVisible="rollVisible" />
 </template>

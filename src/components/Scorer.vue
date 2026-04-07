@@ -409,6 +409,10 @@ const restart = () => {
 
     <br />
 
+    <button @click="recount">Tellen</button>
+
+    <br />
+
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 
     <br />

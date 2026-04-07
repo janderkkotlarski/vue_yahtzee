@@ -152,5 +152,6 @@ defineExpose({
     <button v-if="buttonVisible && diceLine.clicked > 0" class="switch" @click="diceRolling">
         {{ buttonMessage }} {{ diceLine.clicked }}
     </button>
+    <button v-if="diceLine.clicked === 0" class="switch" @click="diceArrayReset">Nieuwe Ronde</button>
     <button v-if="!buttonVisible" class="switch" @click="restart">Herstart</button>
 </template>

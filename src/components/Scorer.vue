@@ -398,10 +398,8 @@ const restart = () => {
 
     <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
 */
-
-// <Roller ref="resetRef" @recounting="recount" :numberLine="numberRoll" :diceLine="diceArray" />
 </script>
 
 <template>
-    <Roller />
+    <Roller :diceLine="diceArray" :buttonVisible="rollVisible" />
 </template>

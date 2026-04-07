@@ -17,23 +17,21 @@ const starts = 'starts';
 const buttonMessage = 'Gooien: ';
 
 const props = defineProps({
-    buttonVisible: Boolean,
+    buttonVisible: {type: Boolean, default: true},
 });
 
 /// define emits to let the parent do the recount function upon emitting this
 const emit = defineEmits(['recounting']);
 
-const numberLine = 5;
+const numberLine = 0;
 
 // the 'ref' that the parent can fill in and access
-// const diceLine = defineModel('diceLine', {
-//     type: Object,
-//     default: {
-//         dice: [],
-//     },
-// });
-
-const diceLine = ref({dice: []});
+const diceLine = defineModel('diceLine', {
+    type: Object,
+    default: {
+        dice: [],
+    },
+});
 
 // Simple dice roll function
 const roll = () => Math.floor(valueMax * Math.random()) + 1;
@@ -97,6 +95,8 @@ const diceRolling = () => {
     if (clicked.value > 0 && !throwing) {
         throwing = true;
 
+        --clicked.value;
+
         normalDicing();
 
         for (let throws = 0; throws < maxThrows; ++throws) {
@@ -111,8 +111,6 @@ const diceRolling = () => {
 
             emit('recounting');
         }, millis * maxThrows);
-
-        --clicked.value;
     }
 };
 
@@ -133,13 +131,13 @@ const restart = () => {
 };
 
 // Give function access to the parent
-// defineExpose({
-//     diceArrayReset,
-// });
+defineExpose({
+    diceArrayReset,
+});
+</script>
 
-/*
-
-<div>
+<template>
+    <div>
         <Dice
             @click="flip(cube.id)"
             v-for="cube in diceLine.dice"
@@ -150,15 +148,10 @@ const restart = () => {
         />
     </div>
 
-<button v-if="buttonVisible && clicked.value > 0" class="switch" @click="diceRolling">
+    <button v-if="buttonVisible && clicked > 0" class="switch" @click="diceRolling">
         {{ buttonMessage }} {{ clicked }}
     </button>
     <button v-if="clicked === 0" class="switch" @click="diceArrayReset">Nieuwe Ronde</button>
 
     <button v-if="!buttonVisible" class="switch" @click="restart">Herstart</button>
-*/
-</script>
-
-<template>
-    <div>Insanium Sanctum</div>
 </template>

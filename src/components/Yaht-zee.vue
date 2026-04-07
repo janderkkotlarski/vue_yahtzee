@@ -1,5 +1,5 @@
 <script setup>
-import Scorer from './Scorer.vue';
+import Scorer from './Sco-rer.vue';
 </script>
 
 <template>

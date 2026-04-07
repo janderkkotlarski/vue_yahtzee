@@ -1,5 +1,5 @@
 <script setup>
-import Eye from './Eye.vue';
+import Eye from './Eye-dot.vue';
 
 // Default is for empty line
 // const selected = defineModel('selected', {type: Number, default: 0});

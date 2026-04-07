@@ -1,8 +1,8 @@
 <script setup>
 import {ref} from 'vue';
-import Multiples from './Multiples.vue';
-import Roller from './Roller.vue';
-import Scorelist from './Scorelist.vue';
+import Multiples from './Multiple-counts.vue';
+import Roller from './Rolling-dice.vue';
+import Scorelist from './Score-list.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
 const countMultiplesRef = ref(null);
@@ -401,5 +401,5 @@ const restart = () => {
 </script>
 
 <template>
-    <Roller :diceLine="diceArray" :buttonVisible="rollVisible" />
+    <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" :buttonVisible="rollVisible" />
 </template>

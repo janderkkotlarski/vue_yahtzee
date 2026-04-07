@@ -1,5 +1,5 @@
 <script setup>
-import Line from './Line.vue';
+import Line from './Line-eyes.vue';
 
 // Makes conditional displaying easier
 const normal = '______';

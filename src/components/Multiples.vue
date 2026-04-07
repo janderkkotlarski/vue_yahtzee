@@ -13,17 +13,19 @@ const props = defineProps({
 
 const valueMax = 6;
 
-const multiples = defineModel('multiples', {
-    type: Object,
-    default: {
-        counts: [],
-    },
-});
+// const multiples = defineModel('multiples', {
+//     type: Object,
+//     default: {
+//         counts: [],
+//     },
+// });
 
-const yahtzeeChevron = defineModel('yahtzeeChevron', {
-    type: Number,
-    default: 0,
-});
+// const yahtzeeChevron = defineModel('yahtzeeChevron', {
+//     type: Number,
+//     default: 0,
+// });
+
+const multiples = ref({counts: []});
 
 const initMultiples = () => {
     for (let index = 1; index <= valueMax; ++index) {
@@ -45,7 +47,9 @@ const countNumber = number => {
     return count;
 };
 
-// const yahtzeeChevron = ref(0);
+const yahtzeeChevron = ref(0);
+
+let sameMax = 0;
 
 const countMultiples = () => {
     sameMax = 0;
@@ -54,23 +58,25 @@ const countMultiples = () => {
     let index = 1;
     let yahtzee = false;
 
-    for (const amount of multiples.value.counts) {
-        amount.count = countNumber(index);
+    // for (const amount of multiples.value.counts) {
+    //     amount.count = 8; // countNumber(index);
 
-        if (sameMax < amount.count) {
-            sameMax = amount.count;
-        }
+    //     if (sameMax < amount.count) {
+    //         sameMax = amount.count;
+    //     }
 
-        // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
-        if (sameMax === diceAmount && !yahtzee) {
-            yahtzeeChevron.value = index;
+    //     // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
+    //     if (sameMax === diceAmount && !yahtzee) {
+    //         yahtzeeChevron.value = index;
 
-            yahtzee = true;
-        }
+    //         yahtzee = true;
+    //     }
 
-        ++index;
-    }
+    //     ++index;
+    // }
 };
+
+countMultiples();
 
 // Check if there are 3 dice with a value and 2 dice with another value
 const filledHouse = () => {
@@ -105,9 +111,9 @@ const consecutive = () => {
     return consec;
 };
 
-defineExpose({
-    countMultiples,
-});
+// defineExpose({
+//     countMultiples,
+// });
 
 /*
 <div>diceLine: {{ diceLine }}</div>
@@ -119,4 +125,6 @@ defineExpose({
 
 <template>
     <div>yahtzeeChevron: {{ yahtzeeChevron }}</div>
+
+    <div>multiples: {{ multiples }}</div>
 </template>

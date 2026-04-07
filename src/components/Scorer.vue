@@ -389,7 +389,7 @@ const restart = () => {
 </script>
 
 <template>
-    <Multiples ref="countMultiplesRef" :multiples="multiplex" :diceLine="diceArray" :yahtzeeChevron="yahtzeeNumber" />
+    <Multiples :multiples="multiplex" :diceLine="diceArray" />
 
     <br />
 

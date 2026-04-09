@@ -19,7 +19,7 @@ const starts = 'starts';
 
 const buttonMessage = 'Gooien: ';
 
-const props = defineProps({
+defineProps({
     buttonVisible: {type: Boolean, default: true},
 });
 

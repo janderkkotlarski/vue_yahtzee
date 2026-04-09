@@ -91,9 +91,13 @@ const diceRoll = () => {
 
 let throwing = false;
 
+const throwable = () => {
+    return clicked.value > 0 && !throwing;
+};
+
 // Throw dice a number of times and space them apart in time
 const diceRolling = () => {
-    if (clicked.value > 0 && !throwing) {
+    if (throwable()) {
         throwing = true;
 
         --clicked.value;
@@ -118,7 +122,7 @@ const diceRolling = () => {
 // flip between free and locked
 const flip = index => {
     // Once one cannot roll, flipping the roll/hold state is useless
-    if (index > 0 && index <= diceAmount && clicked.value > 0) {
+    if (throwable()) {
         const cubid = cuboid(index);
 
         if (cubid.rolled > 0 && cubid.rolled <= valueMax) {

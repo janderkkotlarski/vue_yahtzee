@@ -1,7 +1,8 @@
 <script setup>
 import {ref} from 'vue';
-import Roller from './Roller.vue';
-import Scorelist from './Scorelist.vue';
+import MultipleCounts from './MultipleCounts.vue';
+import RollingDice from './RollingDice.vue';
+import ScoreList from './ScoreList.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
 const countMultiplesRef = ref(null);
@@ -16,7 +17,6 @@ const resetParent = () => {
     resetRef.value.diceArrayReset();
 };
 
-const valueMax = 6;
 const diceAmount = 5;
 
 let sameMax = 0;
@@ -60,8 +60,7 @@ const startLocking = () => {
     }
 };
 
-    startLocking();
-};
+startLocking();
 
 // initMultiples();
 
@@ -226,14 +225,14 @@ const klikable = () => {
 };
 
 // Check if there are 3 dice with a value and 2 dice with another value
-const filledHouse = () => {
-    if (sameMax === 3) {
-        for (const amount of multiples.value.counts) {
-            if (amount.count == 2) {
-                return true;
-            }
-        }
-    }
+// const filledHouse = () => {
+//     if (sameMax === 3) {
+//         for (const amount of multiples.value.counts) {
+//             if (amount.count == 2) {
+//                 return true;
+//             }
+//         }
+//     }
 
 //     return moreYahtzee;
 // };
@@ -241,12 +240,12 @@ const filledHouse = () => {
 // // Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
 // const consecutive = () => {
 //     let consec = 0;
-//     let counted = 0;
+// //     let counted = 0;
 
-    for (const amount of multiples.value.counts) {
-        counted = amount.count ? counted + 1 : 0;
+//     for (const amount of multiples.value.counts) {
+//         counted = amount.count ? counted + 1 : 0;
 
-//         if (counted > consec) {
+// //         if (counted > consec) {
 //             consec = counted;
 //         }
 //     }
@@ -355,10 +354,22 @@ const restart = () => {
 };
 
 // <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
+
+/*
+
+<ScoreList @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <ScoreList @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+
+    <br />
+    <br />
+
+    <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
+
+*/
 </script>
 
 <template>
-    <Roller
+    <RollingDice
         ref="resetRef"
         @recounting="recount"
         :numberLine="rollNumber"
@@ -369,11 +380,5 @@ const restart = () => {
     <br />
     <br />
 
-    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-    <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-
-    <br />
-    <br />
-
-    <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
+    <MultipleCounts />
 </template>

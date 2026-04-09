@@ -8,7 +8,7 @@ const props = defineProps({
             [];
         },
     },
-    // moarYahtzee: {type: Boolean, default: false},
+    moarYahtzee: {type: Boolean, default: false},
 });
 
 const diceAmount = 5;

@@ -1,18 +1,16 @@
 <script setup>
-import Line from './Line.vue';
+import Line from './LineEyes.vue';
 
 // Makes conditional displaying easier
-const normal = '______';
 const invert = 'invert';
 
-// Default is for empty die
-// const eyeValue = defineModel('eyeValue', {type: Number, default: 0});
-// const inverted = defineModel('inverted', {type: String, default: normal});
-
+// And more defineProps applicability
 const props = defineProps({
+    // Default is for empty die
     eyeValue: {type: Number, default: 0},
-    inverted: {type: String, default: normal},
+    inverted: {type: String, default: '______'},
 });
+
 // Most effective array config for v-for coding standards
 const diceLines = [
     {id: 1, lines: [0, 0, 1, 1, 4, 4, 4]},

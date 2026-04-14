@@ -29,7 +29,7 @@ const multiples = defineModel('multiples', {
 // const multiples = ref({counts: []});
 
 const initMultiples = () => {
-    for (let index = 1; index <= valueMax; ++index) {
+    for (let number = 1; number <= valueMax; ++number) {
         multiples.value.counts.push({id: index, count: 0});
     }
 };
@@ -40,7 +40,7 @@ const countNumber = number => {
     let count = 0;
 
     for (let index = 0; index < diceAmount; ++index) {
-        if (diceLine.value.dice[index].rolled === number) {
+        if (diceLine.dice[index].rolled === number) {
             ++count;
         }
     }
@@ -59,21 +59,21 @@ const countMultiples = () => {
     let index = 1;
     // let yahtzee = false;
 
-    for (const amount of multiples.value.counts) {
-        amount.count = 7 - index; // countNumber(index);
+    for (let number = 1; number <= valueMax; ++number) {
+        for (const amount of multiples.value.counts) {
+            amount.count = countNumber(index);
 
-        // if (sameMax < amount.count) {
-        //     sameMax = amount.count;
-        // }
+            // if (sameMax < amount.count) {
+            //     sameMax = amount.count;
+            // }
 
-        // // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
-        // if (sameMax === diceAmount && !yahtzee) {
-        //     yahtzeeChevron.value = index;
+            // // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
+            // if (sameMax === diceAmount && !yahtzee) {
+            //     yahtzeeChevron.value = index;
 
-        //     yahtzee = true;
-        // }
-
-        ++index;
+            //     yahtzee = true;
+            // }
+        }
     }
 };
 
@@ -83,7 +83,7 @@ const countMultiples = () => {
 const filledHouse = () => {
     if (sameMax === 3) {
         for (const amount of multiples.value.counts) {
-            if (amount.count == 2) {
+            if (amount.count === 2) {
                 return true;
             }
         }
@@ -128,4 +128,6 @@ defineExpose({
     <div>yahtzeeChevron: {{ yahtzeeChevron }}</div>
 
     <div>multiples: {{ multiples }}</div>
+
+    <div>diceLine: {{ diceLine }}</div>
 </template>

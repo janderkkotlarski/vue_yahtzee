@@ -27,8 +27,6 @@ const diceLine = defineModel('diceLine', {
 //     default: 0,
 // });
 
-// const multiples = ref({counts: []});
-
 const initMultiples = () => {
     for (let number = 1; number <= valueMax; ++number) {
         multiples.value.counts.push({id: number, count: 0});
@@ -36,12 +34,6 @@ const initMultiples = () => {
 };
 
 initMultiples();
-
-const resetMultiples = () => {
-    for (const amount of multiples.value.counts) {
-        amount.count = 0;
-    }
-};
 
 const countNumber = number => {
     let count = 0;

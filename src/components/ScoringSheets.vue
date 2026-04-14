@@ -325,8 +325,8 @@ const recount = () => {
     // multiYahtzee();
     // klikable();
     // summing();
-    // countUpper();
-    // sumUpper();
+    countUpper();
+    sumUpper();
     // countLower();
     // sumLower();
 };
@@ -417,4 +417,6 @@ const restart = () => {
     <br />
 
     <Multiples ref="countMultiplesRef" :multiples="multiplex" :diceLine="diceArray" />
+
+    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 </template>

@@ -91,7 +91,7 @@ const filledHouse = () => {
         }
     }
 
-    return moarYahtzee;
+    return moarYahtzee.value;
 };
 
 // Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
@@ -117,6 +117,7 @@ const consecutive = () => {
 defineExpose({
     countMultiples,
     filledHouse,
+    consecutive,
 });
 
 /*

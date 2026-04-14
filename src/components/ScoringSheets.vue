@@ -15,6 +15,10 @@ const watchFilledHouse = () => {
     return multiplesRef.value.filledHouse();
 };
 
+const watchConsecutive = () => {
+    return multiplesRef.value.consecutive();
+};
+
 const rollingRef = ref(null);
 
 const resetRollingArray = () => {
@@ -283,8 +287,8 @@ const lowerScoring = () => {
     scoreSheet.push({id: 'three', score: sameMax >= 3 ? diceSum : 0});
     scoreSheet.push({id: 'four', score: sameMax >= 4 ? diceSum : 0});
     scoreSheet.push({id: 'full', score: watchFilledHouse() ? 25 : 0});
-    scoreSheet.push({id: 'small', score: consecutive() > 3 ? 30 : 0});
-    scoreSheet.push({id: 'large', score: consecutive() > 4 ? 40 : 0});
+    scoreSheet.push({id: 'small', score: watchConsecutive() > 3 ? 30 : 0});
+    scoreSheet.push({id: 'large', score: watchConsecutive() > 4 ? 40 : 0});
     scoreSheet.push({id: 'chance', score: diceSum});
     scoreSheet.push({id: 'yahtzee', score: sameMax === diceAmount ? 50 : 0});
 

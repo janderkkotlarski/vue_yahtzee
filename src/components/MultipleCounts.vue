@@ -37,6 +37,12 @@ const initMultiples = () => {
 
 initMultiples();
 
+const resetMultiples = () => {
+    for (const amount of multiples.value.counts) {
+        amount.count = 0;
+    }
+};
+
 const countNumber = number => {
     let count = 0;
 
@@ -54,25 +60,27 @@ const yahtzeeChevron = ref(0);
 let sameMax = 0;
 
 const countMultiples = () => {
-    // sameMax = 0;
-    // yahtzeeChevron.value = 0;
+    sameMax = 0;
+    yahtzeeChevron.value = 0;
 
     let number = 1;
-    // let yahtzee = false;
+    let yahtzee = false;
 
     for (const amount of multiples.value.counts) {
-        amount.count = 2; //countNumber(number);
+        amount.count = countNumber(number);
 
-        // if (sameMax < amount.count) {
-        //     sameMax = amount.count;
-        // }
+        if (sameMax < amount.count) {
+            sameMax = amount.count;
+        }
 
-        // // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
-        // if (sameMax === diceAmount && !yahtzee) {
-        //     yahtzeeChevron.value = index;
+        // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
+        if (sameMax === diceAmount && !yahtzee) {
+            yahtzeeChevron.value = number;
 
-        //     yahtzee = true;
-        // }
+            yahtzee = true;
+        }
+
+        ++number;
     }
 };
 

@@ -21,7 +21,7 @@ defineProps({
 });
 
 /// define emits to let the parent do the recount function upon emitting this
-const emit = defineEmits(['recounting']);
+const emit = defineEmits(['recounting', 'resetMultiples']);
 
 const numberLine = 0;
 
@@ -60,6 +60,8 @@ const diceArrayReset = () => {
     }
 
     clicked.value = maxClicks;
+
+    emit('resetMultiples');
 };
 
 const normalDicing = () => {

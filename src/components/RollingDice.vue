@@ -5,7 +5,7 @@ import Dice from './DiceLines.vue';
 // Simple constants
 const valueMax = 6;
 const diceAmount = 5;
-const maxThrows = 125;
+const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;
 const clicked = ref(maxClicks);
@@ -117,7 +117,7 @@ const diceRolling = () => {
 // flip between free and locked
 const flip = index => {
     // Once one cannot roll, flipping the roll/hold state is useless
-    if (index > 0 && index <= diceAmount && clicked.value > 0) {
+    if (index > 0 && index <= diceAmount && clicked.value > 0 && !throwing) {
         const cubid = cuboid(index);
 
         if (cubid.rolled > 0 && cubid.rolled <= valueMax) {

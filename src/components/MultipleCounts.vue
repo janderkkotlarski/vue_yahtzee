@@ -1,9 +1,7 @@
 <script setup>
 import {ref} from 'vue';
 
-defineProps({
-    // moarYahtzee: {type: Boolean, default: false},
-});
+ref;
 
 const diceAmount = 5;
 const valueMax = 6;
@@ -20,6 +18,11 @@ const diceLine = defineModel('diceLine', {
     default: {
         dice: [],
     },
+});
+
+const moarYahtzee = defineModel('moarYahtzee', {
+    type: Boolean,
+    default: false,
 });
 
 // const yahtzeeChevron = defineModel('yahtzeeChevron', {
@@ -104,7 +107,7 @@ const consecutive = () => {
         }
     }
 
-    if (moarYahtzee) {
+    if (moarYahtzee.value) {
         consec = 5;
     }
 
@@ -113,6 +116,7 @@ const consecutive = () => {
 
 defineExpose({
     countMultiples,
+    filledHouse,
 });
 
 /*

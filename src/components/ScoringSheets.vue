@@ -5,16 +5,20 @@ import Roller from './RollingDice.vue';
 import Scorelist from './ScoreList.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
-const countMultiplesRef = ref(null);
+const multiplesRef = ref(null);
 
 const countMultiplesParent = () => {
-    countMultiplesRef.value.countMultiples();
+    multiplesRef.value.countMultiples();
 };
 
-const resetRef = ref(null);
+const watchFilledHouse = () => {
+    return multiplesRef.value.filledHouse();
+};
 
-const resetParent = () => {
-    resetRef.value.diceArrayReset();
+const rollingRef = ref(null);
+
+const resetRollingArray = () => {
+    rollingRef.value.diceArrayReset();
 };
 
 const diceAmount = 5;
@@ -136,15 +140,11 @@ const summing = () => {
 };
 
 const countUpper = () => {
-    let index = 1;
-
     for (const entry of scoress(scoreUpper)) {
         if (entry.locked != back && entry.locked != lack) {
             const score = arrayEntry(multiplex.value.counts, 'id', entry.id).count * entry.id;
             entryLocking(entry, score);
         }
-
-        ++index;
     }
 };
 
@@ -282,7 +282,7 @@ const lowerScoring = () => {
 
     scoreSheet.push({id: 'three', score: sameMax >= 3 ? diceSum : 0});
     scoreSheet.push({id: 'four', score: sameMax >= 4 ? diceSum : 0});
-    scoreSheet.push({id: 'full', score: filledHouse() ? 25 : 0});
+    scoreSheet.push({id: 'full', score: watchFilledHouse() ? 25 : 0});
     scoreSheet.push({id: 'small', score: consecutive() > 3 ? 30 : 0});
     scoreSheet.push({id: 'large', score: consecutive() > 4 ? 40 : 0});
     scoreSheet.push({id: 'chance', score: diceSum});
@@ -324,11 +324,11 @@ const recount = () => {
     countMultiplesParent();
     // multiYahtzee();
     // klikable();
-    // summing();
+    summing();
     countUpper();
     sumUpper();
-    // countLower();
-    // sumLower();
+    countLower();
+    sumLower();
 };
 
 const lockEntry = (box, index) => {
@@ -351,7 +351,7 @@ const lockEntry = (box, index) => {
             lockList(scoresL);
         }
 
-        resetParent();
+        resetRollingArray();
 
         if (!fullyLocking(scoresU) || !fullyLocking(scoresL)) {
             recount();
@@ -405,7 +405,7 @@ const restart = () => {
 
 <template>
     <Roller
-        ref="resetRef"
+        ref="rollingRef"
         @recounting="recount"
         @resetMultiples="countMultiplesParent"
         :diceLine="diceArray"
@@ -416,7 +416,8 @@ const restart = () => {
     <div>{{ recounter }} | {{ multiCount }}</div>
     <br />
 
-    <Multiples ref="countMultiplesRef" :multiples="multiplex" :diceLine="diceArray" />
+    <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
 
     <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 </template>

@@ -52,17 +52,7 @@ const cuboid = index => {
     return diceLine.value.dice[index - 1];
 };
 
-// For the next round
-const diceArrayReset = () => {
-    for (let index = 1; index <= diceAmount; ++index) {
-        cuboid(index).rolled = 0;
-        cuboid(index).inversion = starts;
-    }
-
-    clicked.value = maxClicks;
-
-    emit('resetMultiples');
-};
+let throwing = false;
 
 const normalDicing = () => {
     for (let index = 1; index <= diceAmount; ++index) {
@@ -86,8 +76,6 @@ const diceRoll = () => {
     }
 };
 
-let throwing = false;
-
 // Throw dice a number of times and space them apart in time
 const diceRolling = () => {
     if (clicked.value > 0 && !throwing) {
@@ -109,6 +97,20 @@ const diceRolling = () => {
 
             emit('recounting');
         }, millis * maxThrows);
+    }
+};
+
+// For the next round
+const diceArrayReset = () => {
+    if (!throwing) {
+        for (let index = 1; index <= diceAmount; ++index) {
+            cuboid(index).rolled = 0;
+            cuboid(index).inversion = starts;
+        }
+
+        clicked.value = maxClicks;
+
+        emit('resetMultiples');
     }
 };
 

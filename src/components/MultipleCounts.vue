@@ -1,13 +1,7 @@
 <script setup>
 import {ref} from 'vue';
 
-const props = defineProps({
-    diceLine: {
-        type: Function,
-        default: () => {
-            [];
-        },
-    },
+defineProps({
     // moarYahtzee: {type: Boolean, default: false},
 });
 
@@ -21,6 +15,13 @@ const multiples = defineModel('multiples', {
     },
 });
 
+const diceLine = defineModel('diceLine', {
+    type: Object,
+    default: {
+        dice: [],
+    },
+});
+
 // const yahtzeeChevron = defineModel('yahtzeeChevron', {
 //     type: Number,
 //     default: 0,
@@ -30,7 +31,7 @@ const multiples = defineModel('multiples', {
 
 const initMultiples = () => {
     for (let number = 1; number <= valueMax; ++number) {
-        multiples.value.counts.push({id: index, count: 0});
+        multiples.value.counts.push({id: number, count: 0});
     }
 };
 
@@ -40,7 +41,7 @@ const countNumber = number => {
     let count = 0;
 
     for (let index = 0; index < diceAmount; ++index) {
-        if (diceLine.dice[index].rolled === number) {
+        if (diceLine.value.dice[index].rolled === number) {
             ++count;
         }
     }
@@ -56,24 +57,22 @@ const countMultiples = () => {
     // sameMax = 0;
     // yahtzeeChevron.value = 0;
 
-    let index = 1;
+    let number = 1;
     // let yahtzee = false;
 
-    for (let number = 1; number <= valueMax; ++number) {
-        for (const amount of multiples.value.counts) {
-            amount.count = countNumber(index);
+    for (const amount of multiples.value.counts) {
+        amount.count = 2; //countNumber(number);
 
-            // if (sameMax < amount.count) {
-            //     sameMax = amount.count;
-            // }
+        // if (sameMax < amount.count) {
+        //     sameMax = amount.count;
+        // }
 
-            // // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
-            // if (sameMax === diceAmount && !yahtzee) {
-            //     yahtzeeChevron.value = index;
+        // // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
+        // if (sameMax === diceAmount && !yahtzee) {
+        //     yahtzeeChevron.value = index;
 
-            //     yahtzee = true;
-            // }
-        }
+        //     yahtzee = true;
+        // }
     }
 };
 

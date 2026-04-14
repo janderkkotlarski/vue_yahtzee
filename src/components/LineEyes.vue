@@ -2,7 +2,7 @@
 import Eye from './EyeDot.vue';
 
 // Another case of defineProps being enough
-const props = defineProps({
+defineProps({
     // Default is for empty line
     selected: {type: Number, default: 0},
     inversion: {type: String, default: '______'},

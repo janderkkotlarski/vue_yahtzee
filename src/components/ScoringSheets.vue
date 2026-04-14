@@ -10,7 +10,7 @@ const countMultiplesRef = ref(null);
 const multiCount = ref(0);
 
 const countMultiplesParent = () => {
-    countMultiplesRef.value.countMultiples();
+    // countMultiplesRef.value.countMultiples();
 
     ++multiCount.value;
 };
@@ -325,7 +325,7 @@ const recounter = ref(0);
 const recount = () => {
     ++recounter.value;
     // countMultiples();
-    countMultiplesParent();
+    // countMultiplesParent();
     // multiYahtzee();
     // klikable();
     // summing();

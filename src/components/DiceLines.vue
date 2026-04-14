@@ -5,7 +5,7 @@ import Line from './LineEyes.vue';
 const invert = 'invert';
 
 // And more defineProps applicability
-const props = defineProps({
+defineProps({
     // Default is for empty die
     eyeValue: {type: Number, default: 0},
     inverted: {type: String, default: '______'},

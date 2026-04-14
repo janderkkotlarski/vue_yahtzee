@@ -2,6 +2,8 @@
 import {ref} from 'vue';
 import Dice from './DiceLines.vue';
 
+const warning = 'squiggly red line';
+
 // Simple constants
 const valueMax = 6;
 const diceAmount = 5;

@@ -5,7 +5,7 @@ import Dice from './DiceLines.vue';
 // Simple constants
 const valueMax = 6;
 const diceAmount = 5;
-const maxThrows = 25;
+const maxThrows = 125;
 const millis = 25;
 const maxClicks = 3;
 const clicked = ref(maxClicks);

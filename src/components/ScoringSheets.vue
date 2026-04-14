@@ -7,8 +7,12 @@ import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Va
 
 const countMultiplesRef = ref(null);
 
+const multiCount = ref(0);
+
 const countMultiplesParent = () => {
-    countMultiplesRef.value.countMultiplesRef();
+    countMultiplesRef.value.countMultiples();
+
+    ++multiCount.value;
 };
 
 const resetRef = ref(null);
@@ -316,7 +320,10 @@ const sumLower = () => {
         summed + extraYahtzee.value * 100 + arrayEntry(scoresU, 'id', 'upper').final;
 };
 
+const recounter = ref(0);
+
 const recount = () => {
+    ++recounter.value;
     // countMultiples();
     countMultiplesParent();
     // multiYahtzee();
@@ -402,4 +409,10 @@ const restart = () => {
 
 <template>
     <Roller ref="resetRef" @recounting="recount" :diceLine="diceArray" :buttonVisible="rollVisible" />
+
+    <br />
+    <div>{{ recounter }} | {{ multiCount }}</div>
+    <br />
+
+    <Multiples ref="countMultiplesRef" :multiples="multiplex" :diceLine="diceArray" />
 </template>

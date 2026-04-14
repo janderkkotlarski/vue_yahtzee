@@ -53,31 +53,31 @@ const yahtzeeChevron = ref(0);
 let sameMax = 0;
 
 const countMultiples = () => {
-    sameMax = 0;
-    yahtzeeChevron.value = 0;
+    // sameMax = 0;
+    // yahtzeeChevron.value = 0;
 
     let index = 1;
-    let yahtzee = false;
+    // let yahtzee = false;
 
     for (const amount of multiples.value.counts) {
-        amount.count = index; // countNumber(index);
+        amount.count = 7 - index; // countNumber(index);
 
-        if (sameMax < amount.count) {
-            sameMax = amount.count;
-        }
+        // if (sameMax < amount.count) {
+        //     sameMax = amount.count;
+        // }
 
-        // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
-        if (sameMax === diceAmount && !yahtzee) {
-            yahtzeeChevron.value = index;
+        // // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
+        // if (sameMax === diceAmount && !yahtzee) {
+        //     yahtzeeChevron.value = index;
 
-            yahtzee = true;
-        }
+        //     yahtzee = true;
+        // }
 
         ++index;
     }
 };
 
-countMultiples();
+// countMultiples();
 
 // Check if there are 3 dice with a value and 2 dice with another value
 const filledHouse = () => {
@@ -112,9 +112,9 @@ const consecutive = () => {
     return consec;
 };
 
-// defineExpose({
-//     countMultiples,
-// });
+defineExpose({
+    countMultiples,
+});
 
 /*
 <div>diceLine: {{ diceLine }}</div>

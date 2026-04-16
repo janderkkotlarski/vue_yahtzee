@@ -1,15 +1,7 @@
 <script setup>
 import {ref} from 'vue';
 
-defineProps({
-    diceLine: {
-        type: Function,
-        default: () => {
-            [];
-        },
-    },
-    moarYahtzee: {type: Boolean, default: false},
-});
+ref;
 
 const diceAmount = 5;
 const valueMax = 6;
@@ -21,16 +13,26 @@ const multiples = defineModel('multiples', {
     },
 });
 
+const diceLine = defineModel('diceLine', {
+    type: Object,
+    default: {
+        dice: [],
+    },
+});
+
+const moarYahtzee = defineModel('moarYahtzee', {
+    type: Boolean,
+    default: false,
+});
+
 // const yahtzeeChevron = defineModel('yahtzeeChevron', {
 //     type: Number,
 //     default: 0,
 // });
 
-// const multiples = ref({counts: []});
-
 const initMultiples = () => {
-    for (let index = 1; index <= valueMax; ++index) {
-        multiples.value.counts.push({id: index, count: 0});
+    for (let number = 1; number <= valueMax; ++number) {
+        multiples.value.counts.push({id: number, count: 0});
     }
 };
 
@@ -56,11 +58,11 @@ const countMultiples = () => {
     sameMax = 0;
     yahtzeeChevron.value = 0;
 
-    let index = 1;
+    let number = 1;
     let yahtzee = false;
 
     for (const amount of multiples.value.counts) {
-        amount.count = index; // countNumber(index);
+        amount.count = countNumber(number);
 
         if (sameMax < amount.count) {
             sameMax = amount.count;
@@ -68,29 +70,29 @@ const countMultiples = () => {
 
         // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
         if (sameMax === diceAmount && !yahtzee) {
-            yahtzeeChevron.value = index;
+            yahtzeeChevron.value = number;
 
             yahtzee = true;
         }
 
-        ++index;
+        ++number;
     }
 };
 
-countMultiples();
+// countMultiples();
 
 // Check if there are 3 dice with a value and 2 dice with another value
-// const filledHouse = () => {
-//     if (sameMax === 3) {
-//         for (const amount of multiples.value.counts) {
-//             if (amount.count == 2) {
-//                 return true;
-//             }
-//         }
-//     }
+const filledHouse = () => {
+    if (sameMax === 3) {
+        for (const amount of multiples.value.counts) {
+            if (amount.count === 2) {
+                return true;
+            }
+        }
+    }
 
-//     return moarYahtzee;
-// };
+    return moarYahtzee.value;
+};
 
 // // Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
 // const consecutive = () => {
@@ -105,16 +107,18 @@ countMultiples();
 //         }
 //     }
 
-//     if (moarYahtzee) {
-//         consec = 5;
-//     }
+if (moarYahtzee.value) {
+    consec = 5;
+}
 
 //     return consec;
 // };
 
-// defineExpose({
-//     countMultiples,
-// });
+defineExpose({
+    countMultiples,
+    filledHouse,
+    consecutive,
+});
 
 /*
 <div>diceLine: {{ diceLine }}</div>
@@ -128,4 +132,6 @@ countMultiples();
     <div>yahtzeeChevron: {{ yahtzeeChevron }}</div>
 
     <div>multiples: {{ multiples }}</div>
+
+    <div>diceLine: {{ diceLine }}</div>
 </template>

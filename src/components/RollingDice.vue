@@ -24,7 +24,7 @@ defineProps({
 });
 
 /// define emits to let the parent do the recount function upon emitting this
-const emit = defineEmits(['recounting']);
+const emit = defineEmits(['recounting', 'resetMultiples']);
 
 // the 'ref' that the parent can fill in and access
 const diceLine = defineModel('diceLine', {
@@ -53,17 +53,7 @@ const cuboid = index => {
     return diceLine.value.dice[index - 1];
 };
 
-// For the next round
-const diceArrayReset = () => {
-    for (let index = 1; index <= diceAmount; ++index) {
-        const cubid = cuboid(index);
-
-        cubid.rolled = 0;
-        cubid.inversion = starts;
-    }
-
-    clicked.value = maxClicks;
-};
+let throwing = false;
 
 const normalDicing = () => {
     for (let index = 1; index <= diceAmount; ++index) {
@@ -76,23 +66,15 @@ const normalDicing = () => {
 // Roll all dice that are rollable
 const diceRoll = () => {
     for (let index = 1; index <= diceAmount; ++index) {
-        const cubid = cuboid(index);
-
         // If not locked, then roll
-        if (cubid.inversion != invert) {
-            cubid.rolled = roll();
+        if (cuboid(index).inversion != invert) {
+            cuboid(index).rolled = roll();
 
             if (numberLine > 0 && numberLine <= valueMax) {
-                cubid.rolled = numberLine;
+                cuboid(index).rolled = numberLine;
             }
         }
     }
-};
-
-let throwing = false;
-
-const throwable = () => {
-    return clicked.value > 0 && !throwing;
 };
 
 // Throw dice a number of times and space them apart in time
@@ -119,15 +101,25 @@ const diceRolling = () => {
     }
 };
 
+// For the next round
+const diceArrayReset = () => {
+    if (!throwing) {
+        for (let index = 1; index <= diceAmount; ++index) {
+            cuboid(index).rolled = 0;
+            cuboid(index).inversion = starts;
+        }
+
+        clicked.value = maxClicks;
+
+        emit('resetMultiples');
+    }
+};
+
 // flip between free and locked
 const flip = index => {
     // Once one cannot roll, flipping the roll/hold state is useless
-    if (throwable()) {
-        const cubid = cuboid(index);
-
-        if (cubid.rolled > 0 && cubid.rolled <= valueMax) {
-            cubid.inversion = cubid.inversion === normal ? invert : normal;
-        }
+    if (clicked.value > 0 && !throwing) {
+        cuboid(index).inversion = cuboid(index).inversion === normal ? invert : normal;
     }
 };
 

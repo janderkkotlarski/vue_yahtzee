@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from 'vue';
-import MultipleCounts from './MultipleCounts.vue';
-import RollingDice from './RollingDice.vue';
+import Multiples from './MultipleCounts.vue';
+import Roller from './RollingDice.vue';
 import ScoreList from './ScoreList.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
@@ -371,6 +371,15 @@ const restart = () => {
 
     <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
 
+    <br />
+    <div>{{ recounter }} | {{ multiCount }}</div>
+    <br />
+
+    <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
+
+    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+
 */
 </script>
 
@@ -384,11 +393,16 @@ const restart = () => {
     />
 
     <br />
+    <br />
+
+    <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
+
+    <br />
     <div>{{ recounter }} | {{ multiCount }}</div>
     <br />
 
     <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
 
-    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-    <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <br />
+    <div>{{ multiplex }}</div>
 </template>

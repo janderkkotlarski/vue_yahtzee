@@ -38,17 +38,17 @@ const initMultiples = () => {
 
 initMultiples();
 
-// const countNumber = number => {
-//     let count = 0;
+const countNumber = number => {
+    let count = 0;
 
-//     for (let index = 0; index < diceAmount; ++index) {
-//         if (diceLine.value.dice[index].rolled === number) {
-//             ++count;
-//         }
-//     }
+    for (let index = 0; index < diceAmount; ++index) {
+        if (diceLine.value.dice[index].rolled === number) {
+            ++count;
+        }
+    }
 
-//     return count;
-// };
+    return count;
+};
 
 const yahtzeeChevron = ref(0);
 
@@ -107,9 +107,9 @@ const filledHouse = () => {
 //         }
 //     }
 
-if (moarYahtzee.value) {
-    consec = 5;
-}
+// if (moarYahtzee.value) {
+//     consec = 5;
+// }
 
 //     return consec;
 // };
@@ -117,7 +117,7 @@ if (moarYahtzee.value) {
 defineExpose({
     countMultiples,
     filledHouse,
-    consecutive,
+    // consecutive,
 });
 
 /*

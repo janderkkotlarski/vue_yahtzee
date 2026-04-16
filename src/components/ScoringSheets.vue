@@ -243,7 +243,7 @@ const recounter = ref(0);
 const recount = () => {
     ++recounter.value;
     sameMax = countMultiplesParent();
-    // multiYahtzee();
+    multiYahtzee();
     klikable();
     summing();
     countUpper();

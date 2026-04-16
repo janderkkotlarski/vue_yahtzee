@@ -126,9 +126,3 @@ defineExpose({
 
 */
 </script>
-
-<template>
-    <div>multiples: {{ multiples }}</div>
-
-    <div>diceLine: {{ diceLine }}</div>
-</template>

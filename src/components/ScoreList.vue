@@ -3,14 +3,6 @@ import {klik} from './Varinit.mjs';
 
 const scoreListing = defineModel('scoreListing', {type: Object});
 
-const yahtzeeVars = defineModel('yahtzeeVars', {
-    type: Object,
-    default: {
-        moreYahtzee: false,
-        extraYahtzee: 0,
-    },
-});
-
 const kliksplay = locked => {
     if (locked === klik) {
         return klik;

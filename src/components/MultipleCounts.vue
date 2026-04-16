@@ -1,10 +1,10 @@
 <script setup>
 import {ref} from 'vue';
 
-ref;
-
 const diceAmount = 5;
 const valueMax = 6;
+
+const sameMax = ref(0);
 
 const multiples = defineModel('multiples', {
     type: Object,
@@ -52,10 +52,8 @@ const countNumber = number => {
 
 const yahtzeeChevron = ref(0);
 
-let sameMax = 0;
-
 const countMultiples = () => {
-    sameMax = 0;
+    sameMax.value = 0;
     yahtzeeChevron.value = 0;
 
     let number = 1;
@@ -64,12 +62,12 @@ const countMultiples = () => {
     for (const amount of multiples.value.counts) {
         amount.count = countNumber(number);
 
-        if (sameMax < amount.count) {
-            sameMax = amount.count;
+        if (sameMax.value < amount.count) {
+            sameMax.value = amount.count;
         }
 
         // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
-        if (sameMax === diceAmount && !yahtzee) {
+        if (sameMax.value === diceAmount && !yahtzee) {
             yahtzeeChevron.value = number;
 
             yahtzee = true;
@@ -83,7 +81,7 @@ const countMultiples = () => {
 
 // Check if there are 3 dice with a value and 2 dice with another value
 const filledHouse = () => {
-    if (sameMax === 3) {
+    if (sameMax.value === 3) {
         for (const amount of multiples.value.counts) {
             if (amount.count === 2) {
                 return true;
@@ -94,30 +92,31 @@ const filledHouse = () => {
     return moarYahtzee.value;
 };
 
-// // Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
-// const consecutive = () => {
-//     let consec = 0;
-//     let counted = 0;
+// Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
+const consecutive = () => {
+    let consec = 0;
+    let counted = 0;
 
-//     for (const amount of multiples.value.counts) {
-//         counted = amount.count ? counted + 1 : 0;
+    for (const amount of multiples.value.counts) {
+        counted = amount.count ? counted + 1 : 0;
 
-//         if (counted > consec) {
-//             consec = counted;
-//         }
-//     }
+        if (counted > consec) {
+            consec = counted;
+        }
+    }
 
-// if (moarYahtzee.value) {
-//     consec = 5;
-// }
+    if (moarYahtzee.value) {
+        consec = 5;
+    }
 
-//     return consec;
-// };
+    return consec;
+};
 
 defineExpose({
     countMultiples,
     filledHouse,
-    // consecutive,
+    consecutive,
+    sameMax,
 });
 
 /*
@@ -129,8 +128,6 @@ defineExpose({
 </script>
 
 <template>
-    <div>yahtzeeChevron: {{ yahtzeeChevron }}</div>
-
     <div>multiples: {{ multiples }}</div>
 
     <div>diceLine: {{ diceLine }}</div>

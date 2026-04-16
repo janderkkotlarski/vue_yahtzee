@@ -9,6 +9,8 @@ const multiplesRef = ref(null);
 
 const countMultiplesParent = () => {
     multiplesRef.value.countMultiples();
+
+    return multiplesRef.value.sameMax;
 };
 
 const watchFilledHouse = () => {
@@ -69,47 +71,6 @@ const startLocking = () => {
 };
 
 startLocking();
-
-// initMultiples();
-
-const countNumber = number => {
-    let count = 0;
-
-    for (let index = 0; index < diceAmount; ++index) {
-        if (diceArray.value.dice[index].rolled === number) {
-            ++count;
-        }
-    }
-
-    return count;
-};
-
-const countMultiples = () => {
-    sameMax = 0;
-    yahtzeeNumber.value = 0;
-
-    let index = 1;
-    let yahtzee = false;
-
-    // countOne.value = countNumber(1);
-
-    for (const amount of multiples.value.counts) {
-        amount.count = countNumber(index);
-
-        if (sameMax < amount.count) {
-            sameMax = amount.count;
-        }
-
-        // yahtzee needed so yahtzeeNumber does not go to 6 when index gets upped
-        if (sameMax === diceAmount && !yahtzee) {
-            yahtzeeNumber.value = index;
-
-            yahtzee = true;
-        }
-
-        ++index;
-    }
-};
 
 const entryLocking = (entry, score) => {
     entry.scored = entry.locked === lock ? 0 : score;
@@ -228,39 +189,6 @@ const klikable = () => {
     }
 };
 
-// Check if there are 3 dice with a value and 2 dice with another value
-const filledHouse = () => {
-    if (sameMax === 3) {
-        for (const amount of multiples.value.counts) {
-            if (amount.count == 2) {
-                return true;
-            }
-        }
-    }
-
-    return moreYahtzee;
-};
-
-// Check whether 4 or 5 consecutive numeric values can be found among the thrown dice
-const consecutive = () => {
-    let consec = 0;
-    let counted = 0;
-
-    for (const amount of multiples.value.counts) {
-        counted = amount.count ? counted + 1 : 0;
-
-        //         if (counted > consec) {
-        consec = counted;
-        // }
-    }
-
-    if (moreYahtzee) {
-        consec = 5;
-    }
-
-    return consec;
-};
-
 let diceSum = 0;
 
 const summing = () => {
@@ -314,10 +242,9 @@ const recounter = ref(0);
 
 const recount = () => {
     ++recounter.value;
-    // countMultiples();
-    countMultiplesParent();
+    sameMax = countMultiplesParent();
     // multiYahtzee();
-    // klikable();
+    klikable();
     summing();
     countUpper();
     sumUpper();
@@ -384,6 +311,8 @@ const restart = () => {
 </script>
 
 <template>
+    <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
+
     <Roller
         ref="rollingRef"
         @recounting="recount"
@@ -398,11 +327,13 @@ const restart = () => {
     <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
 
     <br />
-    <div>{{ recounter }} | {{ multiCount }}</div>
+    <div>{{ recounter }} | {{ sameMax }}</div>
     <br />
-
-    <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
 
     <br />
     <div>{{ multiplex }}</div>
+    <br />
+
+    <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <ScoreList @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
 </template>

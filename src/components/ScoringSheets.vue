@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 import Multiples from './MultipleCounts.vue';
 import Roller from './RollingDice.vue';
 import ScoreList from './ScoreList.vue';
@@ -7,8 +7,10 @@ import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Va
 
 const multiplesRef = ref(null);
 
+const yahtzeeNumber = ref(0);
+
 const countMultiplesParent = () => {
-    multiplesRef.value.countMultiples();
+    yahtzeeNumber.value = multiplesRef.value.countMultiples();
 
     return multiplesRef.value.sameMax;
 };
@@ -31,7 +33,7 @@ const diceAmount = 5;
 
 const sameMax = ref(0);
 const extraYahtzee = ref(0);
-const yahtzeeNumber = ref(0);
+
 const moreYahtzee = ref(false);
 
 const rollVisible = ref(true);
@@ -238,8 +240,12 @@ const sumLower = () => {
         summed + extraYahtzee.value * 100 + arrayEntry(scoresU, 'id', 'upper').final;
 };
 
-const recount = () => {
+const countMultiples = () => {
     sameMax.value = countMultiplesParent();
+};
+
+const recount = () => {
+    countMultiples();
     multiYahtzee();
     klikable();
     summing();
@@ -260,6 +266,7 @@ const lockEntry = (box, index) => {
         if (moreYahtzee.value) {
             ++extraYahtzee.value;
         }
+
         score.final = score.scored;
         score.locked = lock;
 
@@ -269,13 +276,15 @@ const lockEntry = (box, index) => {
             lockList(scoresL);
         }
 
-        resetRollingArray();
+        recount();
 
-        if (!fullyLocking(scoresU) || !fullyLocking(scoresL)) {
-            recount();
-        } else {
+        if (fullyLocking(scoresU) && fullyLocking(scoresL)) {
+            // ++extraYahtzee.value;
+
             rollVisible.value = false;
         }
+
+        resetRollingArray();
     }
 };
 
@@ -308,18 +317,12 @@ const restart = () => {
 </script>
 
 <template>
-    <Multiples
-        ref="multiplesRef"
-        :multiples="multiplex"
-        :diceLine="diceArray"
-        :moarYahtzee="moreYahtzee"
-        :yahtzeeChevron="yahtzeeNumber"
-    />
+    <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
 
     <Roller
         ref="rollingRef"
         @recounting="recount"
-        @resetMultiples="countMultiplesParent"
+        @resetMultiples="countMultiples"
         :diceLine="diceArray"
         :buttonVisible="rollVisible"
     />

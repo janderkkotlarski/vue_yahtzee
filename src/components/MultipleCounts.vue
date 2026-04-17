@@ -25,11 +25,6 @@ const moarYahtzee = defineModel('moarYahtzee', {
     default: false,
 });
 
-// const yahtzeeChevron = defineModel('yahtzeeChevron', {
-//     type: Number,
-//     default: 0,
-// });
-
 const initMultiples = () => {
     for (let number = 1; number <= valueMax; ++number) {
         multiples.value.counts.push({id: number, count: 0});
@@ -50,11 +45,9 @@ const countNumber = number => {
     return count;
 };
 
-const yahtzeeChevron = ref(0);
-
 const countMultiples = () => {
     sameMax.value = 0;
-    yahtzeeChevron.value = 0;
+    let yahtzeeChevron = 0;
 
     let number = 1;
     let yahtzee = false;
@@ -68,13 +61,15 @@ const countMultiples = () => {
 
         // yahtzee needed so yahtzeeChevron does not go to 6 when index gets upped
         if (sameMax.value === diceAmount && !yahtzee) {
-            yahtzeeChevron.value = number;
+            yahtzeeChevron = number;
 
             yahtzee = true;
         }
 
         ++number;
     }
+
+    return yahtzeeChevron;
 };
 
 // Check if there are 3 dice with a value and 2 dice with another value

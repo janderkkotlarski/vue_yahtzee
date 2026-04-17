@@ -27,6 +27,8 @@ const rollingRef = ref(null);
 
 const resetRollingArray = () => {
     rollingRef.value.diceArrayReset();
+
+    moreYahtzee.value = false;
 };
 
 const diceAmount = 5;
@@ -274,17 +276,18 @@ const lockEntry = (box, index) => {
 
         if (fullyLocking(scoresU)) {
             lockList(scoresL);
+
+            if (fullyLocking(scoresL)) {
+                sumLower();
+                rollVisible.value = false;
+            }
         }
 
-        recount();
-
-        if (fullyLocking(scoresU) && fullyLocking(scoresL)) {
-            // ++extraYahtzee.value;
-
-            rollVisible.value = false;
-        }
+        moreYahtzee.value = false;
 
         resetRollingArray();
+
+        recount();
     }
 };
 
@@ -337,7 +340,7 @@ const restart = () => {
     <br />
 
     <br />
-    <div>{{ sameMax }}</div>
+    <div>{{ diceArray }}</div>
     <br />
 
     <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />

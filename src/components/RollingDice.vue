@@ -7,7 +7,7 @@ const valueMax = 6;
 const diceAmount = 5;
 // Had numberLine as an imported value, worked wonky at times
 // Simplify where possible
-const numberLine = 2;
+const numberLine = 4;
 const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;

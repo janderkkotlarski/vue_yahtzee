@@ -29,10 +29,10 @@ const resetRollingArray = () => {
 
 const diceAmount = 5;
 
-let sameMax = 0;
+const sameMax = ref(0);
 const extraYahtzee = ref(0);
 const yahtzeeNumber = ref(0);
-let moreYahtzee = false;
+const moreYahtzee = ref(false);
 
 const rollVisible = ref(true);
 
@@ -55,7 +55,7 @@ const startLocking = () => {
     const scoresU = scoress(scoreUpper);
     const scoresL = scoress(scoreLower);
 
-    if (sameMax === 0) {
+    if (sameMax.value === 0) {
         for (const entry of scoresU) {
             if (entry.locked != back && entry.locked != lack && entry.locked != lock) {
                 entry.locked = klak;
@@ -150,7 +150,7 @@ const sumUpper = () => {
 };
 
 const multiYahtzee = () => {
-    moreYahtzee = arrayEntry(scoress(scoreLower), 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0;
+    moreYahtzee.value = arrayEntry(scoress(scoreLower), 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0;
 };
 
 const deklak = list => {
@@ -170,7 +170,7 @@ const klikable = () => {
 
     startLocking();
 
-    if (moreYahtzee) {
+    if (moreYahtzee.value) {
         if (arrayEntry(scoresU, 'id', yahtzeeNumber.value).locked != lock || lockCount(scoresL) + 3 < scoresL.length) {
             for (const entry of scoresU) {
                 if (entry.locked === klik && entry.id != yahtzeeNumber.value) {
@@ -202,13 +202,13 @@ const summing = () => {
 const lowerScoring = () => {
     const scoreSheet = [];
 
-    scoreSheet.push({id: 'three', score: sameMax >= 3 ? diceSum : 0});
-    scoreSheet.push({id: 'four', score: sameMax >= 4 ? diceSum : 0});
+    scoreSheet.push({id: 'three', score: sameMax.value >= 3 ? diceSum : 0});
+    scoreSheet.push({id: 'four', score: sameMax.value >= 4 ? diceSum : 0});
     scoreSheet.push({id: 'full', score: watchFilledHouse() ? 25 : 0});
     scoreSheet.push({id: 'small', score: watchConsecutive() > 3 ? 30 : 0});
     scoreSheet.push({id: 'large', score: watchConsecutive() > 4 ? 40 : 0});
     scoreSheet.push({id: 'chance', score: diceSum});
-    scoreSheet.push({id: 'yahtzee', score: sameMax === diceAmount ? 50 : 0});
+    scoreSheet.push({id: 'yahtzee', score: sameMax.value === diceAmount ? 50 : 0});
 
     return scoreSheet;
 };
@@ -238,11 +238,8 @@ const sumLower = () => {
         summed + extraYahtzee.value * 100 + arrayEntry(scoresU, 'id', 'upper').final;
 };
 
-const recounter = ref(0);
-
 const recount = () => {
-    ++recounter.value;
-    sameMax = countMultiplesParent();
+    sameMax.value = countMultiplesParent();
     multiYahtzee();
     klikable();
     summing();
@@ -260,7 +257,7 @@ const lockEntry = (box, index) => {
         const scoresL = scoress(scoreLower);
 
         // When another yahtzee is scored, up the bonus
-        if (moreYahtzee) {
+        if (moreYahtzee.value) {
             ++extraYahtzee.value;
         }
         score.final = score.scored;
@@ -311,7 +308,13 @@ const restart = () => {
 </script>
 
 <template>
-    <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
+    <Multiples
+        ref="multiplesRef"
+        :multiples="multiplex"
+        :diceLine="diceArray"
+        :moarYahtzee="moreYahtzee"
+        :yahtzeeChevron="yahtzeeNumber"
+    />
 
     <Roller
         ref="rollingRef"
@@ -327,11 +330,11 @@ const restart = () => {
     <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
 
     <br />
-    <div>{{ recounter }} | {{ sameMax }}</div>
+    <div>{{ moreYahtzee }} | {{ yahtzeeNumber }}</div>
     <br />
 
     <br />
-    <div>{{ multiplex }}</div>
+    <div>{{ sameMax }}</div>
     <br />
 
     <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />

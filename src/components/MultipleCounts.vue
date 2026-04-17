@@ -77,8 +77,6 @@ const countMultiples = () => {
     }
 };
 
-// countMultiples();
-
 // Check if there are 3 dice with a value and 2 dice with another value
 const filledHouse = () => {
     if (sameMax.value === 3) {
@@ -118,11 +116,4 @@ defineExpose({
     consecutive,
     sameMax,
 });
-
-/*
-<div>diceLine: {{ diceLine }}</div>
-
-    <div>yahtzeeChevron: {{ yahtzeeChevron }}</div>
-
-*/
 </script>

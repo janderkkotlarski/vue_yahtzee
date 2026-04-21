@@ -1,9 +1,12 @@
 <script setup>
-import {ref, computed} from 'vue';
+import {ref} from 'vue';
+import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
+import {scoress, entryLocking, arrayEntry} from './Scoringfunctions.mjs';
+
 import Multiples from './MultipleCounts.vue';
 import Roller from './RollingDice.vue';
 import ScoreList from './ScoreList.vue';
-import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
+
 
 const diceAmount = 5;
 
@@ -16,6 +19,17 @@ const extraYahtzee = ref(0);
 const moreYahtzee = ref(0);
 
 const rollVisible = ref(true);
+
+const diceArray = ref({
+    dice: [],
+});
+
+const multiplex = ref({
+    counts: [],
+});
+
+const scoreUpper = ref(scoreUpperInit);
+const scoreLower = ref(scoreLowerInit);
 
 const countMultiplesParent = () => {
     yahtzeeNumber.value = multiplesRef.value.countMultiples();
@@ -37,20 +51,12 @@ const resetRollingArray = () => {
     rollingRef.value.diceArrayReset();
 };
 
-const diceArray = ref({
-    dice: [],
-});
 
-const scoreUpper = ref(scoreUpperInit);
-const scoreLower = ref(scoreLowerInit);
+// const scoress = list => {
+//     return list.value.scores;
+// };
 
-const scoress = list => {
-    return list.value.scores;
-};
 
-const multiplex = ref({
-    counts: [],
-});
 
 const startLocking = () => {
     const scoresU = scoress(scoreUpper);
@@ -73,17 +79,17 @@ const startLocking = () => {
 
 startLocking();
 
-const entryLocking = (entry, score) => {
-    entry.scored = entry.locked === lock ? 0 : score;
-};
+// const entryLocking = (entry, score) => {
+//     entry.scored = entry.locked === lock ? 0 : score;
+// };
 
-const arrayEntry = (array, key, value) => {
-    for (const entry of array) {
-        if (entry[key] === value) {
-            return entry;
-        }
-    }
-};
+// const arrayEntry = (array, key, value) => {
+//     for (const entry of array) {
+//         if (entry[key] === value) {
+//             return entry;
+//         }
+//     }
+// };
 
 const countUpper = () => {
     for (const entry of scoress(scoreUpper)) {

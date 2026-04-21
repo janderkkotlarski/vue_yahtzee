@@ -199,6 +199,12 @@ const lockEntry = (box, index) => {
         // When another yahtzee is scored, up the bonus
         if (moreYahtzee.value === -1) {
             ++extraYahtzee.value;
+
+            if (typeof(index) === Number) {
+                if (index > 1 && rollingRef.value.currentNumber > 0) {
+                    rollingRef.value.currentNumber = index - 1;
+                }
+            }
         }
 
         score.final = score.scored;

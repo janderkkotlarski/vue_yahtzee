@@ -5,9 +5,11 @@ import Dice from './DiceLines.vue';
 // Simple constants
 const valueMax = 6;
 const diceAmount = 5;
+
 // Had numberLine as an imported value, worked wonky at times
 // Simplify where possible
-const numberLine = 5;
+const numberLine = 6;
+const currentNumber = ref(0);
 const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;
@@ -23,14 +25,15 @@ const rolled = 'rolled';
 const buttonMessage = 'Gooien: ';
 const buttonStoppage = 'Klik hieronder'
 
+// Parent input on deciding which button is visible
 defineProps({
     buttonVisible: {type: Boolean, default: true},
 });
 
-/// define emits to let the parent do the recount function upon emitting this
+/// defineEmits to let the parent do the recount and resetMultiples functions upon emission
 const emit = defineEmits(['recounting', 'resetMultiples']);
 
-// the 'ref' that the parent can fill in and access
+// The array of dice from the parent, but n this child component the rolling happens
 const diceLine = defineModel('diceLine', {
     type: Object,
     default: {
@@ -47,6 +50,10 @@ const diceArrayFilling = () => {
     for (let index = 1; index <= diceAmount; ++index) {
         diceLine.value.dice.push({id: index, rolled: 0, inversion: starts});
     }
+
+    if (numberLine === valueMax) {
+        currentNumber.value = valueMax;
+    }
 };
 
 diceArrayFilling();
@@ -59,6 +66,7 @@ const cuboid = index => {
 
 const throwing = ref(stilled);
 
+// When the first throw is performed, make all dice normally rollable
 const normalDicing = () => {
     for (let index = 1; index <= diceAmount; ++index) {
         if (cuboid(index).inversion === starts) {
@@ -72,16 +80,24 @@ const diceRoll = () => {
     for (let index = 1; index <= diceAmount; ++index) {
         // If not locked, then roll
         if (cuboid(index).inversion != invert) {
+            // Standard is empty die
             cuboid(index).rolled = 0;
 
+            // For numberLine is 0 or -1 make a big straight
             if (numberLine > -2) {
                 cuboid(index).rolled = index - numberLine;
             }
 
+            // If numberLine is any dice value, roll yahtzee with that dice value
             if (numberLine > 0 && numberLine <= valueMax) {
                 cuboid(index).rolled = numberLine;
+
+                if (currentNumber.value > 0 && currentNumber.value < valueMax) {
+                    cuboid(index).rolled = currentNumber.value;
+                }
             }
             
+            // If numberLine is too big, just roll randomly
             if (numberLine > valueMax) {
                 cuboid(index).rolled = roll();
             }
@@ -142,6 +158,7 @@ const restart = () => {
 // Give function access to the parent
 defineExpose({
     diceArrayReset,
+    currentNumber
 });
 </script>
 

@@ -8,6 +8,7 @@ defineProps({
     inversion: {type: String, default: '______'},
 });
 
+// An eyeline is vertical from top to bottom
 const eyeLines = [
     {id: 1, eyes: ['_______', 'visible', '_______', '_______', 'visible']},
     {id: 2, eyes: ['_______', '_______', 'visible', '_______', '_______']},

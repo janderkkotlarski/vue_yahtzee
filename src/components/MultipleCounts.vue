@@ -1,10 +1,13 @@
 <script setup>
 import {ref} from 'vue';
 
-const diceAmount = 5;
+// Simple constants
 const valueMax = 6;
+const diceAmount = 5;
 
 const sameMax = ref(0);
+// Because the defineModel does not update when addressed in parent functions but later,
+// a ref and defineExpose and explicitly updating moarYahtzee works as intended
 const moarYahtzee = ref(0);
 
 const multiples = defineModel('multiples', {

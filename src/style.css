@@ -109,6 +109,11 @@ table, th, td {
   background-color: #802020;
 }
 
+.switch.rolled {  
+  color: #c08020;
+  background-color: #2040c0;
+}
+
 .switch.invert {  
   color: #2040c0;
   background-color: #c08020;

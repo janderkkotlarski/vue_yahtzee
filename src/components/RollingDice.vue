@@ -17,6 +17,9 @@ const normal = '______';
 const invert = 'invert';
 const starts = 'starts';
 
+const stilled = 'stilled';
+const rolled = 'rolled';
+
 const buttonMessage = 'Gooien: ';
 const buttonStoppage = 'Klik hieronder'
 
@@ -54,7 +57,7 @@ const cuboid = index => {
     return diceLine.value.dice[index - 1];
 };
 
-let throwing = false;
+const throwing = ref(stilled);
 
 const normalDicing = () => {
     for (let index = 1; index <= diceAmount; ++index) {
@@ -88,8 +91,8 @@ const diceRoll = () => {
 
 // Throw dice a number of times and space them apart in time
 const diceRolling = () => {
-    if (!throwing) {
-        throwing = true;
+    if (throwing.value === stilled) {
+        throwing.value = rolled;
 
         --clicked.value;
 
@@ -103,7 +106,7 @@ const diceRolling = () => {
 
         // Pace throwing
         setTimeout(function () {
-            throwing = false;
+            throwing.value = stilled;
 
             emit('recounting');
         }, millis * maxThrows);
@@ -112,7 +115,7 @@ const diceRolling = () => {
 
 // For the next round
 const diceArrayReset = () => {
-    if (!throwing) {
+    if (throwing.value=== stilled) {
         for (let index = 1; index <= diceAmount; ++index) {
             cuboid(index).rolled = 0;
             cuboid(index).inversion = starts;
@@ -127,7 +130,7 @@ const diceArrayReset = () => {
 // flip between free and locked
 const flip = index => {
     // Once one cannot roll, flipping the roll/hold state is useless
-    if (clicked.value > 0 && clicked.value < maxClicks && !throwing) {
+    if (clicked.value > 0 && clicked.value < maxClicks && throwing.value === stilled) {
         cuboid(index).inversion = cuboid(index).inversion === normal ? invert : normal;
     }
 };
@@ -154,7 +157,7 @@ defineExpose({
         />
     </div>
 
-    <button v-if="buttonVisible && clicked > 0" class="switch" @click="diceRolling">
+    <button v-if="buttonVisible && clicked > 0" class="switch" :class="throwing" @click="diceRolling">
         {{ buttonMessage }} {{ clicked }}
     </button>
     <button v-if="clicked === 0" class="switch invert">{{ buttonStoppage }}</button>

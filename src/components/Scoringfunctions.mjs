@@ -1,4 +1,4 @@
-import {lock} from './Varinit.mjs';
+import {klik, klak, lock, back, lack} from './Varinit.mjs';
 
 export const scoress = list => {
     return list.value.scores;
@@ -15,4 +15,62 @@ export const arrayEntry = (array, key, value) => {
             return entry;
         }
     }
+};
+
+export const lockCount = list => {
+    let locks = 0;
+
+    for (const entry of list) {
+        if (entry.locked === lock) {
+            ++locks;
+        }
+    }
+
+    return locks;
+};
+
+export const lackCount = list => {
+    let lacks = 0;
+
+    for (const entry of list) {
+        if (entry.locked === lack) {
+            ++lacks;
+        }
+    }
+
+    return lacks;
+};
+
+export const lockList = list => {
+    if (lockCount(list) > list.length - 4) {
+        for (const entry of list) {
+            if (entry.locked === back) {
+                entry.locked = lack;
+            }
+        }
+    }
+};
+
+export const finalSummer = list => {
+    let summed = 0;
+
+    for (const entry of list) {
+        if (entry.locked === klik || entry.locked === lock) {
+            summed += entry.final;
+        }
+    }
+
+    return summed;
+};
+
+export const deklak = list => {
+    for (const entry of list) {
+        if (entry.locked === klak) {
+            entry.locked = klik;
+        }
+    }
+};
+
+export const restart = () => {
+    location.reload();
 };

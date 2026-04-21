@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from 'vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
-import {scoress, entryLocking, arrayEntry} from './Scoringfunctions.mjs';
+import {scoress, entryLocking, arrayEntry, lockCount, lackCount, lockList, finalSummer, deklak, restart} from './Scoringfunctions.mjs';
 
 import Multiples from './MultipleCounts.vue';
 import Roller from './RollingDice.vue';
@@ -100,51 +100,51 @@ const countUpper = () => {
     }
 };
 
-const lockCount = list => {
-    let locks = 0;
+// const lockCount = list => {
+//     let locks = 0;
 
-    for (const entry of list) {
-        if (entry.locked === lock) {
-            ++locks;
-        }
-    }
+//     for (const entry of list) {
+//         if (entry.locked === lock) {
+//             ++locks;
+//         }
+//     }
 
-    return locks;
-};
+//     return locks;
+// };
 
-const lackCount = list => {
-    let lacks = 0;
+// const lackCount = list => {
+//     let lacks = 0;
 
-    for (const entry of list) {
-        if (entry.locked === lack) {
-            ++lacks;
-        }
-    }
+//     for (const entry of list) {
+//         if (entry.locked === lack) {
+//             ++lacks;
+//         }
+//     }
 
-    return lacks;
-};
+//     return lacks;
+// };
 
-const lockList = list => {
-    if (lockCount(list) > list.length - 4) {
-        for (const entry of list) {
-            if (entry.locked === back) {
-                entry.locked = lack;
-            }
-        }
-    }
-};
+// const lockList = list => {
+//     if (lockCount(list) > list.length - 4) {
+//         for (const entry of list) {
+//             if (entry.locked === back) {
+//                 entry.locked = lack;
+//             }
+//         }
+//     }
+// };
 
-const finalSummer = list => {
-    let summed = 0;
+// const finalSummer = list => {
+//     let summed = 0;
 
-    for (const entry of list) {
-        if (entry.locked === klik || entry.locked === lock) {
-            summed += entry.final;
-        }
-    }
+//     for (const entry of list) {
+//         if (entry.locked === klik || entry.locked === lock) {
+//             summed += entry.final;
+//         }
+//     }
 
-    return summed;
-};
+//     return summed;
+// };
 
 const sumUpper = () => {
     const scoresU = scoress(scoreUpper);
@@ -164,13 +164,13 @@ const multiYahtzee = () => {
     multiplesRef.value.moarYahtzee = moreYahtzee.value;
 };
 
-const deklak = list => {
-    for (const entry of list) {
-        if (entry.locked === klak) {
-            entry.locked = klik;
-        }
-    }
-};
+// const deklak = list => {
+//     for (const entry of list) {
+//         if (entry.locked === klak) {
+//             entry.locked = klik;
+//         }
+//     }
+// };
 
 const klikable = () => {
     const scoresU = scoress(scoreUpper);
@@ -298,9 +298,9 @@ const lockEntry = (box, index) => {
     }
 };
 
-const restart = () => {
-    location.reload();
-};
+// const restart = () => {
+//     location.reload();
+// };
 </script>
 
 <template>

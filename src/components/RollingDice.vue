@@ -7,7 +7,7 @@ const valueMax = 6;
 const diceAmount = 5;
 // Had numberLine as an imported value, worked wonky at times
 // Simplify where possible
-const numberLine = 4;
+const numberLine = -0;
 const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;
@@ -68,10 +68,18 @@ const diceRoll = () => {
     for (let index = 1; index <= diceAmount; ++index) {
         // If not locked, then roll
         if (cuboid(index).inversion != invert) {
-            cuboid(index).rolled = roll();
+            cuboid(index).rolled = 0;
+
+            if (numberLine > -2) {
+                cuboid(index).rolled = index - numberLine;
+            }
 
             if (numberLine > 0 && numberLine <= valueMax) {
                 cuboid(index).rolled = numberLine;
+            }
+            
+            if (numberLine > valueMax) {
+                cuboid(index).rolled = roll();
             }
         }
     }

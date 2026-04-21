@@ -294,25 +294,8 @@ const lockEntry = (box, index) => {
         moreYahtzee.value = 0;
         multiplesRef.value.moarYahtzee = moreYahtzee.value;
 
-        countMoreYahtzee.value = multiplesRef.value.moarYahtzee;
-
         resetRollingArray();
-
         recount();
-
-        // if (moreYahtzee.value === -1) {
-        //     ++countMoreYahtzee.value;
-        // } else {
-        //     moreYahtzee.value = 0;
-
-        //     multiplesRef.value.moarYahtzee = 0;
-
-        //     resetRollingArray();
-
-        //     recount();
-        // }
-
-        
     }
 };
 
@@ -345,7 +328,7 @@ const restart = () => {
 </script>
 
 <template>
-    <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
+    <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" />
 
     <Roller
         ref="rollingRef"

@@ -5,6 +5,7 @@ const diceAmount = 5;
 const valueMax = 6;
 
 const sameMax = ref(0);
+const moarYahtzee = ref(0);
 
 const multiples = defineModel('multiples', {
     type: Object,
@@ -18,11 +19,6 @@ const diceLine = defineModel('diceLine', {
     default: {
         dice: [],
     },
-});
-
-const moarYahtzee = defineModel('moarYahtzee', {
-    type: Number,
-    default: 0,
 });
 
 const initMultiples = () => {
@@ -109,6 +105,7 @@ defineExpose({
     countMultiples,
     filledHouse,
     consecutive,
+    moarYahtzee,
     sameMax,
 });
 </script>

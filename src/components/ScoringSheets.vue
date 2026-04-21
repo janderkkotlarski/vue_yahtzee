@@ -35,8 +35,6 @@ const rollingRef = ref(null);
 
 const resetRollingArray = () => {
     rollingRef.value.diceArrayReset();
-
-    moreYahtzee.value = 0;
 };
 
 
@@ -158,6 +156,8 @@ const multiYahtzee = () => {
     if (arrayEntry(scoress(scoreLower), 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0) {
         moreYahtzee.value = -1;
     }
+
+    multiplesRef.value.moarYahtzee = moreYahtzee.value;
 };
 
 const deklak = list => {
@@ -206,12 +206,17 @@ const summing = () => {
     }
 };
 
+const countMoreYahtzee = ref(0);
+
 const lowerScoring = () => {
     const scoreSheet = [];
 
+    // countMoreYahtzee.value = watchFilledHouse();
+    
+
     scoreSheet.push({id: 'three', score: sameMax.value >= 3 ? diceSum : 0});
     scoreSheet.push({id: 'four', score: sameMax.value >= 4 ? diceSum : 0});
-    scoreSheet.push({id: 'full', score: watchFilledHouse() != 1 ? 25 : 0});
+    scoreSheet.push({id: 'full', score: watchFilledHouse() != 0 ? 25 : 0});
     scoreSheet.push({id: 'small', score: watchConsecutive() > 3 ? 30 : 0});
     scoreSheet.push({id: 'large', score: watchConsecutive() > 4 ? 40 : 0});
     scoreSheet.push({id: 'chance', score: diceSum});
@@ -287,10 +292,27 @@ const lockEntry = (box, index) => {
         }
 
         moreYahtzee.value = 0;
+        multiplesRef.value.moarYahtzee = moreYahtzee.value;
+
+        countMoreYahtzee.value = multiplesRef.value.moarYahtzee;
 
         resetRollingArray();
 
         recount();
+
+        // if (moreYahtzee.value === -1) {
+        //     ++countMoreYahtzee.value;
+        // } else {
+        //     moreYahtzee.value = 0;
+
+        //     multiplesRef.value.moarYahtzee = 0;
+
+        //     resetRollingArray();
+
+        //     recount();
+        // }
+
+        
     }
 };
 
@@ -339,7 +361,7 @@ const restart = () => {
     <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
 
     <br />
-    <div>{{ moreYahtzee }} | {{ yahtzeeNumber }}</div>
+    <div>{{ moreYahtzee }} | {{ countMoreYahtzee }}</div>
     <br />
 
     <br />

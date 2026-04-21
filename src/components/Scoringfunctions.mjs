@@ -1,4 +1,4 @@
-import {klik, klak, lock, back, lack} from './Varinit.mjs';
+import {klik, klak, lock, back, lack} from './Scoringvars.mjs';
 
 export const scoress = list => {
     return list.value.scores;
@@ -29,7 +29,7 @@ export const lockCount = list => {
     return locks;
 };
 
-export const lackCount = list => {
+const lackCount = list => {
     let lacks = 0;
 
     for (const entry of list) {
@@ -69,6 +69,10 @@ export const deklak = list => {
             entry.locked = klik;
         }
     }
+};
+
+export const fullyLocking = list => {
+    return lockCount(list) + lackCount(list) === list.length;
 };
 
 export const restart = () => {

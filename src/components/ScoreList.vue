@@ -1,5 +1,5 @@
 <script setup>
-import {klik} from './Varinit.mjs';
+import {klik} from './Scoringvars.mjs';
 
 const scoreListing = defineModel('scoreListing', {type: Object});
 

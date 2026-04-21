@@ -1,21 +1,21 @@
 <script setup>
 import {ref} from 'vue';
-import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
-import {scoress, entryLocking, arrayEntry, lockCount, lackCount, lockList, finalSummer, deklak, restart} from './Scoringfunctions.mjs';
+// Necessary variables
+import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Scoringvars.mjs';
+// Functions that could be stashed away
+import {scoress, entryLocking, arrayEntry, lockCount, lockList, finalSummer, deklak, fullyLocking, restart} from './Scoringfunctions.mjs';
 
+// Child components for this parent 
 import Multiples from './MultipleCounts.vue';
 import Roller from './RollingDice.vue';
 import ScoreList from './ScoreList.vue';
 
-
 const diceAmount = 5;
 
-const multiplesRef = ref(null);
-const yahtzeeNumber = ref(0);
-
 const sameMax = ref(0);
-const extraYahtzee = ref(0);
 
+const yahtzeeNumber = ref(0);
+const extraYahtzee = ref(0);
 const moreYahtzee = ref(0);
 
 const rollVisible = ref(true);
@@ -28,8 +28,7 @@ const multiplex = ref({
     counts: [],
 });
 
-const scoreUpper = ref(scoreUpperInit);
-const scoreLower = ref(scoreLowerInit);
+const multiplesRef = ref(null);
 
 const countMultiplesParent = () => {
     yahtzeeNumber.value = multiplesRef.value.countMultiples();
@@ -51,12 +50,8 @@ const resetRollingArray = () => {
     rollingRef.value.diceArrayReset();
 };
 
-
-// const scoress = list => {
-//     return list.value.scores;
-// };
-
-
+const scoreUpper = ref(scoreUpperInit);
+const scoreLower = ref(scoreLowerInit);
 
 const startLocking = () => {
     const scoresU = scoress(scoreUpper);
@@ -79,18 +74,6 @@ const startLocking = () => {
 
 startLocking();
 
-// const entryLocking = (entry, score) => {
-//     entry.scored = entry.locked === lock ? 0 : score;
-// };
-
-// const arrayEntry = (array, key, value) => {
-//     for (const entry of array) {
-//         if (entry[key] === value) {
-//             return entry;
-//         }
-//     }
-// };
-
 const countUpper = () => {
     for (const entry of scoress(scoreUpper)) {
         if (entry.locked != back && entry.locked != lack) {
@@ -99,52 +82,6 @@ const countUpper = () => {
         }
     }
 };
-
-// const lockCount = list => {
-//     let locks = 0;
-
-//     for (const entry of list) {
-//         if (entry.locked === lock) {
-//             ++locks;
-//         }
-//     }
-
-//     return locks;
-// };
-
-// const lackCount = list => {
-//     let lacks = 0;
-
-//     for (const entry of list) {
-//         if (entry.locked === lack) {
-//             ++lacks;
-//         }
-//     }
-
-//     return lacks;
-// };
-
-// const lockList = list => {
-//     if (lockCount(list) > list.length - 4) {
-//         for (const entry of list) {
-//             if (entry.locked === back) {
-//                 entry.locked = lack;
-//             }
-//         }
-//     }
-// };
-
-// const finalSummer = list => {
-//     let summed = 0;
-
-//     for (const entry of list) {
-//         if (entry.locked === klik || entry.locked === lock) {
-//             summed += entry.final;
-//         }
-//     }
-
-//     return summed;
-// };
 
 const sumUpper = () => {
     const scoresU = scoress(scoreUpper);
@@ -163,14 +100,6 @@ const multiYahtzee = () => {
 
     multiplesRef.value.moarYahtzee = moreYahtzee.value;
 };
-
-// const deklak = list => {
-//     for (const entry of list) {
-//         if (entry.locked === klak) {
-//             entry.locked = klik;
-//         }
-//     }
-// };
 
 const klikable = () => {
     const scoresU = scoress(scoreUpper);
@@ -234,10 +163,6 @@ const countLower = () => {
     }
 };
 
-const fullyLocking = list => {
-    return lockCount(list) + lackCount(list) === list.length;
-};
-
 const sumLower = () => {
     const scoresU = scoress(scoreUpper);
     const scoresL = scoress(scoreLower);
@@ -297,10 +222,6 @@ const lockEntry = (box, index) => {
         recount();
     }
 };
-
-// const restart = () => {
-//     location.reload();
-// };
 </script>
 
 <template>

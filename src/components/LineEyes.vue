@@ -1,7 +1,7 @@
 <script setup>
 import Eye from './EyeDot.vue';
 
-// Another case of defineProps being enough
+// Another case of defineProps being better than defineModel
 defineProps({
     // Default is for empty line
     selected: {type: Number, default: 0},

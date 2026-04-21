@@ -27,7 +27,7 @@ const clickClass = locked => {
                 <th>Combinatie</th>
                 <th>Punten</th>
                 <th>Gescoord</th>
-                <th>Klikbaar</th>
+                <th>Klikken</th>
             </tr>
             <tr v-for="score in scoreListing.scores" :key="score.id" :class="score.locked">
                 <td>{{ score.title }}</td>

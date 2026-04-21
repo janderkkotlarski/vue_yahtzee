@@ -7,7 +7,7 @@ const valueMax = 6;
 const diceAmount = 5;
 // Had numberLine as an imported value, worked wonky at times
 // Simplify where possible
-const numberLine = -0;
+const numberLine = 5;
 const maxThrows = 25;
 const millis = 25;
 const maxClicks = 3;
@@ -18,6 +18,7 @@ const invert = 'invert';
 const starts = 'starts';
 
 const buttonMessage = 'Gooien: ';
+const buttonStoppage = 'Klik hieronder'
 
 defineProps({
     buttonVisible: {type: Boolean, default: true},
@@ -156,7 +157,7 @@ defineExpose({
     <button v-if="buttonVisible && clicked > 0" class="switch" @click="diceRolling">
         {{ buttonMessage }} {{ clicked }}
     </button>
-    <button v-if="clicked === 0" class="switch" @click="diceArrayReset">Nieuwe Ronde</button>
+    <button v-if="clicked === 0" class="switch invert">{{ buttonStoppage }}</button>
 
     <button v-if="!buttonVisible" class="switch" @click="restart">Herstart</button>
 </template>

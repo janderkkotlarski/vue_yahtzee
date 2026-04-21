@@ -5,10 +5,10 @@ import Roller from './RollingDice.vue';
 import ScoreList from './ScoreList.vue';
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Varinit.mjs';
 
-const multiplesRef = ref(null);
-
-const yahtzeeNumber = ref(0);
 const diceAmount = 5;
+
+const multiplesRef = ref(null);
+const yahtzeeNumber = ref(0);
 
 const sameMax = ref(0);
 const extraYahtzee = ref(0);
@@ -36,8 +36,6 @@ const rollingRef = ref(null);
 const resetRollingArray = () => {
     rollingRef.value.diceArrayReset();
 };
-
-
 
 const diceArray = ref({
     dice: [],
@@ -206,13 +204,8 @@ const summing = () => {
     }
 };
 
-const countMoreYahtzee = ref(0);
-
 const lowerScoring = () => {
-    const scoreSheet = [];
-
-    // countMoreYahtzee.value = watchFilledHouse();
-    
+    const scoreSheet = [];    
 
     scoreSheet.push({id: 'three', score: sameMax.value >= 3 ? diceSum : 0});
     scoreSheet.push({id: 'four', score: sameMax.value >= 4 ? diceSum : 0});
@@ -302,29 +295,6 @@ const lockEntry = (box, index) => {
 const restart = () => {
     location.reload();
 };
-
-// <Roller ref="resetRef" @recounting="recount" :numberLine="rollNumber" :diceLine="diceArray" />
-
-/*
-
-<ScoreList @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-    <ScoreList @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-
-    <br />
-    <br />
-
-    <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
-
-    <br />
-    <div>{{ recounter }} | {{ multiCount }}</div>
-    <br />
-
-    <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" :moarYahtzee="moreYahtzee" />
-
-    <Scorelist @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-    <Scorelist @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-
-*/
 </script>
 
 <template>
@@ -339,18 +309,11 @@ const restart = () => {
     />
 
     <br />
-    <br />
-
-    <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
-
-    <br />
-    <div>{{ moreYahtzee }} | {{ countMoreYahtzee }}</div>
-    <br />
-
-    <br />
-    <div>{{ diceArray }}</div>
-    <br />
 
     <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" />
     <ScoreList @locker="lockEntry" :scoreListing="scoreLower" />
+
+    <br />
+
+    <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
 </template>

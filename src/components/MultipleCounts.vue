@@ -21,8 +21,8 @@ const diceLine = defineModel('diceLine', {
 });
 
 const moarYahtzee = defineModel('moarYahtzee', {
-    type: Boolean,
-    default: false,
+    type: Number,
+    default: 0,
 });
 
 const initMultiples = () => {
@@ -77,7 +77,7 @@ const filledHouse = () => {
     if (sameMax.value === 3) {
         for (const amount of multiples.value.counts) {
             if (amount.count === 2) {
-                return true;
+                return 1;
             }
         }
     }
@@ -98,7 +98,7 @@ const consecutive = () => {
         }
     }
 
-    if (moarYahtzee.value) {
+    if (moarYahtzee.value === -1) {
         consec = 5;
     }
 

@@ -8,6 +8,14 @@ import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Va
 const multiplesRef = ref(null);
 
 const yahtzeeNumber = ref(0);
+const diceAmount = 5;
+
+const sameMax = ref(0);
+const extraYahtzee = ref(0);
+
+const moreYahtzee = ref(0);
+
+const rollVisible = ref(true);
 
 const countMultiplesParent = () => {
     yahtzeeNumber.value = multiplesRef.value.countMultiples();
@@ -28,17 +36,10 @@ const rollingRef = ref(null);
 const resetRollingArray = () => {
     rollingRef.value.diceArrayReset();
 
-    moreYahtzee.value = false;
+    moreYahtzee.value = 0;
 };
 
-const diceAmount = 5;
 
-const sameMax = ref(0);
-const extraYahtzee = ref(0);
-
-const moreYahtzee = ref(false);
-
-const rollVisible = ref(true);
 
 const diceArray = ref({
     dice: [],
@@ -154,7 +155,9 @@ const sumUpper = () => {
 };
 
 const multiYahtzee = () => {
-    moreYahtzee.value = arrayEntry(scoress(scoreLower), 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0;
+    if (arrayEntry(scoress(scoreLower), 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0) {
+        moreYahtzee.value = -1;
+    }
 };
 
 const deklak = list => {
@@ -174,7 +177,7 @@ const klikable = () => {
 
     startLocking();
 
-    if (moreYahtzee.value) {
+    if (moreYahtzee.value === -1) {
         if (arrayEntry(scoresU, 'id', yahtzeeNumber.value).locked != lock || lockCount(scoresL) + 3 < scoresL.length) {
             for (const entry of scoresU) {
                 if (entry.locked === klik && entry.id != yahtzeeNumber.value) {
@@ -208,7 +211,7 @@ const lowerScoring = () => {
 
     scoreSheet.push({id: 'three', score: sameMax.value >= 3 ? diceSum : 0});
     scoreSheet.push({id: 'four', score: sameMax.value >= 4 ? diceSum : 0});
-    scoreSheet.push({id: 'full', score: watchFilledHouse() ? 25 : 0});
+    scoreSheet.push({id: 'full', score: watchFilledHouse() != 1 ? 25 : 0});
     scoreSheet.push({id: 'small', score: watchConsecutive() > 3 ? 30 : 0});
     scoreSheet.push({id: 'large', score: watchConsecutive() > 4 ? 40 : 0});
     scoreSheet.push({id: 'chance', score: diceSum});
@@ -265,7 +268,7 @@ const lockEntry = (box, index) => {
         const scoresL = scoress(scoreLower);
 
         // When another yahtzee is scored, up the bonus
-        if (moreYahtzee.value) {
+        if (moreYahtzee.value === -1) {
             ++extraYahtzee.value;
         }
 
@@ -283,7 +286,7 @@ const lockEntry = (box, index) => {
             }
         }
 
-        moreYahtzee.value = false;
+        moreYahtzee.value = 0;
 
         resetRollingArray();
 
@@ -343,6 +346,6 @@ const restart = () => {
     <div>{{ diceArray }}</div>
     <br />
 
-    <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
-    <ScoreList @locker="lockEntry" :scoreListing="scoreLower" :yahtzeeVars="{moreYahtzee, extraYahtzee}" />
+    <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" />
+    <ScoreList @locker="lockEntry" :scoreListing="scoreLower" />
 </template>

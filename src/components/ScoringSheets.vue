@@ -16,6 +16,7 @@ import {
 } from './Scoringfunctions.mjs';
 
 // Child components for this parent
+import Divider from './VerticalDivider.vue';
 import Multiples from './MultipleCounts.vue';
 import Roller from './RollingDice.vue';
 import ScoreList from './ScoreList.vue';
@@ -29,6 +30,14 @@ const extraYahtzee = ref(0);
 const moreYahtzee = ref(0);
 
 const rollVisible = ref(true);
+
+const verticals = [];
+
+const divides = 100;
+
+for (let index = 1; index <= divides; ++index) {
+    verticals.push({id: index});
+}
 
 const diceArray = ref({
     dice: [],
@@ -225,6 +234,8 @@ const lockEntry = (box, index) => {
         lockList(scoresU);
 
         if (fullyLocking(scoresU)) {
+            recount();
+
             lockList(scoresL);
 
             if (fullyLocking(scoresL)) {
@@ -244,6 +255,8 @@ const lockEntry = (box, index) => {
         recount();
     }
 };
+
+// <div v-for="divide in verticals" :key="verticals.id"><Divider :class="divide.id" /></div>
 </script>
 
 <template>
@@ -257,12 +270,12 @@ const lockEntry = (box, index) => {
         :buttonVisible="rollVisible"
     />
 
-    <br />
+    <Divider />
 
     <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" />
     <ScoreList @locker="lockEntry" :scoreListing="scoreLower" />
 
-    <br />
+    <Divider v-for="divide in verticals" :key="divide.id" />
 
     <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
 </template>

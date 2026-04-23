@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from 'vue';
+import Divider from './VerticalDivider.vue';
 import Dice from './DiceLines.vue';
 
 // Simple constants
@@ -105,8 +106,6 @@ const diceRoll = () => {
     }
 };
 
-const visited = ref(0);
-
 const lowerCurrentNumber = () => {
     --currentNumber.value;
 };
@@ -181,12 +180,12 @@ defineExpose({
         />
     </div>
 
+    <Divider />
+
     <button v-if="buttonVisible && clicked > 0" class="switch" :class="throwing" @click="diceRolling">
         {{ buttonMessage }} {{ clicked }}
     </button>
     <button v-if="clicked === 0" class="switch invert">{{ buttonStoppage }}</button>
 
     <button v-if="!buttonVisible" class="switch" @click="restart">Herstart</button>
-
-    <br />
 </template>

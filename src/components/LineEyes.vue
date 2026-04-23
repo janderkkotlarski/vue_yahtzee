@@ -5,10 +5,11 @@ import Eye from './EyeDot.vue';
 defineProps({
     // Default is for empty line
     selected: {type: Number, default: 0},
+    // Default is for normal color scheme
     inversion: {type: String, default: '______'},
 });
 
-// An eyeline is vertical from top to bottom
+// An eyeline is vertical from top to bottom due how v-for interacts with arrays
 const eyeLines = [
     {id: 1, eyes: ['_______', 'visible', '_______', '_______', 'visible']},
     {id: 2, eyes: ['_______', '_______', 'visible', '_______', '_______']},

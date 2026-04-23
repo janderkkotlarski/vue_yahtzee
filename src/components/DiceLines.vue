@@ -11,7 +11,7 @@ defineProps({
     inverted: {type: String, default: '______'},
 });
 
-// Most effective array config for v-for coding standards
+// A diceline is vertical from top to bottom due how v-for interacts with arrays
 const diceLines = [
     {id: 1, lines: [0, 0, 1, 1, 4, 4, 4]},
     {id: 2, lines: [0, 2, 0, 2, 0, 2, 4]},

@@ -23,7 +23,7 @@ const stilled = 'stilled';
 const rolled = 'rolled';
 
 const buttonMessage = 'Gooien: ';
-const buttonStoppage = 'Klik hieronder'
+const buttonStoppage = 'Klik hieronder';
 
 // Parent input on deciding which button is visible
 defineProps({
@@ -96,13 +96,19 @@ const diceRoll = () => {
                     cuboid(index).rolled = currentNumber.value;
                 }
             }
-            
+
             // If numberLine is too big, just roll randomly
             if (numberLine > valueMax) {
                 cuboid(index).rolled = roll();
             }
         }
     }
+};
+
+const visited = ref(0);
+
+const lowerCurrentNumber = () => {
+    --currentNumber.value;
 };
 
 // Throw dice a number of times and space them apart in time
@@ -131,7 +137,7 @@ const diceRolling = () => {
 
 // For the next round
 const diceArrayReset = () => {
-    if (throwing.value=== stilled) {
+    if (throwing.value === stilled) {
         for (let index = 1; index <= diceAmount; ++index) {
             cuboid(index).rolled = 0;
             cuboid(index).inversion = starts;
@@ -157,8 +163,9 @@ const restart = () => {
 
 // Give function access to the parent
 defineExpose({
+    lowerCurrentNumber,
     diceArrayReset,
-    currentNumber
+    currentNumber,
 });
 </script>
 
@@ -180,4 +187,6 @@ defineExpose({
     <button v-if="clicked === 0" class="switch invert">{{ buttonStoppage }}</button>
 
     <button v-if="!buttonVisible" class="switch" @click="restart">Herstart</button>
+
+    <br />
 </template>

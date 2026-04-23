@@ -3,9 +3,19 @@ import {ref} from 'vue';
 // Necessary variables
 import {klik, klak, lock, back, lack, scoreUpperInit, scoreLowerInit} from './Scoringvars.mjs';
 // Functions that could be stashed away
-import {scoress, entryLocking, arrayEntry, lockCount, lockList, finalSummer, deklak, fullyLocking, restart} from './Scoringfunctions.mjs';
+import {
+    scoress,
+    entryLocking,
+    arrayEntry,
+    lockCount,
+    lockList,
+    finalSummer,
+    deklak,
+    fullyLocking,
+    restart,
+} from './Scoringfunctions.mjs';
 
-// Child components for this parent 
+// Child components for this parent
 import Multiples from './MultipleCounts.vue';
 import Roller from './RollingDice.vue';
 import ScoreList from './ScoreList.vue';
@@ -48,6 +58,14 @@ const rollingRef = ref(null);
 
 const resetRollingArray = () => {
     rollingRef.value.diceArrayReset();
+};
+
+const getRollingNumber = () => {
+    return rollingRef.value.currentNumber;
+};
+
+const lowerRollingNumber = () => {
+    rollingRef.value.lowerCurrentNumber();
 };
 
 const scoreUpper = ref(scoreUpperInit);
@@ -140,7 +158,7 @@ const summing = () => {
 };
 
 const lowerScoring = () => {
-    const scoreSheet = [];    
+    const scoreSheet = [];
 
     scoreSheet.push({id: 'three', score: sameMax.value >= 3 ? diceSum : 0});
     scoreSheet.push({id: 'four', score: sameMax.value >= 4 ? diceSum : 0});
@@ -199,12 +217,6 @@ const lockEntry = (box, index) => {
         // When another yahtzee is scored, up the bonus
         if (moreYahtzee.value === -1) {
             ++extraYahtzee.value;
-
-            if (typeof(index) === Number) {
-                if (index > 1 && rollingRef.value.currentNumber > 0) {
-                    rollingRef.value.currentNumber = index - 1;
-                }
-            }
         }
 
         score.final = score.scored;
@@ -219,6 +231,10 @@ const lockEntry = (box, index) => {
                 sumLower();
                 rollVisible.value = false;
             }
+        }
+
+        if (lockCount(scoresL) > scoresL.length - 4 && getRollingNumber() > 0) {
+            lowerRollingNumber();
         }
 
         moreYahtzee.value = 0;

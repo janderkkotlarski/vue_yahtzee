@@ -4,25 +4,37 @@ import Divider from './VerticalDivider.vue';
 import Dice from './DiceLines.vue';
 
 // Simple constants
+// 6 sided dice
 const valueMax = 6;
+// 5 dice
 const diceAmount = 5;
 
 // Had numberLine as an imported value, worked wonky at times
 // Simplify where possible
+// Depending on the value, different kinds of dice values can be rolled
 const numberLine = 6;
+// For testing purposes
 const currentNumber = ref(0);
+
+// How many times are the dice rolled for viewing pleasure
 const maxThrows = 25;
+// HOw long does a roll last?
 const millis = 25;
+// The maximum amount of (re)rolling the dice for a round
 const maxClicks = 3;
+// How many (re)rolls left for the current round
 const clicked = ref(maxClicks);
 
+// Status classes for the shown dice
 const normal = '______';
 const invert = 'invert';
 const starts = 'starts';
 
+// Only rolled designates active rolling
 const stilled = 'stilled';
 const rolled = 'rolled';
 
+// Button messages
 const buttonMessage = 'Gooien: ';
 const buttonStoppage = 'Klik hieronder';
 
@@ -31,10 +43,10 @@ defineProps({
     buttonVisible: {type: Boolean, default: true},
 });
 
-/// defineEmits to let the parent do the recount and resetMultiples functions upon emission
+// defineEmits to let the parent do the recount and resetMultiples functions upon emission
 const emit = defineEmits(['recounting', 'resetMultiples']);
 
-// The array of dice from the parent, but n this child component the rolling happens
+// The dice roll array from the parent, and here the actual rolling happens
 const diceLine = defineModel('diceLine', {
     type: Object,
     default: {
@@ -52,7 +64,9 @@ const diceArrayFilling = () => {
         diceLine.value.dice.push({id: index, rolled: 0, inversion: starts});
     }
 
+    // When valueMax is yahtzee roll value
     if (numberLine === valueMax) {
+        // Prep for max scoring
         currentNumber.value = valueMax;
     }
 };
@@ -60,18 +74,22 @@ const diceArrayFilling = () => {
 diceArrayFilling();
 
 // Feels a bit like passing parameters by reference in C++
-// Got rid of the superfluous index restriction
+// Got rid of the superfluous index restrictions
 const cuboid = index => {
     return diceLine.value.dice[index - 1];
 };
 
+// The dice are not automatically thrown
 const throwing = ref(stilled);
 
 // When the first throw is performed, make all dice normally rollable
 const normalDicing = () => {
-    for (let index = 1; index <= diceAmount; ++index) {
-        if (cuboid(index).inversion === starts) {
-            cuboid(index).inversion = normal;
+    // Only for the start of hte round
+    if (clicked.value === maxClicks) {
+        for (let index = 1; index <= diceAmount; ++index) {
+            if (cuboid(index).inversion === starts) {
+                cuboid(index).inversion = normal;
+            }
         }
     }
 };
@@ -93,19 +111,21 @@ const diceRoll = () => {
             if (numberLine > 0 && numberLine <= valueMax) {
                 cuboid(index).rolled = numberLine;
 
+                // If currentNumber is a rollable number that is not valueMax, then roll that as a yahtzee
                 if (currentNumber.value > 0 && currentNumber.value < valueMax) {
                     cuboid(index).rolled = currentNumber.value;
                 }
             }
 
-            // If numberLine is too big, just roll randomly
-            if (numberLine > valueMax) {
+            // If numberLine is higher than valueMax, just roll randomly
+            if (numberLine > valueMax || throwing.value === rolled) {
                 cuboid(index).rolled = roll();
             }
         }
     }
 };
 
+// Let's the parent decrease currentNumber by 1
 const lowerCurrentNumber = () => {
     --currentNumber.value;
 };
@@ -115,9 +135,9 @@ const diceRolling = () => {
     if (throwing.value === stilled) {
         throwing.value = rolled;
 
-        --clicked.value;
-
         normalDicing();
+
+        --clicked.value;
 
         for (let throws = 0; throws < maxThrows; ++throws) {
             setTimeout(function () {
@@ -128,6 +148,8 @@ const diceRolling = () => {
         // Pace throwing
         setTimeout(function () {
             throwing.value = stilled;
+
+            diceRoll();
 
             emit('recounting');
         }, millis * maxThrows);

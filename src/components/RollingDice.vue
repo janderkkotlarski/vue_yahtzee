@@ -132,31 +132,39 @@ const lowerCurrentNumber = () => {
 
 // Throw dice a number of times and space them apart in time
 const diceRolling = () => {
+    // If not throwing
     if (throwing.value === stilled) {
+        // Make it throwing so no throwing while throwing
         throwing.value = rolled;
 
         normalDicing();
 
+        // One less click
         --clicked.value;
 
+        // Fake random throwing for visual flair
         for (let throws = 0; throws < maxThrows; ++throws) {
             setTimeout(function () {
                 diceRoll();
             }, millis * throws);
         }
 
-        // Pace throwing
+        // Throwing is over
         setTimeout(function () {
             throwing.value = stilled;
 
+            // The true dice roll
             diceRoll();
 
+            // Process the roll in the parent
             emit('recounting');
         }, millis * maxThrows);
     }
 };
 
-// For the next round
+/////////////////////////////////////////////////////////////////////////
+
+// Start of next round
 const diceArrayReset = () => {
     if (throwing.value === stilled) {
         for (let index = 1; index <= diceAmount; ++index) {

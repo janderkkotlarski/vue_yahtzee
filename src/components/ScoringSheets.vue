@@ -196,7 +196,7 @@ const sumLower = () => {
     const summed = finalSummer(scoresL);
 
     arrayEntry(scoresL, 'id', 'yonus').final = extraYahtzee.value * 100;
-    arrayEntry(scoresL, 'id', 'lower').final = summed;
+    arrayEntry(scoresL, 'id', 'lower').final = summed + extraYahtzee.value * 100;
     arrayEntry(scoresL, 'id', 'total').final =
         summed + extraYahtzee.value * 100 + arrayEntry(scoresU, 'id', 'upper').final;
 };
@@ -255,8 +255,6 @@ const lockEntry = (box, index) => {
         recount();
     }
 };
-
-// <div v-for="divide in verticals" :key="verticals.id"><Divider :class="divide.id" /></div>
 </script>
 
 <template>
@@ -275,7 +273,9 @@ const lockEntry = (box, index) => {
     <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" />
     <ScoreList @locker="lockEntry" :scoreListing="scoreLower" />
 
-    <Divider v-for="divide in verticals" :key="divide.id" />
+    <div v-if="rollVisible">
+        <Divider v-for="divide in verticals" :key="divide.id" />
 
-    <button v-if="rollVisible" class="switch" @click="restart">Herstart</button>
+        <button class="switch" @click="restart">Herstart</button>
+    </div>
 </template>

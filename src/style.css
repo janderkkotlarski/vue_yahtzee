@@ -135,6 +135,7 @@ th, td {
 
 .inlined {
   display: inline-block;
+  vertical-align: top;
   padding: 1em;
 }
 

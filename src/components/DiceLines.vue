@@ -21,12 +21,14 @@ const diceLines = [
 
 <template>
     <div class="dice">
+        <!-- eyeValue determines which lines are selected for and inversion determines color scheme -->
         <Line
             v-for="diceLine in diceLines"
             :key="diceLine.id"
             :selected="diceLine.lines[eyeValue]"
             :inversion="inverted"
         />
+        <!-- Inversion determines message -->
         <b v-if="inverted === invert">Houden</b>
         <b v-else>Gooien</b>
     </div>

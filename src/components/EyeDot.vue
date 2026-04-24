@@ -12,5 +12,6 @@ defineProps({
 </script>
 
 <template>
+    <!-- The class determines if an eye is seen and which color it is -->
     <div class="eye" :class="[visibility, inverted]"></div>
 </template>

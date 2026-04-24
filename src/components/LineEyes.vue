@@ -19,6 +19,7 @@ const eyeLines = [
 
 <template>
     <div>
+        <!-- The selected line shows (not) which eyes are seen and what colors are presented -->
         <Eye v-for="eyeLine in eyeLines" :key="eyeLine.id" :visibility="eyeLine.eyes[selected]" :inverted="inversion" />
     </div>
 </template>

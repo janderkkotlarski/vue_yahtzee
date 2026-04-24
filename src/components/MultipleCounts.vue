@@ -5,9 +5,12 @@ import {ref} from 'vue';
 const valueMax = 6;
 const diceAmount = 5;
 
+// defineProps does not work without <template></template>
+// Also does not update in <script setup></setup> functions
 const sameMax = ref(0);
-// Because the defineModel does not update when addressed in parent functions but later,
-// a ref and defineExpose and explicitly updating moarYahtzee works as intended
+
+// Because the defineModel does not update when addressed in parent functions but later
+// A ref and defineExpose and explicitly updating moarYahtzee works as intended
 const moarYahtzee = ref(0);
 
 const multiples = defineModel('multiples', {

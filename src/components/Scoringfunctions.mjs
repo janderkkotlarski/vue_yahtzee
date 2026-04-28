@@ -1,13 +1,18 @@
 import {klik, klak, lock, back, lack} from './Scoringvars.mjs';
 
+// Returns an array of scores from a full list
 export const scoress = list => {
     return list.value.scores;
 };
 
+// If the entry is locked, no score points will shown
 export const entryLocking = (entry, score) => {
     entry.scored = entry.locked === lock ? 0 : score;
 };
 
+// Get an entry of an array based upon its key value
+// Key can be anything that is differentiable enough
+// 'id' is preferred for easy access
 export const arrayEntry = (array, key, value) => {
     for (const entry of array) {
         if (entry[key] === value) {
@@ -16,6 +21,7 @@ export const arrayEntry = (array, key, value) => {
     }
 };
 
+// Count the amount of locked entries in a list that can be clicked
 export const lockCount = list => {
     let locks = 0;
 
@@ -28,9 +34,11 @@ export const lockCount = list => {
     return locks;
 };
 
+// Count the amount of locked entries in a list that cannot be clicked
 const lackCount = list => {
     let lacks = 0;
 
+    // lack is just lock for unclickable entries
     for (const entry of list) {
         if (entry.locked === lack) {
             ++lacks;
@@ -40,7 +48,9 @@ const lackCount = list => {
     return lacks;
 };
 
+// Fully lock a list for the unclickable entries
 export const lockList = list => {
+    // Once clickable entries are all locked, lock everything else
     if (lockCount(list) > list.length - 4) {
         for (const entry of list) {
             if (entry.locked === back) {
@@ -50,6 +60,7 @@ export const lockList = list => {
     }
 };
 
+// Sum over all finalized results
 export const finalSummer = list => {
     let summed = 0;
 

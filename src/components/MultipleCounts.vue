@@ -116,7 +116,7 @@ const consecutive = () => {
     }
 
     // If there is another yahtzee, then consec is set to its most possible maximum
-    if (moarYahtzee.value === -1) {
+    if (moarYahtzee.value === 1) {
         consec = 5;
     }
 

@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from 'vue';
+
 import Divider from './VerticalDivider.vue';
 import Dice from './DiceLines.vue';
 

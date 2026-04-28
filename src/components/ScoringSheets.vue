@@ -29,7 +29,7 @@ const sameMax = ref(0);
 const yahtzeeNumber = ref(0);
 // Amount of extra yahtzees scored
 const extraYahtzee = ref(0);
-// Is an xtra yahtzee scored?
+// Is an extra yahtzee scored?
 const moreYahtzee = ref(0);
 
 // Visible while the game is in session
@@ -46,14 +46,17 @@ for (let index = 1; index <= divides; ++index) {
     verticals.push({id: index});
 }
 
+// Array of throwable dice
 const diceArray = ref({
     dice: [],
 });
 
+// Array for counted results
 const multiplex = ref({
     counts: [],
 });
 
+// defineExpose coupling for Multiples
 const multiplesRef = ref(null);
 
 const countMultiplesParent = () => {
@@ -70,6 +73,7 @@ const watchConsecutive = () => {
     return multiplesRef.value.consecutive();
 };
 
+// defineExpose coupling for Roller
 const rollingRef = ref(null);
 
 const resetRollingArray = () => {
@@ -84,39 +88,44 @@ const lowerRollingNumber = () => {
     rollingRef.value.lowerCurrentNumber();
 };
 
+// Scorelist initialization
 const scoreUpper = ref(scoreUpperInit);
 const scoreLower = ref(scoreLowerInit);
 
-const startLocking = () => {
-    const scoresU = scoress(scoreUpper);
-    const scoresL = scoress(scoreLower);
+// Turn all kliks into klaks
+const startKlaking = () => {
+    // Turn the scores into an array for more compact code
+    const scoresUL = [scoress(scoreUpper), scoress(scoreLower)];
 
+    // Check whether there is a new round
     if (sameMax.value === 0) {
-        for (const entry of scoresU) {
-            if (entry.locked != back && entry.locked != lack && entry.locked != lock) {
-                entry.locked = klak;
+        for (const scores of scoresUL) {
+            // If an entry has klik, it now is klak
+            for (const entry of scores) {
+                if (entry.locked === klik) {
+                    entry.locked = klak;
+                }
             }
-        }
-
-        for (const entry of scoresL) {
-            if (entry.locked != back && entry.locked != lack && entry.locked != lock) {
-                entry.locked = klak;
-            }
-        }
+        }  
     }
 };
 
-startLocking();
+startKlaking();
 
+// Count the score for each upper entry
 const countUpper = () => {
     for (const entry of scoress(scoreUpper)) {
-        if (entry.locked != back && entry.locked != lack) {
+        // If it is a legitimite entry
+        if (entry.locked != back /*&& entry.locked != lack*/) {
+            // Score is number of dice rolls times that rolled value
             const score = arrayEntry(multiplex.value.counts, 'id', entry.id).count * entry.id;
+            // Check the locked status and enter an appropriate socre
             entryLocking(entry, score);
         }
     }
 };
 
+// Sum the upper scores and calculate totals and bonus
 const sumUpper = () => {
     const scoresU = scoress(scoreUpper);
     const summed = finalSummer(scoresU);
@@ -127,36 +136,46 @@ const sumUpper = () => {
     arrayEntry(scoresU, 'id', 'upper').final = summed + bonus;
 };
 
+// If the first yahtzee was finalized and a yahtzee is detected, then there is another yahtzee
 const multiYahtzee = () => {
     if (arrayEntry(scoress(scoreLower), 'id', 'yahtzee').final === 50 && yahtzeeNumber.value != 0) {
-        moreYahtzee.value = -1;
+        moreYahtzee.value = 1;
     }
 
     multiplesRef.value.moarYahtzee = moreYahtzee.value;
 };
 
+// Determine clickable entries
 const klikable = () => {
     const scoresU = scoress(scoreUpper);
     const scoresL = scoress(scoreLower);
 
+    // First make all clickable
     deklak(scoresU);
     deklak(scoresL);
 
-    startLocking();
+    // Then check wat cannot be clicked
+    // Only does something for the start of a round
+    startKlaking();
 
-    if (moreYahtzee.value === -1) {
-        if (arrayEntry(scoresU, 'id', yahtzeeNumber.value).locked != lock || lockCount(scoresL) + 3 < scoresL.length) {
-            for (const entry of scoresU) {
-                if (entry.locked === klik && entry.id != yahtzeeNumber.value) {
-                    entry.locked = klak;
-                }
-            }
-        }
-
+    // When there is another yahtzee
+    if (moreYahtzee.value === 1) {
+        // If the upper number entry for the yahtzee value is clickable
         if (arrayEntry(scoresU, 'id', yahtzeeNumber.value).locked != lock) {
+            // Klak all of scoreL entries
             for (const entry of scoresL) {
                 if (entry.locked === klik) {
                     entry.locked = klak;
+                }
+            }
+
+            // If the lower scores are not fully locked
+            if (lockCount(scoresL) + 3 < scoresL.length) {
+                for (const entry of scoresU) {
+                    // Klak all values not having a yahtzee
+                    if (entry.locked === klik && entry.id != yahtzeeNumber.value) {
+                        entry.locked = klak;
+                    }
                 }
             }
         }
@@ -165,6 +184,7 @@ const klikable = () => {
 
 let diceSum = 0;
 
+// Sum all dice results
 const summing = () => {
     diceSum = 0;
 
@@ -173,6 +193,7 @@ const summing = () => {
     }
 };
 
+// Lower score calculations
 const lowerScoring = () => {
     const scoreSheet = [];
 
@@ -187,6 +208,7 @@ const lowerScoring = () => {
     return scoreSheet;
 };
 
+// Count the lower score entries
 const countLower = () => {
     const scoreSheet = lowerScoring();
 
@@ -197,6 +219,7 @@ const countLower = () => {
     }
 };
 
+// Sum the lower scores and calculate totals and bonus
 const sumLower = () => {
     const scoresU = scoress(scoreUpper);
     const scoresL = scoress(scoreLower);
@@ -231,7 +254,7 @@ const lockEntry = (box, index) => {
         const scoresL = scoress(scoreLower);
 
         // When another yahtzee is scored, up the bonus
-        if (moreYahtzee.value === -1) {
+        if (moreYahtzee.value === 1) {
             ++extraYahtzee.value;
         }
 
@@ -274,14 +297,6 @@ const lockEntry = (box, index) => {
         :diceLine="diceArray"
         :buttonVisible="rollVisible"
     />
-
-    <Divider />
-
-    {{ scoreUpper }}
-
-    <Divider />
-
-    {{ scoreLower }}
 
     <Divider />
 

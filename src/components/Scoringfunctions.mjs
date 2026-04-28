@@ -64,8 +64,9 @@ export const lockList = list => {
 export const finalSummer = list => {
     let summed = 0;
 
+    // Only sum over locked entries, those are finalized
     for (const entry of list) {
-        if (entry.locked === klik || entry.locked === lock) {
+        if (entry.locked === lock) {
             summed += entry.final;
         }
     }

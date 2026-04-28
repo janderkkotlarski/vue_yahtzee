@@ -15,7 +15,6 @@ import {
     restart,
 } from './Scoringfunctions.mjs';
 
-// Child components for this parent
 import Divider from './VerticalDivider.vue';
 import Multiples from './MultipleCounts.vue';
 import Roller from './RollingDice.vue';
@@ -23,18 +22,26 @@ import ScoreList from './ScoreList.vue';
 
 const diceAmount = 5;
 
+// Max amount of same dice results
 const sameMax = ref(0);
 
+// Number of the yahtzee result
 const yahtzeeNumber = ref(0);
+// Amount of extra yahtzees scored
 const extraYahtzee = ref(0);
+// Is an xtra yahtzee scored?
 const moreYahtzee = ref(0);
 
+// Visible while the game is in session
 const rollVisible = ref(true);
 
+// Vertical divides
 const verticals = [];
 
+// Amount of vertical divides
 const divides = 100;
 
+// Build an array for v-for logic
 for (let index = 1; index <= divides; ++index) {
     verticals.push({id: index});
 }

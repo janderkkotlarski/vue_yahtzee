@@ -1,7 +1,6 @@
 <script setup>
 import {ref} from 'vue';
 
-// Simple constants
 const valueMax = 6;
 const diceAmount = 5;
 

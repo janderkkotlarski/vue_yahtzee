@@ -1,3 +1,4 @@
+<!-- A handy divider -->
 <template>
     <div>
         <br />

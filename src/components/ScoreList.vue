@@ -1,9 +1,6 @@
 <script setup>
 import {klik} from './Scoringvars.mjs';
 
-// Score needs to be imported in order to be displayed
-// const scoreListing = defineModel('scoreListing', {type: Object});
-
 // Again a case where defineProps is simple and safer
 defineProps({
     // The score list needs to be imported in order to be displayed 

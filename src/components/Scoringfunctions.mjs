@@ -82,6 +82,7 @@ export const deklak = list => {
     }
 };
 
+// Check if the list is fully locked
 export const fullyLocking = list => {
     return lockCount(list) + lackCount(list) === list.length;
 };

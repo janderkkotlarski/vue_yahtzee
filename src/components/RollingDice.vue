@@ -162,8 +162,6 @@ const diceRolling = () => {
     }
 };
 
-/////////////////////////////////////////////////////////////////////////
-
 // Start of next round
 const diceArrayReset = () => {
     if (throwing.value === stilled) {
@@ -180,17 +178,18 @@ const diceArrayReset = () => {
 
 // flip between free and locked
 const flip = index => {
-    // Once one cannot roll, flipping the roll/hold state is useless
+    // Once one cannot roll, roll/hold state cannot be flipped until rolling is over
     if (clicked.value > 0 && clicked.value < maxClicks && throwing.value === stilled) {
         cuboid(index).inversion = cuboid(index).inversion === normal ? invert : normal;
     }
 };
 
+// Reloading the page
 const restart = () => {
     location.reload();
 };
 
-// Give function access to the parent
+// Give function access to the parent component
 defineExpose({
     lowerCurrentNumber,
     diceArrayReset,
@@ -199,6 +198,7 @@ defineExpose({
 </script>
 
 <template>
+    <!-- Displaying the dice -->
     <div>
         <Dice
             @click="flip(cube.id)"
@@ -212,10 +212,13 @@ defineExpose({
 
     <Divider />
 
+    <!-- Roll button while rollable -->
     <button v-if="buttonVisible && clicked > 0" class="switch" :class="throwing" @click="diceRolling">
         {{ buttonMessage }} {{ clicked }}
     </button>
+    <!-- Inactive button advising clicking a score -->
     <button v-if="clicked === 0" class="switch invert">{{ buttonStoppage }}</button>
 
+    <!-- Button for restarting the game once no more other actions can be done -->
     <button v-if="!buttonVisible" class="switch" @click="restart">Herstart</button>
 </template>

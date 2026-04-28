@@ -4,7 +4,6 @@ export const scoress = list => {
     return list.value.scores;
 };
 
-
 export const entryLocking = (entry, score) => {
     entry.scored = entry.locked === lock ? 0 : score;
 };

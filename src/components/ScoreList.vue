@@ -30,18 +30,22 @@ const clickClass = locked => {
 </script>
 
 <template>
+    <!-- Inline to get scorelists bsides each other -->
     <div class="inlined">
         <table>
+            <!-- Top titles -->
             <tr>
                 <th>Combinatie</th>
                 <th>Punten</th>
                 <th>Gescoord</th>
                 <th>Klikken</th>
             </tr>
+            <!-- names, scores, final scores and clickability -->
             <tr v-for="score in scoreListing.scores" :key="score.id" :class="score.locked">
                 <td>{{ score.title }}</td>
                 <td>{{ score.scored }}</td>
                 <td>{{ score.final }}</td>
+                <!-- When successfully clicked lock the entry -->
                 <td :class="clickClass(score.locked)" @click="$emit('locker', scoreListing, score.id)">
                     {{ kliksplay(score.locked) }}
                 </td>

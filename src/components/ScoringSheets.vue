@@ -270,6 +270,14 @@ const lockEntry = (box, index) => {
 
     <Divider />
 
+    {{ scoreUpper }}
+
+    <Divider />
+
+    {{ scoreLower }}
+
+    <Divider />
+
     <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" />
     <ScoreList @locker="lockEntry" :scoreListing="scoreLower" />
 

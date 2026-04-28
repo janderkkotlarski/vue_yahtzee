@@ -21,7 +21,7 @@ export const arrayEntry = (array, key, value) => {
     }
 };
 
-// Count the amount of locked entries in a list that can be clicked
+// Count the amount of locked entries in the list that are clickable
 export const lockCount = list => {
     let locks = 0;
 
@@ -34,7 +34,7 @@ export const lockCount = list => {
     return locks;
 };
 
-// Count the amount of locked entries in a list that cannot be clicked
+// Count the amount of summed entries in the list that are locked
 const lackCount = list => {
     let lacks = 0;
 
@@ -73,6 +73,7 @@ export const finalSummer = list => {
     return summed;
 };
 
+// Make anything clickable unlclickable without locking it
 export const deklak = list => {
     for (const entry of list) {
         if (entry.locked === klak) {
@@ -85,6 +86,7 @@ export const fullyLocking = list => {
     return lockCount(list) + lackCount(list) === list.length;
 };
 
+// Reload the page
 export const restart = () => {
     location.reload();
 };

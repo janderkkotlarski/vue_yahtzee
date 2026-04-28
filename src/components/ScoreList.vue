@@ -1,8 +1,16 @@
 <script setup>
 import {klik} from './Scoringvars.mjs';
 
-const scoreListing = defineModel('scoreListing', {type: Object});
+// Score needs to be imported in order to be displayed
+// const scoreListing = defineModel('scoreListing', {type: Object});
 
+// Again a case where defineProps is simple and safer
+defineProps({
+    // The score list needs to be imported in order to be displayed 
+    scoreListing: {type: Object, default: null},
+});
+
+// If the entry can be clicked, show that
 const kliksplay = locked => {
     if (locked === klik) {
         return klik;
@@ -11,6 +19,7 @@ const kliksplay = locked => {
     return ' ';
 };
 
+// Colors the entry correctly
 const clickClass = locked => {
     if (locked === klik) {
         return 'switch';

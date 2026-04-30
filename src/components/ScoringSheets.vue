@@ -106,7 +106,7 @@ const startKlaking = () => {
                     entry.locked = klak;
                 }
             }
-        }  
+        }
     }
 };
 
@@ -115,8 +115,8 @@ startKlaking();
 // Count the score for each upper entry
 const countUpper = () => {
     for (const entry of scoress(scoreUpper)) {
-        // If it is a legitimite entry
-        if (entry.locked != back /*&& entry.locked != lack*/) {
+        // Ensure that the entry is scorable
+        if (entry.locked != back && entry.locked != lack) {
             // Score is number of dice rolls times that rolled value
             const score = arrayEntry(multiplex.value.counts, 'id', entry.id).count * entry.id;
             // Check the locked status and enter an appropriate socre

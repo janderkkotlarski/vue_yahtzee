@@ -142,6 +142,7 @@ const multiYahtzee = () => {
         moreYahtzee.value = 1;
     }
 
+    // Pass it to the child component
     multiplesRef.value.moarYahtzee = moreYahtzee.value;
 };
 
@@ -233,7 +234,7 @@ const sumLower = () => {
         summed + extraYahtzee.value * 100 + arrayEntry(scoresU, 'id', 'upper').final;
 };
 
-// Relay counting the multiples
+// Relay counting the multiples to the child component
 const countMultiples = () => {
     sameMax.value = countMultiplesParent();
 };
@@ -250,38 +251,53 @@ const recount = () => {
     sumLower();
 };
 
+// Lock a clicked entry
 const lockEntry = (box, index) => {
     const score = arrayEntry(box.scores, 'id', index);
 
+    // Check if it should be clickable and if there is an actual number as score
     if (score.locked === klik && typeof score.scored === 'number') {
         const scoresU = scoress(scoreUpper);
         const scoresL = scoress(scoreLower);
 
-        // When another yahtzee is scored, up the bonus
+        // When another yahtzee is scored, up the yahtzee bonus amount
         if (moreYahtzee.value === 1) {
             ++extraYahtzee.value;
         }
 
+        // Finalize and lock the score
         score.final = score.scored;
         score.locked = lock;
 
+        // Fully lock the upper list if appropriate
         lockList(scoresU);
 
+        // If the upper list is fully locked
         if (fullyLocking(scoresU)) {
+            // Recheck everything
             recount();
 
+            // Then fully lock the lower list if appropriate
             lockList(scoresL);
 
+            // If the lower list is fully locked
             if (fullyLocking(scoresL)) {
+                // Recheck both lists to finalize the lower totals and bonus
                 sumLower();
+
+                // Disable rolling
                 rollVisible.value = false;
             }
         }
 
+        // While max score yahtzee testing, if the lower scores have been finalized
+        // And rollingNumber for yahtzee is positive
         if (lockCount(scoresL) > scoresL.length - 4 && getRollingNumber() > 0) {
+            // Decrease rollingNumber
             lowerRollingNumber();
         }
 
+        // Reset all relevant values and prepare for another round
         moreYahtzee.value = 0;
         multiplesRef.value.moarYahtzee = moreYahtzee.value;
 
@@ -292,8 +308,10 @@ const lockEntry = (box, index) => {
 </script>
 
 <template>
+    <!-- Initialize Multiples -->
     <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" />
 
+    <!-- Initialize Rolling for dice displaying -->
     <Roller
         ref="rollingRef"
         @recounting="recount"
@@ -304,12 +322,15 @@ const lockEntry = (box, index) => {
 
     <Divider />
 
+    <!-- Upper score list -->
     <ScoreList @locker="lockEntry" :scoreListing="scoreUpper" />
+    <!-- Lower score list -->
     <ScoreList @locker="lockEntry" :scoreListing="scoreLower" />
 
     <div v-if="rollVisible">
+        <!-- Huge divider block for when the game needs to be reset prematurely -->
         <Divider v-for="divide in verticals" :key="divide.id" />
-
+        <!-- Reset the game -->
         <button class="switch" @click="restart">Herstart</button>
     </div>
 </template>

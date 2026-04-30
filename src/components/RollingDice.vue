@@ -13,7 +13,7 @@ const diceAmount = 5;
 // Had numberLine as an imported value, worked wonky at times
 // Simplify where possible
 // Depending on the value, different kinds of dice values can be rolled
-const numberLine = 6;
+const numberLine = 7;
 // For testing purposes
 const currentNumber = ref(0);
 
@@ -95,6 +95,14 @@ const normalDicing = () => {
     }
 };
 
+const zeroDicing = () => {
+    if (clicked.value === 0) {
+        for (let index = 1; index <= diceAmount; ++index) {
+            cuboid(index).inversion = invert;
+        }
+    }
+};
+
 // Roll all dice that are rollable
 const diceRoll = () => {
     for (let index = 1; index <= diceAmount; ++index) {
@@ -156,6 +164,9 @@ const diceRolling = () => {
 
             // The true dice roll
             diceRoll();
+
+            // Set all dice to hold to signify the end of rolling
+            zeroDicing();
 
             // Process the roll in the parent
             emit('recounting');

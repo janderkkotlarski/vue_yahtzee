@@ -1,9 +1,7 @@
 <script setup>
-import Yahtzee from './components/Yahtzee.vue';
-
-// <Yahtzee />
+import Scorer from './components/ScoringSheets.vue';
 </script>
 
 <template>
-    <Yahtzee />
+    <Scorer />
 </template>

@@ -1,10 +1,13 @@
+// Score entry locked statuses
 export const klik = 'klik';
 export const klak = 'klak';
 export const lock = 'lock';
 
+// Totals and bonuses entry locked statuses
 export const back = 'back';
 export const lack = 'lack';
 
+// Upper score list initialization values
 export const scoreUpperInit = {
     scores: [
         {id: 1, title: 'Enen', scored: 0, final: 0, locked: klik},
@@ -19,6 +22,7 @@ export const scoreUpperInit = {
     ],
 };
 
+// Lower score list initialization values
 export const scoreLowerInit = {
     scores: [
         {id: 'three', title: '3 Gelijke', scored: 0, final: 0, locked: klik},

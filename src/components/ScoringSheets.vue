@@ -119,7 +119,7 @@ const countUpper = () => {
         if (entry.locked != back && entry.locked != lack) {
             // Score is number of dice rolls times that rolled value
             const score = arrayEntry(multiplex.value.counts, 'id', entry.id).count * entry.id;
-            // Check the locked status and enter an appropriate socre
+            // Check the locked status and enter the appropriate score
             entryLocking(entry, score);
         }
     }
@@ -212,8 +212,10 @@ const lowerScoring = () => {
 const countLower = () => {
     const scoreSheet = lowerScoring();
 
+    // For every scorable entry...
     for (const entry of scoress(scoreLower)) {
-        if (entry.locked != back) {
+        if (entry.locked != back && entry.locked != lack) {
+            // ...enter the appropriate score
             entryLocking(entry, arrayEntry(scoreSheet, 'id', entry.id).score);
         }
     }
@@ -231,10 +233,12 @@ const sumLower = () => {
         summed + extraYahtzee.value * 100 + arrayEntry(scoresU, 'id', 'upper').final;
 };
 
+// Relay counting the multiples
 const countMultiples = () => {
     sameMax.value = countMultiplesParent();
 };
 
+// Recounting is just a collection of other functions in a correct order
 const recount = () => {
     countMultiples();
     multiYahtzee();

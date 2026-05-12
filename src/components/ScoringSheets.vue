@@ -309,6 +309,7 @@ const lockEntry = (box, index) => {
 
 <template>
     <!-- Initialize Multiples -->
+     <!-- TODO: wat is het nut van een vue component zonder template? Ik zou de logica van dit bestand in een js / ts bestand stoppen en deze importeren -->
     <Multiples ref="multiplesRef" :multiples="multiplex" :diceLine="diceArray" />
 
     <!-- Initialize Rolling for dice displaying -->
@@ -329,6 +330,7 @@ const lockEntry = (box, index) => {
 
     <div v-if="rollVisible">
         <!-- Huge divider block for when the game needs to be reset prematurely -->
+         <!-- TODO: ik zou dit met css doen, ipv met een loop en met vue componenten, want dat maakt de code onnodig complex -->
         <Divider v-for="divide in verticals" :key="divide.id" />
         <!-- Reset the game -->
         <button class="switch" @click="restart">Herstart</button>

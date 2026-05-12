@@ -8,6 +8,7 @@ export const back = 'back';
 export const lack = 'lack';
 
 // Upper score list initialization values
+// TODO: locked naam impliceert boolean value, geen string. klik / klak zijn moeilijk te begrijpen waarden voor buitenstaanders
 export const scoreUpperInit = {
     scores: [
         {id: 1, title: 'Enen', scored: 0, final: 0, locked: klik},
